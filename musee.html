@@ -7,8 +7,8 @@
 <meta name="apple-mobile-web-app-title" content="Inga I + II">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
-<style>html,body{margin:0;background:#0d1315}</style>
 <script>window.INGA_MUSEE=true;</script>
+<style>html,body{margin:0;background:#0d1315}</style>
 </head><body>
 <title>Inga I + II</title>
 <link rel="stylesheet" href="fonts/fonts.css">
@@ -19,7 +19,7 @@
 :root{
   --bg:#0d1315; --bg2:#141c1f; --panel:rgba(15,22,24,.9); --panel2:rgba(22,31,34,.92);
   --line:rgba(226,219,200,.12); --line2:rgba(226,219,200,.24);
-  --ink:#ece7d9; --muted:#a1aca8; --dim:#717d7a;
+  --ink:#ece7d9; --muted:#acb7b4; --dim:#98a5a0;
   --water:#8cc3d1; --power:#e8b45a; --concrete:#d3c9b5;
   --ok:#8fc183; --warn:#e5ab4f; --bad:#dc7362; --gridc:#a8b4ea;
   --doc:#74bdb4; --est:#e2b65f; --simp:#b8a8da; --unk:#8f9895;
@@ -52,7 +52,7 @@ button{cursor:pointer}
 .tb h1{margin:2px 0 0;font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1;letter-spacing:.01em}
 .tb-s{font-family:var(--f-display);font-size:15px;color:var(--concrete);margin-top:3px}
 .tb-badge{display:inline-block;margin-top:8px;font-family:var(--f-mono);font-size:10px;letter-spacing:.02em;color:var(--ink);background:rgba(13,19,21,.72);border:1px solid var(--line2);padding:3px 7px;pointer-events:auto}
-body.paper .tb h1,body.paper .tb-s,body.paper .tb-k{color:#2c2a26}
+body.paper .tb h1,body.paper .tb-s,body.paper .tb-k{color:var(--ink)}
 body.paper .tb-badge{background:rgba(236,227,203,.85);color:#2c2a26;border-color:rgba(44,42,38,.3)}
 
 /* toolbar */
@@ -336,7 +336,46 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
   #tour .ib::before{content:attr(data-ico);font-size:17px;line-height:1}
 }
 @media (max-width:360px){ #tour p#tour-p{font-size:12px} #tour .btnrow .btn{font-size:11px} }
-@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+/* Keep cards within their declared width, including padding and borders. */
+#intro,#tour,#card,.mbox,.result-feedback{box-sizing:border-box}
+#intro{max-height:calc(100dvh - 130px);overflow:auto}
+#intro .go{letter-spacing:.03em;text-transform:none;font-size:14px;padding:12px 16px}
+#intro .intro-animation{font-size:12px;padding:6px 0;border:0;text-decoration:underline;text-underline-offset:3px}
+.result-feedback{flex:none;padding:10px 14px;border-bottom:1px solid var(--line2);background:rgba(232,180,90,.07)}
+.result-feedback>span,.result-feedback>strong{display:block}
+#result-title{font-size:11px;color:var(--muted)}
+#result-summary{font-family:var(--f-display);font-size:20px;line-height:1.25;margin:3px 0}
+#result-cause{font-size:12px;color:var(--ink)}
+.result-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.result-actions button{background:none;border:0;padding:6px 0;color:var(--water);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.experience-change{font-weight:600;color:var(--power)!important}
+#exp-context{margin-bottom:8px}
+.ba .h{text-align:right;font-size:9px;letter-spacing:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+button:disabled{cursor:default;opacity:.6}
+@media (max-width:900px){
+  .tools{scrollbar-width:thin;padding-bottom:3px}
+  .tools::after{content:'';flex:0 0 16px}
+  .u{grid-template-columns:44px 44px minmax(55px,1fr) 40px 38px;gap:5px;padding:7px 0}
+  .u .u-st{grid-column:3/-1}
+  .uhead{grid-template-columns:44px 44px minmax(55px,1fr) 40px 38px;gap:5px}
+  .uhead span:last-child{display:none}
+  .u-id{min-height:44px}
+  .sw{width:44px;height:44px}
+  .sw span{inset:14px 7px}
+  .u input[type=range]{height:44px}
+  .x{width:40px;height:40px}
+  #tour .btnrow .btn{min-height:44px}
+  #tour .btnrow .ib{flex:0 0 36px!important}
+  #result-summary{font-size:18px}
+}
+@media (min-width:901px) and (max-width:1180px){
+  .tools{max-width:calc(100% - 210px)}
+  .tb-k{max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #ctrl{top:108px}
+}
+@media (max-height:560px){#intro{max-height:calc(100dvh - 100px)}#tour{max-height:65dvh}}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
 </style>
 
 <div id="app" class="hide-ui">
@@ -359,6 +398,7 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
       <button data-view="flow" aria-pressed="false">Vue débit</button>
       <button data-view="grid" aria-pressed="false">Vue réseau</button>
       <button id="toPaper" aria-pressed="false">Plan</button>
+      <button id="recenter">Recentrer</button>
     </div>
     <div class="tg desk" role="group" aria-label="Panneaux">
       <button id="tgDash" aria-pressed="false">Bilan</button>
@@ -385,6 +425,7 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
       <div class="sec-h">Expérience <span class="chip st-SIMP" id="exp-chip">SIMPLIFIÉ</span></div>
       <h3 id="exp-t"></h3>
       <p id="exp-p"></p>
+      <p id="exp-change" class="experience-change"></p><p id="exp-context" class="note"></p>
       <div class="ba" id="exp-ba"></div>
     </div>
     <div class="sec">
@@ -424,6 +465,10 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
   </aside>
 
   <aside id="ctrl" class="rail" aria-label="Pupitre de l’opérateur">
+    <section id="result-feedback" class="result-feedback" hidden aria-label="Résultat de votre action">
+      <span id="result-title"></span><strong id="result-summary"></strong><span id="result-cause"></span>
+      <div class="result-actions"><button id="result-details" type="button">Voir le bilan</button><button id="restore-preset" type="button" hidden>Rétablir le scénario</button></div>
+    </section>
     <div class="tabs" role="tablist">
       <button role="tab" aria-selected="true" data-tab="pre">Scénarios</button>
       <button role="tab" aria-selected="false" data-tab="cond">Conditions</button>
@@ -442,7 +487,7 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
             <button data-v="normal">Normal<small>40 000</small></button>
             <button data-v="high">Hautes eaux<small>60 000</small></button>
           </div>
-          <p class="note">Normal ≈ débit moyen historique [S01]. Basses et hautes eaux : valeurs illustratives (SIMPLIFIÉ).</p></div>
+          <p class="note">Débits illustratifs autour de la moyenne historique [S01]. Basses eaux : prise à 1 800 m³/s ; normal et hautes eaux : 3 000 m³/s. Cette alimentation est une hypothèse du modèle.</p></div>
         <div class="fld"><div class="fld-h"><span class="lbl2">État du canal</span><output id="o-canal"></output></div>
           <div class="seg" id="seg-canal">
             <button data-v="clear">Dégagé<small>2 200</small></button>
@@ -481,6 +526,7 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
     <div class="fb-foot"><span>m³/s jusqu’aux turbines, MW ensuite · sortie simulée, pas une mesure SNEL</span><span>Relief réel : Copernicus GLO-30 (MNS 30 m) · ouvrages placés de façon approximative</span></div>
   </div></div>
   <div id="caption" role="status" aria-live="polite"></div>
+  <div id="result-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   <section id="tour" hidden aria-label="Visite guidée"><div class="tk"><span id="tour-k"></span><span class="tk2">Visite guidée · reconstruction éducative</span></div><h3 id="tour-h"></h3><p id="tour-p"></p><div class="tbar"><i id="tour-prog"></i></div><p id="tour-note" style="min-height:0;font-size:11px;color:var(--dim);margin:-4px 0 8px"></p>
     <div class="btnrow"><button class="btn ib" id="tPrev" data-ico="‹" aria-label="Étape précédente"><span class="t">Précédent</span></button><button class="btn" id="tPlay">Pause</button><button class="btn" id="tSnd" aria-pressed="true">Son : activé</button><button class="btn ib" id="tNext" data-ico="›" aria-label="Étape suivante"><span class="t">Suivant</span></button><button class="btn pri ib" id="tQuit" data-ico="✕" aria-label="Quitter la visite"><span class="t">Quitter la visite</span></button></div></section>
   <figure id="detailA" class="gone"><figcaption><b>Détail A</b><span>centrales et poste · agrandi</span></figcaption><canvas id="detailC" width="900" height="1000"></canvas></figure>
@@ -495,11 +541,11 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
     <div class="k">Planche 01 · d’après le plan SNEL reproduit par la Banque mondiale (2011)</div>
     <p>Le Congo ne passe pas tout entier dans les turbines. Une dérivation en rive droite conduit une fraction de son débit vers deux centrales qui fonctionnent en parallèle, puis l’eau rejoint le fleuve en aval.</p>
     <div class="acts">
-      <button class="go" id="go">SIMULER INGA</button>
-      <button class="ghost tourgo" id="goTour"><span class="fi" aria-hidden="true"></span>Visite guidée commentée</button>
-      <button class="ghost" id="skip">Entrer directement</button>
+      <button class="ghost tourgo" id="goTour"><span class="fi" aria-hidden="true"></span>Découvrir Inga · visite guidée</button>
+      <button class="go" id="skip">Explorer le simulateur</button>
+      <button class="ghost intro-animation" id="go">Voir l’animation du plan</button>
     </div>
-    <p class="n">En 1959 déjà, les laboratoires ABELINGA construisaient un modèle hydraulique physique du site pour comparer ses écoulements à ceux du fleuve [S07].</p>
+    <p class="n">Visite commentée en 8 étapes, ou exploration libre : choisissez un scénario et observez son effet. Dans la maquette, faites glisser pour tourner et utilisez la molette ou deux doigts pour zoomer.</p>
   </section>
   <button class="btn" id="skipT">Passer l’animation</button>
 
@@ -528,16 +574,16 @@ html.musee #tourBtn.feat{transform:scale(1.08);transform-origin:right top}
           <div>
             <canvas id="cutc" width="1440" height="1040" aria-label="Coupe d’un groupe Francis vertical"></canvas>
             <div class="energy">
-              <div class="h"><b id="c-ph">0 MW</b><small>énergie hydraulique ρ·g·Q·H</small></div><i>→</i>
+              <div class="h"><b id="c-ph">0 MW</b><small>puissance hydraulique ρ·g·Q·H</small></div><i>→</i>
               <div class="mm"><b id="c-rpm">0 tr/min</b><small>rotation mécanique</small></div><i>→</i>
-              <div class="e"><b id="c-pe">0 MW</b><small>énergie électrique</small></div>
+              <div class="e"><b id="c-pe">0 MW</b><small>puissance électrique</small></div>
             </div>
             <p class="note">Coupe générique d’une turbine Francis à axe vertical : nombre d’aubes, profils et dimensions internes non confirmés. Rotation ralentie ×¼ pour la lecture.</p>
           </div>
           <div>
             <div class="ro" id="cut-ro"></div>
             <div class="btnrow">
-              <label class="sw" title="Marche / arrêt"><input type="checkbox" id="c-on"><span></span></label><span style="align-self:center;font-size:12px">Marche</span>
+              <label class="sw" title="Marche / arrêt"><input type="checkbox" id="c-on" aria-label="Marche du groupe sélectionné"><span></span></label><label for="c-on" style="align-self:center;font-size:12px">Marche</label>
               <button class="btn" id="c-fail">Simuler une panne</button>
             </div>
             <div class="fld" style="margin-top:12px"><div class="fld-h"><label for="c-load">Consigne de charge</label><output id="o-cload"></output></div><input type="range" id="c-load" min="0" max="100" step="1"></div>
@@ -729,8 +775,9 @@ let S = clone(BASE);
 let R = simulate(S);
 let selected = null;
 let activePreset = null;
+let experience = null, resultAnnouncement = 0;
 const RT = {}; BASE.units.forEach(u=>RT[u.id]={rpmVis:rpmOf(u,u.plant), phase:Math.random()*6});
-function recompute(){ R = simulate(S); uiDirty = true; if(prevBind && R.bind!==prevBind && mode==='live' && !presetBusy) flashConstraint('Contrainte modifiée'); prevBind=R.bind; }
+function recompute(){ R = simulate(S); uiDirty = true; if(experience && !presetBusy) renderExperience(); if(prevBind && R.bind!==prevBind && mode==='live' && !presetBusy) flashConstraint('Contrainte modifiée'); prevBind=R.bind; }
 let presetBusy=false;
 
 /* =====================================================================
@@ -1532,7 +1579,7 @@ function buildFlowTubes(){
    8. LABELS
    ===================================================================== */
 const LABELS=[];
-function addLabel(text,x,z,elev,opt={}){const el=document.createElement(opt.info?'button':'div');el.className='lbl '+(opt.cls||'');el.textContent=text;if(opt.info){el.type='button';el.addEventListener('click',e=>{e.stopPropagation();openInfo(opt.info);});}
+function addLabel(text,x,z,elev,opt={}){const el=document.createElement(opt.info?'button':'div');el.className='lbl '+(opt.cls||'');el.textContent=text;el.inert=true;el.setAttribute('aria-hidden','true');el.style.pointerEvents='none';if(opt.info){el.type='button';el.addEventListener('click',e=>{e.stopPropagation();openInfo(opt.info);});}
   document.getElementById('labels').appendChild(el);const L={el,pos:new THREE.Vector3(x,opt.abs?elev:V(elev),z),mode:opt.mode||'site',maxD:opt.maxD||30000,minD:opt.minD||0,vis:0,fn:opt.fn};LABELS.push(L);return L;}
 function buildLabels(){
   const LW=(t,pt,dz,opt)=>{const y=(opt&&opt.water)?riverLevel(pt[0],pt[1])+dz:hAt(pt[0],pt[1])+dz; return addLabel(t,pt[0],pt[1],y,opt);};
@@ -1577,9 +1624,9 @@ function updateLabels(dt){
         if(!L.w||L.w<30){ L.w=L.el.offsetWidth||120; L.h=L.el.offsetHeight||20; }
         const r=[sx-L.w/2-8, sy-L.h*1.3-5, sx+L.w/2+8, sy-L.h*0.3+5];
         if(placed.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1])) want=false;
-        else if(TOUR.on && (r[3]>clipB || r[1]<clipT || r[0]<4 || r[2]>w-4)) want=false;
+        else if(r[3]<0 || r[1]>h || r[2]<0 || r[0]>w || (TOUR.on && (r[3]>clipB || r[1]<clipT || r[0]<4 || r[2]>w-4))) want=false;
         else { placed.push(r); L.el.style.transform=`translate(${sx}px,${sy}px) translate(-50%,-130%)`; } }}
-    const o = want?1:0; if(L.vis!==o){L.vis=o;L.el.style.opacity=o;L.el.style.pointerEvents=o?'auto':'none';}
+    const o = want?1:0; if(L.vis!==o){L.vis=o;L.el.style.opacity=o;L.el.style.pointerEvents=o?'auto':'none';setA11yHidden(L.el,!want);}
   });
 }
 
@@ -1678,7 +1725,7 @@ const INFO={
   fwdam:{t:'Barrage de Fwamalo',what:'Ouvrage en remblai entre le système de dérivation et le fleuve.',does:'Il sépare l’eau dérivée du lit du Congo pour maintenir le niveau dans le canal de Fwamalo.',data:[['Nommé et localisé sur le plan SNEL','DOC','S01'],['Hauteur et longueur','UNK','-']],conf:['Volume reconstitué.','SIMP'],src:['S01']},
   pexvii:{t:'PE XVII et déversoir aval',what:'Déversoirs entre le canal de Fwamalo et le fleuve.',does:'Ils évacuent un excès d’eau vers le Congo. Ce simulateur ne modélise pas de déversement interne : l’eau non turbinée reste au fleuve.',data:[['Nommés sur le plan SNEL','DOC','S01']],conf:['Ouvrages représentés sans modèle hydraulique.','SIMP'],src:['S01']},
   shongo:{t:'Barrage de Shongo',what:'Barrage en bout du canal de Fwamalo ; la centrale Inga I y est intégrée (station de Shongo sur le plan).',does:'Il retient l’eau dérivée et alimente les six conduites d’Inga I ; le canal d’amenée d’Inga II part juste en amont.',data:[['Barrage de Shongo et station Inga I sur le plan','DOC','S01']],conf:['Volume reconstitué.','SIMP'],src:['S01']},
-  inga1:{t:'Inga I',what:'Première centrale du site (1972) : six groupes Francis à axe vertical.',does:'Elle transforme l’énergie de l’eau du canal en électricité, en parallèle avec Inga II.',data:[['351 MW, mise en service 1972','DOC','S02'],['6 × 55 MW nominal = 330 MW','DOC','S03'],['6 × 58,5 MW maximum de référence','DOC','S01'],['Chute brute 50 m ; nette 48 m dans le modèle','DOC','S03'],['140 m³/s par groupe ; 136 tr/min','DOC','S03'],['Conduites Ø 5,5 m, 60 m ; centrale 150 × 25 m','DOC','S03']],conf:['Positions G11-G16 dans la maquette non vérifiées.','SIMP'],src:['S02','S03','S01','S09']},
+  inga1:{t:'Inga I',what:'Première centrale du site (1972) : six groupes Francis à axe vertical.',does:'Elle transforme l’énergie de l’eau du canal en électricité, en parallèle avec Inga II.',data:[['351 MW, mise en service 1972','DOC','S02'],['6 × 55 MW nominal = 330 MW','DOC','S03'],['6 × 58,5 MW maximum de référence','DOC','S01'],['Chute brute 50 m','DOC','S03'],['Chute nette 48 m retenue dans le modèle','SIMP','hypothèse'],['140 m³/s par groupe ; 136 tr/min','DOC','S03'],['Conduites Ø 5,5 m, 60 m ; centrale 150 × 25 m','DOC','S03']],conf:['Positions G11-G16 dans la maquette non vérifiées.','SIMP'],src:['S02','S03','S01','S09']},
   inga2:{t:'Inga II',what:'Seconde centrale (1982) : huit groupes Francis, grand bâtiment bas au bord du fleuve.',does:'Alimentée par son canal d’amenée et ses conduites inclinées, elle produit l’essentiel de la puissance du site.',data:[['1 424 MW, mise en service 1982','DOC','S02'],['8 × 162 MW nominal historique = 1 296 MW','DOC','S09'],['8 × 178 MW maximum de référence','DOC','S01'],['Chute 56,20 m (1982), utilisée comme chute nette','SIMP','S08'],['107,1 tr/min (groupe 5, 2024) étendu aux 8 groupes','EST','S11'],['Conduites G27 / G28 Ø 8 m','DOC','S05'],['Débit maximal par groupe : 360 m³/s','SIMP','p. 5']],conf:['Proportions lues sur photos aériennes.','SIMP'],src:['S02','S09','S01','S04','S08','S11','S05']},
   switchyard:{t:'Poste électrique d’Inga',what:'Poste à haute tension entre les centrales et le fleuve.',does:'Il élève et répartit la puissance des deux centrales vers les lignes de transport.',data:[['Visible entre les centrales et le fleuve sur la vue aérienne','DOC','S06']],conf:['Géométrie reconstituée par lecture visuelle.','SIMP'],src:['S06']},
   hvdc:{t:'Liaison CC Inga-Kolwezi',what:'Station de conversion d’Inga, sur le plateau à l’ouest d’Inga II, et liaison à courant continu d’environ 1 700 km.',does:'Elle transporte une partie de la puissance sur une très longue distance en courant continu.',data:[['Station de conversion et liaison 500 kV CC','DOC','S01'],['±500 kV, ≈ 1 700 km ; stations Selo, Kikwit, Kananga, Kamina, Kolwezi','EST','S16'],['Position de la station d’Inga (5°31′27″ S, 13°36′39″ E)','EST','S16'],['Tracé exact des pylônes','UNK','-']],conf:['Direction générale vers Selo ; tracé détaillé non représenté.','SIMP'],src:['S01','S16']},
@@ -1699,28 +1746,61 @@ function closeInfo(){ $('#card').hidden=true; }
 
 // presets
 const PRESETS=[
-  {id:'normal',name:'Fonctionnement normal',sub:'Référence pédagogique p. 18',cam:'overview',apply:s=>Object.assign(s,clone(BASE)),text:'Configuration pédagogique du dossier : tous les groupes disponibles, canal 2 200 m³/s, demande reçue 1 500 MW, pertes 5 %. Ce n’est pas l’état réel du jour.'},
+  {id:'normal',name:'Configuration de référence',sub:'Point de départ du modèle',cam:'overview',apply:s=>Object.assign(s,clone(BASE)),text:'Configuration pédagogique de référence : tous les groupes disponibles, canal 2 200 m³/s, demande reçue 1 500 MW, pertes 5 %. Ce n’est pas l’état réel du jour.'},
   {id:'low',name:'Basses eaux',sub:'Débit et alimentation réduits',cam:'river',apply:s=>{Object.assign(s,clone(BASE));s.river=20000;s.riverCond='low';s.supply=1800;},text:'Hypothèse illustrative : Congo à 20 000 m³/s et alimentation de la prise réduite à 1 800 m³/s. Aucune courbe niveau-débit n’est fournie : cette réduction est supposée. Le fleuve reste énorme, mais la prise en reçoit moins.'},
   {id:'sed',name:'Sédimentation du canal',sub:'Capacité 1 600 m³/s',cam:'canal',apply:s=>{Object.assign(s,clone(BASE));s.canal=1600;s.canalCond='sed';},text:'Le Congo transporte toujours un débit énorme, mais la production peut être limitée par la capacité du système de dérivation et des ouvrages de production. Capacité ensablée de 1 600 m³/s : hypothèse.'},
-  {id:'one',name:'Panne d’un groupe',sub:'G24 indisponible',cam:'inga2',apply:s=>{Object.assign(s,clone(BASE));s.units.find(u=>u.id==='G24').failed=true;},text:'G24 perd son débit et sa puissance. Comme l’eau du canal est la contrainte, les autres groupes reprennent presque tout ce débit : la production totale baisse peu.'},
-  {id:'multi',name:'Pannes multiples',sub:'7 groupes indisponibles',cam:'plants',apply:s=>{Object.assign(s,clone(BASE));['G21','G22','G25','G26','G27','G12','G15'].forEach(id=>s.units.find(u=>u.id===id).failed=true);},text:'Avec sept groupes en panne, la capacité restante devient inférieure à ce que le canal peut fournir. La contrainte passe de l’eau aux groupes disponibles et la production chute.'},
-  {id:'demand',name:'Forte demande à Kinshasa',sub:'Demande reçue 2 000 MW',cam:'grid',apply:s=>{Object.assign(s,clone(BASE));s.demand=2000;},text:'La demande reçue monte à 2 000 MW. Le modèle ne crée pas de puissance : une fois l’eau et les groupes au maximum, le déficit apparaît.'},
+  {id:'one',name:'Panne d’un groupe',sub:'G24 indisponible',cam:'inga2',apply:s=>{Object.assign(s,clone(BASE));s.units.find(u=>u.id==='G24').failed=true;},text:'G24 est indisponible. Les autres groupes reçoivent l’eau disponible, dans la limite de leur capacité. L’effet sur la production dépend de la situation comparée.'},
+  {id:'multi',name:'Pannes multiples',sub:'7 groupes indisponibles',cam:'plants',apply:s=>{Object.assign(s,clone(BASE));['G21','G22','G25','G26','G27','G12','G15'].forEach(id=>s.units.find(u=>u.id===id).failed=true);},text:'Sept groupes sont indisponibles. Leur capacité restante limite la production avant la capacité du canal.'},
+  {id:'demand',name:'Forte demande sur le réseau',sub:'Demande reçue 2 000 MW',cam:'grid',apply:s=>{Object.assign(s,clone(BASE));s.demand=2000;},text:'La demande reçue monte à 2 000 MW. Le modèle ne crée pas de puissance : une fois l’eau et les groupes au maximum, le déficit apparaît.'},
   {id:'full',name:'Production maximale disponible',sub:'Sous les contraintes actives',cam:'overview',apply:s=>{s.units.forEach(u=>{u.on=true;u.failed=false;u.load=1;u.starting=0;});s.demand=2000;s.exportLim=2000;s.gate=1;},text:'Tous les groupes à pleine consigne, demande et transport au maximum, en gardant l’état actuel du fleuve et du canal. Les 1 775 MW ne sont pas atteignables avec un canal limité à 3 000 m³/s.'},
   {id:'rehab',name:'Canal réhabilité',sub:'Objectif 3 000 m³/s (2011)',cam:'canal',apply:s=>{Object.assign(s,clone(BASE));s.canal=3000;s.canalCond='rehab';},text:'Usage illustratif de l’objectif historique de 3 000 m³/s décrit en 2011 [S01]. Cela ne prouve pas l’état actuel du canal.'},
   {id:'grid',name:'Transport limité',sub:'Export 900 MW',cam:'grid',apply:s=>{Object.assign(s,clone(BASE));s.exportLim=900;},text:'Capacité d’export limitée à 900 MW : les groupes sont réduits par le réseau et l’eau non turbinée reste dans le fleuve.'}
 ];
-function applyPreset(id,{fly=true}={}){
-  const p=PRESETS.find(x=>x.id===id); if(!p) return; const camKey = p.cam==='overview' ? null : p.cam;
-  const before=R; p.apply(S); S.units.forEach(u=>u.starting=0); presetBusy=true; recompute(); presetBusy=false; activePreset=id; flashConstraint(p.name);
-  document.querySelectorAll('.pre').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.p===id)));
-  $('#exp').classList.add('on'); $('#exp-t').textContent=p.name; $('#exp-p').textContent=p.text;
+function comparisonName(){
+  if(activePreset) return PRESETS.find(p=>p.id===activePreset).name;
+  return experience ? 'Configuration personnalisée' : 'Configuration de référence';
+}
+function renderExperience(){
+  if(!experience) return;
+  const {before,beforeName,title,text,origin}=experience;
+  const delta=R.Pgen-before.Pgen, amount=fMW(Math.abs(delta));
+  const change=Math.abs(delta)<0.5 ? 'Production inchangée' : `Production en ${delta>0?'hausse':'baisse'} de ${amount}`;
+  const summary=`${change} par rapport à l’état précédent.`;
+  $('#exp').classList.add('on'); $('#exp-t').textContent=title; $('#exp-p').textContent=text;
+  $('#exp-change').textContent=summary;
+  $('#exp-context').textContent=`État précédent : ${beforeName}. État actuel : ${title}.`;
   const row=(k,a,b)=>`<span>${k}</span><span class="v before">${a}</span><span class="v after">${b}</span>`;
-  $('#exp-ba').innerHTML=`<span class="h"></span><span class="h" style="text-align:right">Avant</span><span class="h" style="text-align:right">Après</span>`+
-    row('Produit',fMW(before.Pgen),fMW(R.Pgen))+row('Livré',fMW(before.Prec),fMW(R.Prec))+row('Débit dérivé',nf.format(Math.round(before.Qdiv))+' m³/s',nf.format(Math.round(R.Qdiv))+' m³/s')+row('Non servi',fMW(before.unserved),fMW(R.unserved));
-  syncControls();
+  $('#exp-ba').innerHTML=`<span class="h"></span><span class="h">État précédent</span><span class="h">État actuel</span>`+
+    row('Produit',fMW(before.Pgen),fMW(R.Pgen))+row('Livré',fMW(before.Prec),fMW(R.Prec))+
+    row('Débit dérivé',nf.format(Math.round(before.Qdiv))+' m³/s',nf.format(Math.round(R.Qdiv))+' m³/s')+
+    row('Non servi',fMW(before.unserved),fMW(R.unserved));
+  $('#result-feedback').hidden=false; $('#result-title').textContent=title;
+  $('#result-summary').textContent=`${fMW(R.Pgen)} produits · ${Math.abs(delta)<0.5?'sans variation':(delta>0?'+':'−')+amount}`;
+  $('#result-cause').textContent=`Limite : ${BIND_SHORT[R.bind]||'aucune'}.`;
+  $('#restore-preset').hidden=!origin || !!activePreset;
+  clearTimeout(resultAnnouncement);
+  resultAnnouncement=setTimeout(()=>{ $('#result-announcement').textContent=`${title}. ${summary} ${BIND_TXT[R.bind]||''}`; },400);
+}
+function editSimulation(change){
+  const before=R, beforeName=comparisonName(), origin=activePreset || (experience&&experience.origin);
+  change(); activePreset=null;
+  experience={before,beforeName,origin,title:'Configuration personnalisée',text:origin?`Réglages modifiés à partir de « ${PRESETS.find(p=>p.id===origin).name} ».`:'Vos réglages sont comparés à leur état précédent.'};
+  document.querySelectorAll('.pre').forEach(b=>b.setAttribute('aria-pressed','false'));
+  recompute(); syncControls();
+}
+function showResults(){
+  if(innerWidth<=900) setMob('dash'); else {PANELS.dash=true;applyPanels();}
+  $('#dash').scrollTop=0;
+}
+function applyPreset(id,{fly=true}={}){
+  const p=PRESETS.find(x=>x.id===id); if(!p) return; const camKey=p.cam==='overview'?null:p.cam;
   if(TOUR.on) endTour();
-  if(fly && mode==='live' && webgl){ if(p.cam==='grid'){setView('grid');} else { if(view==='grid') setView('site',false); flyTo(camKey?VIEWS[camKey]:ov(),1.8); } }
-  if(window.innerWidth<=900) setMob('dash');
+  const before=R, beforeName=comparisonName();
+  p.apply(S); S.units.forEach(u=>u.starting=0); presetBusy=true; recompute(); presetBusy=false; activePreset=id;
+  experience={before,beforeName,title:p.name,text:p.text,origin:id}; renderExperience(); flashConstraint(p.name);
+  document.querySelectorAll('.pre').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.p===id)));
+  syncControls();
+  if(fly && mode==='live' && webgl){ if(p.cam==='grid') setView('grid'); else { if(view==='grid') setView('site',false); flyTo(camKey?VIEWS[camKey]:ov(),1.8); } }
 }
 
 function buildUI(){
@@ -1732,16 +1812,16 @@ function buildUI(){
   $('#unitlist').innerHTML=html;
   BASE.units.forEach(({id})=>{
     $('#on-'+id).onchange=e=>setUnitOn(id,e.target.checked);
-    $('#ld-'+id).oninput=e=>{unitById(id).load=e.target.value/100;recompute();};
+    $('#ld-'+id).oninput=e=>editSimulation(()=>{unitById(id).load=e.target.value/100;});
     $('[data-cut="'+id+'"]').onclick=()=>selectUnit(id,true);
   });
-  $('#allOn').onclick=()=>{S.units.forEach(u=>{if(!u.on&&!u.failed){u.on=true;u.starting=reduced?0:2.5;}});recompute();syncControls();};
-  $('#allOff').onclick=()=>{S.units.forEach(u=>{u.on=false;u.starting=0;});recompute();syncControls();};
-  $('#allRepair').onclick=()=>{S.units.forEach(u=>u.failed=false);recompute();syncControls();};
+  $('#allOn').onclick=()=>editSimulation(()=>S.units.forEach(u=>{if(!u.on&&!u.failed){u.on=true;u.starting=reduced?0:2.5;}}));
+  $('#allOff').onclick=()=>editSimulation(()=>S.units.forEach(u=>{u.on=false;u.starting=0;}));
+  $('#allRepair').onclick=()=>editSimulation(()=>S.units.forEach(u=>u.failed=false));
   // tabs
-  document.querySelectorAll('.tabs [data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs [data-tab]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.tab));});
+  document.querySelectorAll('.tabs [data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs [data-tab]').forEach(x=>x.setAttribute('aria-selected',String(x===b)));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.tab));syncTablist($('.tabs'));});
   // segmented
-  segBind('#seg-river',v=>{S.river=RIVER_COND[v];S.riverCond=v;});
+  segBind('#seg-river',v=>{S.river=RIVER_COND[v];S.riverCond=v;S.supply=v==='low'?1800:3000;});
   segBind('#seg-canal',v=>{S.canal=CANAL_COND[v];S.canalCond=v;});
   segBind('#seg-mode',v=>{S.ratingMode=v;});
   rangeBind('#r-gate',v=>S.gate=v/100); rangeBind('#r-dem',v=>S.demand=+v); rangeBind('#r-exp',v=>S.exportLim=+v);
@@ -1757,13 +1837,14 @@ function buildUI(){
   window.addEventListener('resize',applyPanels);
   try{ document.fonts&&document.fonts.ready.then(()=>{ try{ LABELS.forEach(L=>{L.w=0;}); }catch(e){} }); }catch(e){}
   $('#resetAll').onclick=resetAll;
+  $('#result-details').onclick=showResults;
+  $('#restore-preset').onclick=()=>{if(experience&&experience.origin)applyPreset(experience.origin);};
+  $('#recenter').onclick=()=>{if(webgl&&mode==='live'){setView('site',false);flyTo(ov(),1.2);}};
   $('#openReg').onclick=()=>{ if(TOUR.on) endTour(); openReg('params'); };
   $('#tourBtn').onclick=()=>{ TOUR.on?endTour():startTour(); };
   $('#tPrev').onclick=()=>tourStop(TOUR.i-1); $('#tNext').onclick=()=>{ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(); };
-  $('#tPlay').onclick=()=>{ TOUR.playing=!TOUR.playing; $('#tPlay').textContent=TOUR.playing?'Pause':'Reprendre';
-    try{ if(TOUR.playing){ if(!narrResume()){ if(NARR.audio) NARR.audio.play(); else if(window.speechSynthesis) speechSynthesis.resume(); } }
-      else { if(!narrPause()){ if(NARR.audio) NARR.audio.pause(); else if(window.speechSynthesis) speechSynthesis.pause(); } } }catch(e){} };
-  $('#tSnd').onclick=()=>{ NARR.on=!NARR.on; $('#tSnd').textContent=NARR.on?'Son : activé':'Son : coupé'; $('#tSnd').setAttribute('aria-pressed',String(NARR.on)); if(NARR.on){ ambStart(); ambLevel(AMB_BED,1); narrate(TOUR.i); } else { narrStop(); ambLevel(0,0.4); } }; $('#tQuit').onclick=endTour;
+  $('#tPlay').onclick=()=>{ TOUR.playing=!TOUR.playing; $('#tPlay').textContent=TOUR.playing?'Pause':'Reprendre'; if(TOUR.playing) narrResume(); else narrPause(); };
+  $('#tSnd').onclick=()=>{ NARR.on=!NARR.on; $('#tSnd').textContent=NARR.on?'Son : activé':'Son : coupé'; $('#tSnd').setAttribute('aria-pressed',String(NARR.on)); if(NARR.on){ ambStart(); ambLevel(AMB_BED,1); narrate(TOUR.i); } else { narrStop(); ambLevel(0,0.4); $('#tour-note').textContent='Texte affiché · narration désactivée'; } }; $('#tQuit').onclick=endTour;
   $('#go').onclick=startTransition; $('#skip').onclick=()=>{startTransition();T=TT;};
   $('#goTour').onclick=()=>{ TOUR.pending=true; if(NARR.on){ ambStart(); } startTransition(); T=TT; };
   $('#skipT').onclick=()=>{ T = dir>0 ? TT : 0; };
@@ -1772,19 +1853,107 @@ function buildUI(){
   document.querySelectorAll('.tabbar [data-mob]').forEach(b=>b.onclick=()=>setMob(b.dataset.mob));
   // cutaway controls
   $('#c-on').onchange=e=>{ if(selected) setUnitOn(selected,e.target.checked); };
-  $('#c-load').oninput=e=>{ if(selected){unitById(selected).load=e.target.value/100; recompute(); $('#ld-'+selected).value=e.target.value;} };
-  $('#c-fail').onclick=()=>{ if(!selected) return; const u=unitById(selected); u.failed=!u.failed; if(u.failed){u.starting=0;} recompute(); syncControls(); };
+  $('#c-load').oninput=e=>{if(selected) editSimulation(()=>{unitById(selected).load=e.target.value/100;});};
+  $('#c-fail').onclick=()=>{if(selected) editSimulation(()=>{const u=unitById(selected);u.failed=!u.failed;if(u.failed)u.starting=0;});};
   window.addEventListener('keydown',e=>{
     if(e.key==='Escape'){ if(TOUR.on && $('#cut').hidden){ endTour(); return; } if(!$('#cut').hidden) closeCut(); else if(!$('#reg').hidden) $('#reg').hidden=true; else closeInfo(); }
-    if(mode!=='live'||e.target.tagName==='INPUT') return;
+    if(mode!=='live'||activeModal()||e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable]')) return;
     if(e.key==='1') setView('site'); if(e.key==='2') setView('flow'); if(e.key==='3') setView('grid');
   });
   syncControls();
+  setupAccessibility();
 }
-function segBind(sel,fn){document.querySelectorAll(sel+' button').forEach(b=>b.onclick=()=>{fn(b.dataset.v);recompute();syncControls();});}
-function rangeBind(sel,fn){$(sel).addEventListener('input',e=>{fn(e.target.value);recompute();syncControls(sel);});}
+// Keep the keyboard and accessibility tree aligned with the animated interface.
+const A11Y={modal:null,restore:null};
+function setA11yHidden(el,hidden){
+  if(el.inert!==hidden) el.inert=hidden;
+  if(hidden){ if(el.getAttribute('aria-hidden')!=='true') el.setAttribute('aria-hidden','true'); }
+  else if(el.hasAttribute('aria-hidden')) el.removeAttribute('aria-hidden');
+}
+function activeModal(){ return [...document.querySelectorAll('.modal')].reverse().find(el=>!el.hidden)||null; }
+function a11yFocusable(root){
+  return [...root.querySelectorAll('a[href],button,input,select,textarea,[tabindex]')].filter(el=>
+    !el.disabled && el.tabIndex>=0 && !el.closest('[inert],[hidden]') && el.getClientRects().length && getComputedStyle(el).visibility!=='hidden');
+}
+function focusModal(modal){
+  const box=modal.querySelector('[role="dialog"]'); box.tabIndex=-1;
+  (a11yFocusable(modal)[0]||box).focus({preventScroll:true});
+}
+function focusAvailable(){
+  const preferred=!$('#tour').hidden ? $('#tPlay') : !$('#intro').classList.contains('gone') ? $('#goTour') : $('#skipT').classList.contains('on') ? $('#skipT') : $('#tourBtn');
+  const targets=a11yFocusable($('#app'));
+  const target=targets.includes(preferred)?preferred:targets[0];
+  if(target) target.focus({preventScroll:true});
+}
+function syncAccessibility(){
+  const app=$('#app'), modal=activeModal(), previous=A11Y.modal, focused=document.activeElement;
+  const hiddenUI=app.classList.contains('hide-ui'), touring=document.body.classList.contains('touring');
+  if(modal && modal!==previous && !previous) A11Y.restore=focused;
+  A11Y.modal=modal;
+  [...app.children].forEach(el=>{
+    let hidden=el.hidden || el.classList.contains('gone') || el.classList.contains('closed') || getComputedStyle(el).display==='none';
+    if(hiddenUI && el.matches('.tools,.rail,.tabbar,.foot,#flowbar,.scrim,#labels')) hidden=true;
+    if(touring && el.matches('.rail,#flowbar,#caption,.tabbar')) hidden=true;
+    if(touring && innerWidth<=900 && el.matches('.tools')) hidden=true;
+    if(modal && el!==modal) hidden=true;
+    setA11yHidden(el,hidden);
+  });
+  if(modal && modal!==previous) focusModal(modal);
+  else if(previous && !modal){
+    const target=A11Y.restore; A11Y.restore=null;
+    if(target && target!==document.body && target.isConnected && !target.closest('[inert],[hidden]') && target.getClientRects().length) target.focus({preventScroll:true});
+    else focusAvailable();
+  } else if(focused!==document.body && focused.closest('[inert],[hidden]')) focusAvailable();
+}
+function syncTablist(list){
+  const isRegistry=list.classList.contains('rtabs');
+  [...list.querySelectorAll('[role="tab"]')].forEach(tab=>{
+    const key=isRegistry?tab.dataset.rt:tab.dataset.tab, selected=tab.getAttribute('aria-selected')==='true';
+    tab.id=(isRegistry?'reg-tab-':'ctrl-tab-')+key;
+    tab.tabIndex=selected?0:-1;
+    const panel=isRegistry?$('#reg-body'):$('#p-'+key);
+    tab.setAttribute('aria-controls',panel.id);
+    panel.setAttribute('role','tabpanel'); panel.tabIndex=0;
+    if(!isRegistry || selected) panel.setAttribute('aria-labelledby',tab.id);
+  });
+}
+function setupAccessibility(){
+  [$('.tabs'),$('.rtabs')].forEach(list=>{
+    list.setAttribute('aria-label',list.classList.contains('rtabs')?'Rubriques du registre':'Réglages de la simulation');
+    syncTablist(list);
+    list.addEventListener('keydown',e=>{
+      const tabs=[...list.querySelectorAll('[role="tab"]')], at=tabs.indexOf(e.target);
+      if(at<0 || !['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
+      e.preventDefault();
+      const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(at+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+      tabs[next].click(); tabs[next].focus({preventScroll:true});
+    });
+  });
+  const observer=new MutationObserver(syncAccessibility);
+  [document.body,$('#app'),...document.querySelectorAll('#app > *')].forEach(el=>observer.observe(el,{attributes:true,attributeFilter:['class','hidden']}));
+  window.addEventListener('resize',syncAccessibility);
+  document.addEventListener('focusin',e=>{ if(A11Y.modal && !A11Y.modal.contains(e.target)) focusModal(A11Y.modal); });
+  document.addEventListener('keydown',e=>{
+    const modal=activeModal(); if(!modal) return;
+    if(e.key==='Escape'){
+      e.preventDefault(); e.stopImmediatePropagation();
+      if(modal.id==='cut') closeCut(); else modal.hidden=true;
+      syncAccessibility(); return;
+    }
+    if(e.key==='Tab'){
+      const items=a11yFocusable(modal), first=items[0], last=items[items.length-1];
+      if(!items.length){e.preventDefault();focusModal(modal);}
+      else if(e.shiftKey && (document.activeElement===first || !items.includes(document.activeElement))){e.preventDefault();last.focus();}
+      else if(!e.shiftKey && (document.activeElement===last || !items.includes(document.activeElement))){e.preventDefault();first.focus();}
+    }
+  },true);
+  syncAccessibility();
+}
+
+function segBind(sel,fn){document.querySelectorAll(sel+' button').forEach(b=>b.onclick=()=>editSimulation(()=>fn(b.dataset.v)));}
+function rangeBind(sel,fn){$(sel).addEventListener('input',e=>editSimulation(()=>fn(e.target.value)));}
 function unitById(id){return S.units.find(u=>u.id===id);}
-function setUnitOn(id,on){const u=unitById(id); if(u.failed){syncControls();return;} if(on&&!u.on){u.on=true;u.starting=reduced?0:2.5;} else if(!on){u.on=false;u.starting=0;} recompute(); syncControls();}
+function setUnitOn(id,on){const u=unitById(id);if(u.failed){syncControls();return;}editSimulation(()=>{if(on&&!u.on){u.on=true;u.starting=reduced?0:2.5;}else if(!on){u.on=false;u.starting=0;}});}
 function setMob(which){document.querySelectorAll('.tabbar [data-mob]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mob===which)));$('#dash').classList.toggle('mob',which==='dash');$('#ctrl').classList.toggle('mob',which==='ctrl');}
 function syncControls(except){
   const setSeg=(sel,v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));
@@ -1798,7 +1967,7 @@ function syncControls(except){
   $('#o-hloss').textContent=nf1.format(S.loss*100)+' %'; $('#o-heta').textContent=S.eta.toFixed(2).replace('.',','); $('#o-hshare').textContent=Math.round(S.share*100)+' %';
   $('#o-mode').textContent=S.ratingMode==='max'?'max. réf.':'nominal';
   S.units.forEach(u=>{ $('#on-'+u.id).checked=u.on&&!u.failed; $('#on-'+u.id).disabled=u.failed; if(document.activeElement!==$('#ld-'+u.id)) $('#ld-'+u.id).value=Math.round(u.load*100); });
-  if(selected){ const u=unitById(selected); $('#c-on').checked=u.on&&!u.failed; $('#c-on').disabled=u.failed; $('#c-load').value=Math.round(u.load*100); $('#o-cload').textContent=Math.round(u.load*100)+' %'; $('#c-fail').textContent=u.failed?'Réparer le groupe':'Simuler une panne'; }
+  if(selected){ const u=unitById(selected); $('#c-on').checked=u.on&&!u.failed; $('#c-on').disabled=u.failed; $('#c-on').setAttribute('aria-label','Marche du groupe '+u.id); $('#c-load').value=Math.round(u.load*100); $('#o-cload').textContent=Math.round(u.load*100)+' %'; $('#c-fail').textContent=u.failed?'Réparer le groupe':'Simuler une panne'; }
   uiDirty=true;
 }
 function renderDash(){ if(T3&&T3.fl){ [T3.fl.river,T3.fl.canal,T3.fl.i1,T3.fl.i2,T3.gl&&T3.gl.kin,T3.gl&&T3.gl.kol].forEach(L=>{ if(L) L.w=0; }); }
@@ -1899,7 +2068,7 @@ const A=(pt,y,oa,ob)=>{const t=[pt[0],y,pt[1]]; return {a:{p:[t[0]+oa[0],t[1]+oa
 const TOUR_STOPS=[
   {k:'Le fleuve',h:'Le fleuve Congo à Inga',p:'En moyenne, environ 40 000 m³/s passent ici [S01]. Sur l’ensemble des rapides, le fleuve descend d’environ 97 m [S02]. Ce dénivelé naturel n’est pas la chute des turbines.',v:'site',dur:9,...A(UTM(343300,9398600),70,[-1800,1500,2600],[1400,1300,2300])},
   {k:'La dérivation',h:'La prise d’eau en rive droite',p:'Une prise admet une petite partie du Congo dans un système d’amenée d’environ 8,5 km [S01]. Le reste du fleuve continue par les rapides.',v:'site',dur:8,...A(SW.intake,140,[-700,620,900],[-350,520,700])},
-  {k:'Le canal',h:'Le canal amont et Fwamalo',p:'Le plan SNEL indique 2 200 m³/s dans le canal amont ; l’objectif de réhabilitation décrit en 2011 était d’environ 3 000 m³/s [S01]. C’est moins de 6 % du débit moyen du fleuve.',v:'flow',dur:10,...A(SW.canal[5],130,[-2200,1900,2900],[2600,2000,2600])},
+  {k:'Le canal',h:'Le canal amont et Fwamalo',p:'Le plan SNEL indique 2 200 m³/s dans le canal amont ; l’objectif de réhabilitation décrit en 2011 était d’environ 3 000 m³/s [S01]. Les 2 200 m³/s représentent environ 5,5 % du débit moyen du fleuve.',v:'flow',dur:10,...A(SW.canal[5],130,[-2200,1900,2900],[2600,2000,2600])},
   {k:'Inga I',h:'Inga I, au barrage de Shongo',p:'Le barrage de Shongo ferme le canal de Fwamalo ; Inga I y est intégrée. Six groupes Francis à axe vertical, 351 MW au maximum de référence, chute brute 50 m [S01] [S03]. Son canal de fuite longe le fleuve.',v:'site',dur:9,...A(CL.I.newO,90,[700,380,700],[520,320,560])},
   {k:'Inga II',h:'Inga II et ses conduites forcées',p:'Juste en amont de Shongo, un canal d’amenée franchi par de petits ponts descend jusqu’au bassin d’Inga II [S01]. Huit conduites forcées courtes plongent vers la centrale, posée au bord du fleuve : huit groupes de 178 MW au maximum de référence [S04].',v:'site',dur:9,...A(CL.II.newO,80,[650,330,620],[480,280,520])},
   {k:'Dans un groupe',h:'De l’eau à l’électricité',p:'L’eau entre par la bâche spirale, traverse le distributeur et fait tourner la roue Francis à vitesse synchrone. L’arbre entraîne l’alternateur ; l’eau repart par l’aspirateur vers le fleuve.',v:'site',dur:12,cut:'G24',...A(UNIT_POS.G24?[UNIT_POS.G24.x,UNIT_POS.G24.z]:CL.II.newO,75,[220,110,170],[210,105,160])},
@@ -1917,7 +2086,7 @@ const TOUR_SPOKEN=[
  "Depuis Inga, deux couloirs partent vers le nord-est. Les lignes à courant alternatif alimentent Kinshasa. La liaison à courant continu de plus ou moins cinq cents kilovolts passe d'abord par Selo, près de Kinshasa, puis file vers l'est jusqu'à Kolwezi, au Katanga, à environ mille sept cents kilomètres."
 ];
 // Narration: recorded clips (voix/stopN.mp3, ElevenLabs) when published with the page, otherwise the browser's French voice.
-const NARR={on:true,busy:false,audio:null,clipsOK:null,voice:null};
+const NARR={on:true,busy:false,audio:null,clipsOK:null,voice:null,generation:0,pending:null,resume:null,speechTimer:null,utterance:null};
 function pickVoice(){ try{ const vs=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)); NARR.voice = vs.find(v=>/natural|online|neural/i.test(v.name)) || vs.find(v=>/fr-FR/i.test(v.lang)) || vs[0] || null; }catch(e){} }
 try{ if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; } }catch(e){}
 // Soft river ambience under the tour (generated noise, no file): ducked while the narrator speaks.
@@ -1948,38 +2117,78 @@ function loadClip(i){ if(i<0||i>=TOUR_SPOKEN.length) return Promise.reject(); if
 function nbStopSrc(){ const s=NB.src; NB.src=null; if(s){ try{ s.onended=null; s.stop(); }catch(e){} } }
 function nbPlay(buf,off,onEnd){ const c=narrCtx(); nbStopSrc(); const s=c.createBufferSource(); s.buffer=buf; s.connect(NB.gain);
   s.onended=()=>{ if(NB.src===s){ NB.src=null; onEnd&&onEnd(); } }; NB.src=s; NB.cur={buf,onEnd}; NB.startAt=c.currentTime-off; NB.paused=false; s.start(0,off); }
-function narrPause(){ if(NB.src&&AMB.ctx){ NB.off=Math.max(0,AMB.ctx.currentTime-NB.startAt); NB.paused=true; nbStopSrc(); return true; } return false; }
-function narrResume(){ if(NB.paused&&NB.cur){ const c=narrCtx(); if(c&&c.state==='suspended') c.resume(); nbPlay(NB.cur.buf,NB.off,NB.cur.onEnd); return true; } return false; }
-function narrStop(){ NARR.busy=false; nbStopSrc(); NB.paused=false; NB.cur=null; try{ if(NARR.audio){ NARR.audio.pause(); NARR.audio=null; } }catch(e){} try{ window.speechSynthesis&&speechSynthesis.cancel(); }catch(e){} }
+function narrPause(){
+  clearTimeout(NARR.speechTimer);
+  if(NB.src&&AMB.ctx){ NB.off=Math.max(0,AMB.ctx.currentTime-NB.startAt); NB.paused=true; nbStopSrc(); }
+  try{ if(NARR.audio) NARR.audio.pause(); if(window.speechSynthesis) speechSynthesis.pause(); }catch(e){}
+}
+function narrResume(){
+  if(!TOUR.on||!TOUR.playing||!NARR.on) return;
+  if(NARR.pending){ const start=NARR.pending; NARR.pending=null; if(NARR.utterance&&NARR.resume) NARR.resume(); start(); return; }
+  if(NB.paused&&NB.cur){ const c=narrCtx(); if(c&&c.state==='suspended') c.resume().catch(()=>{}); nbPlay(NB.cur.buf,NB.off,NB.cur.onEnd); return; }
+  if(NARR.resume) NARR.resume();
+}
+function narrStop(){
+  // Invalidate every fetch, decode, playback promise and speech callback, even if the next tour opens the same stop.
+  NARR.generation++; NARR.busy=false; NARR.pending=null; NARR.resume=null; clearTimeout(NARR.speechTimer);
+  nbStopSrc(); NB.paused=false; NB.cur=null; NB.off=0;
+  const a=NARR.audio; NARR.audio=null;
+  try{ if(a){ a.onended=a.onplaying=a.onerror=null; a.pause(); a.removeAttribute('src'); a.load(); } }catch(e){}
+  if(NARR.utterance){ NARR.utterance.onstart=NARR.utterance.onend=NARR.utterance.onerror=null; NARR.utterance=null; }
+  try{ window.speechSynthesis&&speechSynthesis.cancel(); }catch(e){}
+}
 function narrate(i){
-  narrStop(); if(!NARR.on) return; NARR.busy=true; const myI=i;
-  const done=()=>{ if(TOUR.i===myI){ NARR.busy=false; if(NARR.on&&TOUR.on) ambLevel(AMB_BED,1.2); } };
-  const note=t=>{ const n=document.getElementById('tour-note'); if(n) n.textContent=t; };
-  const speak=()=>{ try{
-      if(!window.speechSynthesis){ NARR.busy=false; note('Narration audio indisponible dans ce navigateur : texte affiché seulement.'); return; }
+  narrStop(); if(!NARR.on||!TOUR.on) return; NARR.busy=true;
+  const generation=NARR.generation;
+  const active=()=>NARR.generation===generation&&TOUR.on&&TOUR.i===i&&NARR.on;
+  const note=t=>{ if(!active()) return; const n=document.getElementById('tour-note'); if(n) n.textContent=t; };
+  const done=()=>{ if(!active()) return; NARR.busy=false; NARR.pending=null; NARR.resume=null; NB.cur=null; NB.paused=false; clearTimeout(NARR.speechTimer); NARR.generation++; ambLevel(AMB_BED,1.2); };
+  const whenPlaying=start=>{ if(!active()) return; if(!TOUR.playing){ NARR.pending=()=>{ if(active()) start(); }; return; } start(); };
+  note('Chargement de la narration…');
+  // The recorded seventh stop describes a canal limit. Other configurations use their actual explanation.
+  const dynamic=i===6&&R.bind!=='canal';
+  const spoken=dynamic?`Dans votre configuration actuelle, la contrainte est la suivante. ${BIND_TXT[R.bind]} Changez de scénario après la visite pour voir la contrainte se déplacer.`:TOUR_SPOKEN[i];
+  const speak=()=>{ if(!active()) return; whenPlaying(()=>{ try{
+      if(!window.speechSynthesis){ note('Narration audio indisponible dans ce navigateur : texte affiché seulement.'); done(); return; }
       if(!NARR.voice) pickVoice();
-      const parts=TOUR_SPOKEN[i].match(/[^.!?:]+[.!?:]?/g).map(t=>t.trim()).filter(Boolean); let started=false, k=0;
-      const next=()=>{ if(TOUR.i!==myI||!NARR.on) return; if(k>=parts.length){ done(); return; }
-        const u=new SpeechSynthesisUtterance(parts[k++]); u.lang='fr-FR'; if(NARR.voice) u.voice=NARR.voice; u.rate=0.97; u.pitch=1;
-        u.onstart=()=>{ started=true; ambLevel(AMB_DUCK,0.5); note(NARR.voice?('Narration : voix du navigateur ('+NARR.voice.name+')'):'Narration : voix du navigateur'); }; u.onend=next; u.onerror=()=>{ if(!started) note('Narration audio bloquée par le navigateur : texte affiché seulement.'); next(); };
-        speechSynthesis.speak(u); };
-      speechSynthesis.cancel(); try{ speechSynthesis.resume(); }catch(e){}
-      next();
-      setTimeout(()=>{ if(!started && TOUR.i===myI && NARR.on){ note('Aucune voix française trouvée dans ce navigateur : texte affiché seulement.'); NARR.busy=false; } },3000);
-    }catch(e){ NARR.busy=false; } };
-  const tapToListen=()=>{ NARR.busy=false; const n=document.getElementById('tour-note'); if(!n) return; n.textContent=''; const b=document.createElement('button'); b.className='btn'; b.style.cssText='padding:4px 10px;font-size:12px;border-color:var(--power);color:var(--power)'; b.textContent='▶ Écouter cette étape'; b.onclick=()=>{ narrCtx(); narrate(TOUR.i); }; n.appendChild(b); };
-  const html5=()=>{ try{ const a=new Audio('voix/stop'+(i+1)+'.mp3'); NARR.audio=a; a.onended=done; a.onplaying=()=>{ ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); };
-      a.onerror=()=>{ if(TOUR.i===myI&&NARR.audio===a){ NARR.audio=null; speak(); } };
-      a.play().catch(err=>{ if(NARR.audio!==a) return; NARR.audio=null; if(err&&err.name==='NotAllowedError') tapToListen(); else speak(); }); }catch(e){ speak(); } };
+      const parts=(spoken.match(/[^.!?:]+[.!?:]?/g)||[]).map(t=>t.trim()).filter(Boolean); let started=false, k=0;
+      const watch=()=>{ clearTimeout(NARR.speechTimer); if(!started) NARR.speechTimer=setTimeout(()=>{
+        if(active()&&TOUR.playing&&!started){ note('Aucune voix française disponible : texte affiché seulement.'); done(); speechSynthesis.cancel(); }
+      },3000); };
+      const next=()=>{ if(!active()) return; whenPlaying(()=>{
+        if(k>=parts.length){ done(); return; }
+        const u=new SpeechSynthesisUtterance(parts[k++]); NARR.utterance=u; u.lang='fr-FR'; if(NARR.voice) u.voice=NARR.voice; u.rate=0.97; u.pitch=1;
+        u.onstart=()=>{ if(!active()) return; started=true; clearTimeout(NARR.speechTimer); if(!TOUR.playing) speechSynthesis.pause(); ambLevel(AMB_DUCK,0.5); note(NARR.voice?('Narration : voix du navigateur ('+NARR.voice.name+')'):'Narration : voix du navigateur'); };
+        u.onend=next; u.onerror=()=>{ if(!active()) return; note('Narration audio indisponible : texte affiché seulement.'); done(); };
+        speechSynthesis.speak(u);
+      }); };
+      speechSynthesis.cancel(); NARR.resume=()=>{ if(!active()) return; try{ speechSynthesis.resume(); watch(); }catch(e){ done(); } };
+      NARR.resume(); next();
+    }catch(e){ note('Narration audio indisponible : texte affiché seulement.'); done(); } }); };
+  const tapToListen=()=>{ if(!active()) return; NARR.busy=false; const n=document.getElementById('tour-note'); if(!n) return; n.textContent=''; const b=document.createElement('button'); b.className='btn'; b.style.cssText='padding:4px 10px;font-size:12px;border-color:var(--power);color:var(--power)'; b.textContent='▶ Écouter cette étape'; b.onclick=()=>{ if(active()){ narrCtx(); narrate(i); } }; n.appendChild(b); };
+  const html5=()=>{ if(!active()) return; whenPlaying(()=>{ try{
+      const a=new Audio('voix/stop'+(i+1)+'.mp3'); NARR.audio=a; a.onended=done;
+      a.onplaying=()=>{ if(!active()||NARR.audio!==a){ a.pause(); return; } if(!TOUR.playing){ a.pause(); return; } ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); };
+      const fallback=err=>{ if(!active()||NARR.audio!==a) return; a.onended=a.onplaying=a.onerror=null; a.pause(); NARR.audio=null; NARR.resume=null; if(err&&err.name==='NotAllowedError') tapToListen(); else speak(); };
+      a.onerror=fallback;
+      NARR.resume=()=>{ if(active()&&NARR.audio===a) whenPlaying(()=>{ a.play().catch(fallback); }); };
+      NARR.resume();
+    }catch(e){ speak(); } }); };
+  if(dynamic){ speak(); return; }
   const c=narrCtx();
   if(!c){ html5(); return; }
-  if(c.state==='suspended'){ try{ c.resume(); }catch(e){} }
-  loadClip(i).then(buf=>{ if(TOUR.i!==myI||!NARR.on) return;
-      if(c.state!=='running'){ c.resume().catch(()=>{}); setTimeout(()=>{ if(TOUR.i!==myI||!NARR.on) return; if(c.state!=='running') tapToListen(); else { nbPlay(buf,0,done); ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); } },350); return; }
-      if(!TOUR.playing){ NB.cur={buf,onEnd:done}; NB.off=0; NB.paused=true; return; }
-      nbPlay(buf,0,done); ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)');
-      loadClip(i+1).catch(()=>{}); })
-    .catch(()=>{ if(TOUR.i===myI&&NARR.on) html5(); });
+  if(c.state==='suspended'){ try{ c.resume().catch(()=>{}); }catch(e){} }
+  const play=buf=>whenPlaying(()=>{
+    if(c.state!=='running'){
+      c.resume().catch(()=>{}); setTimeout(()=>{
+        if(!active()) return;
+        whenPlaying(()=>{ if(c.state!=='running') tapToListen(); else play(buf); });
+      },350); return;
+    }
+    nbPlay(buf,0,done); ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)');
+    loadClip(i+1).catch(()=>{});
+  });
+  loadClip(i).then(buf=>{ if(active()) play(buf); }).catch(()=>{ if(active()) html5(); });
 }
 function tourStop(i){
   TOUR.i=clamp(i,0,TOUR_STOPS.length-1); TOUR.t=0; const st=TOUR_STOPS[TOUR.i];
@@ -2004,20 +2213,24 @@ function tourClearArea(){ const h=innerHeight; const c=$('#tour'); const tb=docu
   const top=tb?tb.getBoundingClientRect().bottom+6:0; const bot=(c&&!c.hidden)?c.getBoundingClientRect().top-6:h; return [top,bot]; }
 function updateViewOffset(rdt){ if(!camera) return; const h=innerHeight, w=innerWidth;
   let tgt=0; if(TOUR.on){ const [a,b]=tourClearArea(); tgt=clamp(h/2-(a+b)/2,0,h*0.32); }
-  viewOffY+= (tgt-viewOffY)*Math.min(1,(rdt||0.016)*3.5);
-  if(Math.abs(viewOffY)<0.5 && tgt===0){ if(camera.view&&camera.view.enabled){ camera.clearViewOffset(); } viewOffY=0; return; }
-  camera.setViewOffset(w,h,0,viewOffY,w,h); }
+  viewOffY=reduced?tgt:viewOffY+(tgt-viewOffY)*Math.min(1,(rdt||0.016)*3.5);
+  viewShift=reduced?viewShiftTarget:viewShift+(viewShiftTarget-viewShift)*(1-Math.exp(-(rdt||0.016)*5));
+  if(Math.abs(viewOffY)<0.5&&tgt===0) viewOffY=0;
+  const x=Math.abs(viewShift)>0.5?-viewShift:0;
+  // Apply the panel and tour-card offsets together; neither may overwrite the other before rendering.
+  if(!x&&!viewOffY){ if(camera.view&&camera.view.enabled) camera.clearViewOffset(); return; }
+  camera.setViewOffset(w,h,x,viewOffY,w,h); }
 function updateTour(rdt){
   if(!TOUR.on) return; const st=TOUR_STOPS[TOUR.i];
   if(TOUR.playing) TOUR.t+=rdt;
   $('#tour-prog').style.width=clamp(TOUR.t/st.dur*100,0,100)+'%';
-  if(!tween && (!st.cut || innerWidth<900)){ const k=ease(clamp((TOUR.t-2.6)/(st.dur-2.6),0,1)); const pa=tourPos(st,'a'), pb=tourPos(st,'b'); setCam([0,1,2].map(j=>lerp(pa[j],pb[j],k)),[0,1,2].map(j=>lerp(st.a.t[j],st.b.t[j],k)),42); }
+  if(!reduced && !tween && (!st.cut || innerWidth<900)){ const k=ease(clamp((TOUR.t-2.6)/(st.dur-2.6),0,1)); const pa=tourPos(st,'a'), pb=tourPos(st,'b'); setCam([0,1,2].map(j=>lerp(pa[j],pb[j],k)),[0,1,2].map(j=>lerp(st.a.t[j],st.b.t[j],k)),42); }
   if(TOUR.playing && TOUR.t>=st.dur && !NARR.busy){ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(); }
 }
 
 function resetAll(){
   if(TOUR.on) endTour();
-  S=clone(BASE); activePreset=null; selected=null; closeCut(); closeInfo(); recompute(); syncControls();
+  S=clone(BASE); activePreset=null; experience=null; clearTimeout(resultAnnouncement); $('#result-feedback').hidden=true; $('#result-announcement').textContent=''; selected=null; closeCut(); closeInfo(); recompute(); syncControls();
   $('#exp').classList.remove('on'); document.querySelectorAll('.pre').forEach(b=>b.setAttribute('aria-pressed','false'));
   if(webgl && mode==='live'){ setView('site',false); flyTo(ov(),1.6); }
 }
@@ -2043,7 +2256,7 @@ if(MUSEE){
 
 // registry
 function openReg(tab){
-  $('#reg').hidden=false; document.querySelectorAll('.rtabs [data-rt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.rt===tab)));
+  $('#reg').hidden=false; document.querySelectorAll('.rtabs [data-rt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.rt===tab))); syncTablist($('.rtabs'));
   const B=$('#reg-body');
   if(tab==='params') B.innerHTML=`<p class="note" style="margin:0 0 10px">Chaque paramètre porte un statut. Les valeurs DOCUMENTÉ restent liées à leur date et à leur périmètre ; les autres sont des choix de modèle signalés comme tels.</p><div class="tw"><table><thead><tr><th>Paramètre</th><th>Valeur</th><th>Unité</th><th>Statut</th><th>Source</th><th>Date</th><th>Périmètre</th><th>Usage dans le modèle</th></tr></thead><tbody>${REGISTRY.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td>${chip(r[3])}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td></tr>`).join('')}</tbody></table></div>`;
   if(tab==='srcs') B.innerHTML=`<div class="srcl">${Object.entries(SOURCES).map(([k,s])=>`<div><b>${k}</b>${s.t}<p>${s.d} · ${s.loc}</p><p>${s.use}</p><a href="${s.url}" target="_blank" rel="noopener">${s.url}</a></div>`).join('')}</div><p class="note">Images de référence du dossier : plan SNEL (F02), photographies Ivanhoe Mines, Elecnor, Evolutio, Radio Okapi (CC BY 2.0), ANDRITZ, ABELINGA. Aucune image générée n’a servi à établir la géométrie.</p>`;
@@ -2204,9 +2417,6 @@ function frame(now){
     T3.riverMat.uniforms.uO1.value.z=clamp(DISP.q1/700,0,1); T3.riverMat.uniforms.uO2.value.z=clamp(DISP.q2/2400,0,1);
     T3.sky.position.copy(camera.position);
     if(mode==='paper' && revealV<1.2){ revealV=Math.min(1.2,revealV+rdt/2.8); T3.terrainMat.uniforms.uReveal.value=revealV; if(revealV>=1.2){ document.getElementById('intro').classList.remove('gone'); document.getElementById('detailA').classList.remove('gone'); } }
-    // view offset keeps the model centred in the space left free by the panels
-    viewShift += (viewShiftTarget-viewShift)*(1-Math.exp(-rdt*5));
-    if(Math.abs(viewShift)>0.5){ const w=lastW||innerWidth, h=lastH||innerHeight; camera.setViewOffset(w,h,-viewShift,0,w,h); } else if(camera.view && camera.view.enabled){ camera.clearViewOffset(); }
     // highlight of the limiting element after a scenario or a change of constraint
     hiT=Math.max(0,hiT-rdt); const pulse = hiT>0 ? (0.55+0.45*Math.sin(tt*4.2))*Math.min(1,hiT/1.2) : 0; const hk = hiT>0 ? hiKey : null;
     T3.tubeCanal.visible = view==='flow' || ((hk==='canal'||hk==='intake') && pulse>0.01); T3.tubeCanal.material.uniforms.uAmb.value = (hk==='canal'||hk==='intake') ? pulse : 0;
@@ -2265,6 +2475,8 @@ async function init(){
     document.getElementById('gl').style.display='none';
     const fb=document.createElement('div'); fb.id='fallback'; fb.innerHTML='<p>WebGL indisponible : plan 2D schématique. Les calculs, commandes et scénarios restent actifs.</p>'; fb.appendChild(paperC); document.getElementById('app').prepend(fb);
     document.getElementById('intro').classList.add('gone'); mode='live'; setUI(true);
+    $('#tourBtn').disabled=true;$('#tourBtn .ft').textContent='Visite 3D indisponible';$('#tourBtn small').textContent='Explorez les scénarios en 2D';
+    document.querySelectorAll('[data-view],#toPaper,#recenter').forEach(b=>b.disabled=true);
   } else { setUI(false); document.body.classList.add('paper'); if(revealV>=1.2){ document.getElementById('intro').classList.remove('gone'); document.getElementById('detailA').classList.remove('gone'); } }
   document.getElementById('loading').classList.add('gone');
   const res=runValidation(); const ok=res.filter(r=>r.ok).length; console.info(`[Inga] validation ${ok}/${res.length}`); res.filter(r=>!r.ok).forEach(r=>console.warn('[Inga] FAIL',r.name,r.detail));

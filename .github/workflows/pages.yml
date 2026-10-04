@@ -24,6 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check generated pages and offline version
+        run: python3 scripts/sync_site.py --check
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 

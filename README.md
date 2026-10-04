@@ -32,6 +32,7 @@ Avec Chromium installé (`/usr/bin/chromium` par défaut, sinon définir `CHROMI
 ```sh
 NODE_PATH=/tmp/inga-test-tools/node_modules node tests/browser-ux.cjs
 NODE_PATH=/tmp/inga-test-tools/node_modules node tests/browser-audio.cjs
+NODE_PATH=/tmp/inga-test-tools/node_modules node tests/browser-cutaway.cjs
 NODE_PATH=/tmp/inga-test-tools/node_modules node tests/browser-offline.cjs
 ```
 

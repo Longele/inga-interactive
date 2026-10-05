@@ -9,6 +9,7 @@ Nouvelle expérience du transformateur à la ville pour comprendre le transport 
 - Possibilité de mémoriser la production simulée du site au moment du clic pour la comparer localement, sans modifier ni suivre ensuite les réglages du modèle principal.
 - Accès depuis les outils, Plus sur mobile, Apprendre, l'expérience du réseau limité, les informations du poste et de la liaison vers Kinshasa, et la coupe de l'alternateur.
 - Les flèches du clavier règlent les champs et parcourent les fenêtres sans être captées par la caméra 3D.
+- En paysage sur téléphone, les neuf options du menu Plus sont disposées sur trois colonnes pour rester accessibles.
 - Hypothèses explicites : transformateur idéal, source de 20 kV, résistance de 10 Ω par conducteur, ligne triphasée équilibrée à facteur de puissance unitaire. Les valeurs sont pédagogiques et la liaison en courant continu Inga–Kolwezi n'est pas modélisée par cette expérience.
 
 Les 19 vérifications de la suite dédiée réussissent sur la distribution construite ; les résultats et limites sont consignés dans [VALIDATION.md](VALIDATION.md). La publication reste conditionnée aux suites navigateur de GitHub Actions pour le commit livré.

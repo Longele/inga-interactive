@@ -10,6 +10,7 @@ Vérifications exécutées sur la distribution construite sous Chromium/Linux av
 - Cinq formats vérifiés et inspectés visuellement : 320×568, 390×844, 740×800, 844×390 et 1440×900. Dessin et mesures restent visibles ; les commandes défilantes sont accessibles. Tous les boutons de la barre à 1024 px sont également accessibles.
 - Correction du conflit entre les flèches des champs et la caméra : les curseurs du transformateur et du canal répondent au clavier sans déplacer la vue.
 - `browser-navigation.cjs` : les quatre groupes de vérification passent, notamment le menu Plus sur trois colonnes en paysage, le bilan mobile, le retour au bureau et le secours sans WebGL.
+- `browser-offline.cjs` : les sept groupes passent localement, dont l'installation avec deux onglets, le démarrage hors ligne et la migration d'une ancienne version. Les attentes d'état du service worker sont indépendantes des images d'animation des onglets en arrière-plan ; l'installation revient explicitement à l'onglet demandeur.
 - Contrôles syntaxiques, génération du mode musée et du cache, construction de la distribution et vérification du diff réussis.
 
 Pour reproduire la suite, servir `dist/site` sur le port 8001 et utiliser l'environnement Playwright décrit dans le README :

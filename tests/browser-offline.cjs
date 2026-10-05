@@ -41,7 +41,21 @@ const base = (process.env.INGA_TEST_URL || 'http://127.0.0.1:8001').replace(/\/$
   const context=await browser.newContext({reducedMotion:'reduce',viewport:{width:390,height:844}});
   const page=await context.newPage();
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  async function waitMode(target,mode){await target.waitForFunction(expected=>window.__INGA_OFFLINE?.state.mode===expected,mode,{timeout:60000});}
+  async function waitMode(target,mode){
+    try{
+      // Service-worker state can change in a background tab, independently of animation frames.
+      await target.waitForFunction(expected=>window.__INGA_OFFLINE?.state.mode===expected,mode,{timeout:60000,polling:100});
+    }catch(error){
+      const diagnostic=await target.evaluate(async()=>{
+        const registration=await navigator.serviceWorker.getRegistration();
+        return {visibility:document.visibilityState,focused:document.hasFocus(),offline:window.__INGA_OFFLINE?.state,
+          controller:navigator.serviceWorker.controller?.state,active:registration?.active?.state,
+          waiting:registration?.waiting?.state,installing:registration?.installing?.state};
+      }).catch(failure=>({diagnosticError:failure.message}));
+      console.error('Offline mode timeout',JSON.stringify({expected:mode,...diagnostic}));
+      throw error;
+    }
+  }
   try{
     // Registration errors are visible and retryable, rather than silently swallowed.
     failWorker=true;
@@ -57,7 +71,7 @@ const base = (process.env.INGA_TEST_URL || 'http://127.0.0.1:8001').replace(/\/$
     });
     await page.locator('#offline-retry').click();
     await waitMode(page,'incomplete');
-    await page.waitForFunction(()=>!!__INGA_OFFLINE.state.current);
+    await page.waitForFunction(()=>!!__INGA_OFFLINE.state.current,null,{polling:100});
     const incomplete=await page.evaluate(()=>__INGA_OFFLINE.state);
     assert.equal(incomplete.current.ready,false);
     assert.equal(incomplete.current.cached,files.length-1);
@@ -109,11 +123,13 @@ const base = (process.env.INGA_TEST_URL || 'http://127.0.0.1:8001').replace(/\/$
     await other.goto(url+'__offline-test__');
     await waitMode(other,'update');
     await other.evaluate(()=>window.visitMarker='other-ongoing-visit');
+    // The user returns to the first tab to install; a protocol click alone need not activate it.
+    await page.bringToFront();
     await page.locator('#offline-update').click();
     await waitMode(page,'ready');
-    await page.waitForFunction(expected=>window.__INGA_OFFLINE?.state.current?.version===expected,version+'-test2');
+    await page.waitForFunction(expected=>window.__INGA_OFFLINE?.state.current?.version===expected,version+'-test2',{polling:100});
     assert.equal(await page.evaluate(()=>window.visitMarker),undefined);
-    await other.waitForFunction(expected=>window.__INGA_OFFLINE?.state.current?.version===expected,version+'-test2');
+    await other.waitForFunction(expected=>window.__INGA_OFFLINE?.state.current?.version===expected,version+'-test2',{polling:100});
     assert.equal(await other.evaluate(()=>window.visitMarker),'other-ongoing-visit');
     const cacheState=await page.evaluate(async()=>{
       const keys=await caches.keys(),prefix='inga:'+location.origin+'/release/:';
@@ -160,15 +176,15 @@ const base = (process.env.INGA_TEST_URL || 'http://127.0.0.1:8001').replace(/\/$
     const legacy=await legacyContext.newPage();
     await legacy.goto(url+'__legacy__');
     await legacy.evaluate(async()=>{await navigator.serviceWorker.register('sw.js');await navigator.serviceWorker.ready;});
-    await legacy.waitForFunction(()=>!!navigator.serviceWorker.controller);
+    await legacy.waitForFunction(()=>!!navigator.serviceWorker.controller,null,{polling:100});
     await legacy.evaluate(()=>{window.visitMarker='legacy-visit';window.controllerChanges=0;navigator.serviceWorker.addEventListener('controllerchange',()=>controllerChanges++);});
     legacyWorker=false;revision=3;failAsset=true;
     await legacy.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update();});
-    await legacy.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration();return !r.installing&&!r.waiting;},null,{timeout:60000});
+    await legacy.waitForFunction(async()=>{const r=await navigator.serviceWorker.getRegistration();return !r.installing&&!r.waiting;},null,{timeout:60000,polling:100});
     assert.equal(await legacy.evaluate(()=>controllerChanges),0);
     failAsset=false;
     await legacy.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration();await r.update();});
-    await legacy.waitForFunction(()=>controllerChanges===1,null,{timeout:60000});
+    await legacy.waitForFunction(()=>controllerChanges===1,null,{timeout:60000,polling:100});
     assert.equal(await legacy.evaluate(()=>window.visitMarker),'legacy-visit');
     await legacy.goto(url+'__offline-test__');
     await waitMode(legacy,'ready');

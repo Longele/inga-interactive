@@ -1,0 +1,17 @@
+/* The status stays quiet during a visit; details are available on demand. */
+#offline-status{display:inline-flex;align-items:center;gap:7px}
+#offline-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted,#a7b6bb);flex:none}
+#offline-status[data-state="ready"]::before{background:#98d7b2}
+#offline-status[data-state="update"]::before{background:var(--water,#8bcde1)}
+#offline-status:is([data-state="incomplete"],[data-state="error"])::before{background:var(--power,#e8b45a)}
+#offline-panel .mbox{width:min(540px,100%)}
+#offline-panel .mbody{overflow:auto}
+#offline-panel p{line-height:1.6;margin:0 0 16px}
+#offline-summary{font-size:17px;font-weight:500;color:var(--ink,#e6eeee)}
+#offline-detail{font-size:14px;color:var(--muted,#b9c8cb)}
+#offline-progress{width:100%;height:8px;accent-color:var(--water,#8bcde1);margin-bottom:14px}
+#offline-panel .offline-help{font-size:13px;color:var(--muted,#b9c8cb);border-top:1px solid var(--line,#45555b);padding-top:16px;margin:20px 0 0}
+#offline-panel .btnrow{flex-wrap:wrap}
+#offline-panel .btn{min-height:44px;white-space:normal}
+#offline-panel [hidden]{display:none!important}
+@media(max-width:600px){#offline-panel .mhead{padding-right:42px}#offline-panel .mbody{padding:16px}#offline-panel h2{font-size:23px}}

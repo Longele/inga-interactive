@@ -12,7 +12,8 @@ const {chromium}=require('playwright');
     await page.route('**/voix/stop1.mp3',async r=>{requested();await gate;await r.continue();});
     await page.goto(process.env.INGA_URL||'http://127.0.0.1:8001/index.html');
     await page.waitForFunction(()=>window.__INGA&&document.querySelector('#loading').classList.contains('gone'));
-    await page.evaluate(()=>{window.__plays=0;const original=nbPlay;nbPlay=(...args)=>{window.__plays++;return original(...args);};document.querySelector('#goTour').click();});
+    // Media lifecycle uses real browser clocks; scene rendering is exercised by the visual suites.
+    await page.evaluate(()=>{renderer.render=()=>{};window.__plays=0;const original=nbPlay;nbPlay=(...args)=>{window.__plays++;return original(...args);};document.querySelector('#goTour').click();});
     await signal;
     await page.evaluate(()=>document.querySelector('#tQuit').click());
     release();

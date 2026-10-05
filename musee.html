@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
+<title>Inga I + II · Du fleuve au réseau</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d1315">
 <meta name="description" content="Inga I + II : reconstruction éducative interactive de l’aménagement hydroélectrique d’Inga sur le fleuve Congo.">
@@ -10,7 +11,6 @@
 <script>window.INGA_MUSEE=true;</script>
 <style>html,body{margin:0;background:#0d1315}</style>
 </head><body>
-<title>Inga I + II</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 /* Layout: full-bleed 3D stage. Left rail = live balance, right rail = operator desk.
@@ -396,6 +396,9 @@ button:disabled{cursor:default;opacity:.6}
 @media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
 </style>
 
+<link rel="stylesheet" href="product.css">
+<link rel="stylesheet" href="offline.css">
+<link rel="stylesheet" href="polish.css">
 <div id="app" class="hide-ui">
   <canvas id="gl" aria-label="Reconstruction 3D interactive du site d’Inga"></canvas>
   <div id="labels"></div>
@@ -528,7 +531,7 @@ button:disabled{cursor:default;opacity:.6}
       </div>
       <div class="pane" id="p-hyp" role="tabpanel">
         <div class="fld"><div class="fld-h"><label for="h-river">Débit du Congo</label><output id="o-hriver"></output></div><input type="range" id="h-river" min="0" max="80000" step="1000"></div>
-        <div class="fld"><div class="fld-h"><label for="h-sup">Alimentation de la prise</label><output id="o-hsup"></output></div><input type="range" id="h-sup" min="0" max="4000" step="50"><p class="note"><span class="chip st-SIMP">SIMPLIFIÉ</span> 3 000 m³/s dans la configuration de départ (p. 18).</p></div>
+        <div class="fld"><div class="fld-h"><label for="h-sup">Alimentation de la prise</label><output id="o-hsup"></output></div><input type="range" id="h-sup" min="0" max="4000" step="50"><p class="note"><span class="chip st-SIMP">SIMPLIFIÉ</span> 3 000 m³/s dans la configuration de départ (hypothèse pédagogique).</p></div>
         <div class="fld"><div class="fld-h"><label for="h-canal">Capacité du canal</label><output id="o-hcanal"></output></div><input type="range" id="h-canal" min="0" max="4000" step="50"></div>
         <div class="fld"><div class="fld-h"><label for="h-loss">Pertes de transport</label><output id="o-hloss"></output></div><input type="range" id="h-loss" min="0" max="15" step="0.5"><p class="note"><span class="chip st-SIMP">SIMPLIFIÉ</span> 5 % par défaut.</p></div>
         <div class="fld"><div class="fld-h"><label for="h-eta">Rendement combiné turbine-alternateur</label><output id="o-heta"></output></div><input type="range" id="h-eta" min="0.80" max="0.95" step="0.01"><p class="note"><span class="chip st-SIMP">SIMPLIFIÉ</span> 0,90 est une hypothèse ; aucune courbe constructeur n’est fournie.</p></div>
@@ -572,7 +575,7 @@ button:disabled{cursor:default;opacity:.6}
   <div class="modal" id="reg" hidden>
     <div class="mbox" role="dialog" aria-modal="true" aria-labelledby="reg-h">
       <button class="x" data-close="reg" aria-label="Fermer">×</button>
-      <div class="mhead"><div class="k">Registre interne</div><h2 id="reg-h">Sources, statuts et validation</h2></div>
+      <div class="mhead"><div class="k">Méthode et références</div><h2 id="reg-h">Sources, statuts et validation</h2></div>
       <div class="rtabs" role="tablist">
         <button role="tab" aria-selected="true" data-rt="params">Paramètres</button>
         <button role="tab" aria-selected="false" data-rt="srcs">Sources</button>
@@ -652,13 +655,13 @@ const REGISTRY = [
   ['Système d’amenée rive droite','≈ 8,5','km','DOC','S01','2011','Prise + canal','Tracé schématique d’après le plan'],
   ['Débit du canal sur le plan','2 200','m³/s','DOC','S01','2011','Annotation historique','Scénario « Dégagé » (choix pédagogique)'],
   ['Objectif de réhabilitation','≈ 3 000','m³/s','DOC','S01','2011','Objectif décrit','Scénario « Réhabilité » (illustratif)'],
-  ['Canal ensablé','1 600','m³/s','SIMP','p. 16','-','Hypothèse','Scénario « Ensablé »'],
-  ['Capacité opérationnelle actuelle du canal','-','m³/s','UNK','p. 17','-','Non confirmée','Non représentée comme fait'],
+  ['Canal ensablé','1 600','m³/s','SIMP','Hypothèse du modèle','-','Hypothèse','Scénario « Ensablé »'],
+  ['Capacité opérationnelle actuelle du canal','-','m³/s','UNK','Donnée non confirmée','-','Non confirmée','Non représentée comme fait'],
   ['Puissance totale nominale / maximale','1 626 / 1 775','MW','DOC','S09 S02','2007 / 2025','Deux conventions','Les deux libellés conservés'],
   ['Inga I : puissance nominale','6 × 55 = 330','MW','DOC','S03 S09','2013-2016','Fiche Elecnor','Mode « Nominal »'],
   ['Inga I : maximum de référence','6 × 58,5 = 351','MW','DOC','S01','2011','Banque mondiale','Mode « Maximum de référence »'],
   ['Inga I : chute nominale brute','50','m','DOC','S03','2013-2016','« brute » explicite','Base de la chute nette'],
-  ['Inga I : chute nette du modèle','48','m','SIMP','p. 4','-','Perte supposée 2 m','H_net Inga I'],
+  ['Inga I : chute nette du modèle','48','m','SIMP','Hypothèse du modèle','-','Perte supposée 2 m','H_net Inga I'],
   ['Inga I : débit nominal par groupe','140','m³/s','DOC','S03','2013-2016','Pas un maximum certifié','Plafond Q du modèle (SIMPLIFIÉ)'],
   ['Inga I : vitesse nominale','136','tr/min','DOC','S03','2013-2016','Valeur arrondie','Vitesse synchrone affichée'],
   ['Inga I : conduites forcées','Ø 5,5 ; 60','m','DOC','S03','2013-2016','Diamètre intérieur ; longueur','Géométrie 3D'],
@@ -668,24 +671,24 @@ const REGISTRY = [
   ['Inga II : chute historique','56,20','m','DOC','S08','1982','Brute / nette non précisé','Utilisée comme chute nette : SIMPLIFIÉ'],
   ['Inga II : vitesse','107,1','tr/min','EST','S11','2024','Mesurée sur le groupe 5','Étendue aux 8 groupes'],
   ['Inga II : conduites G27 / G28','Ø 8','m','DOC','S05','n. d.','Deux conduites du contrat','Généralisé visuellement : SIMPLIFIÉ'],
-  ['Inga II : débit maximal par groupe','360','m³/s','SIMP','p. 5, 18','-','Non établi','Hypothèse de simulation'],
-  ['Inga II : ≈ 316 m³/s, roue ≈ 6 m, 16 kV','-','-','UNK','p. 5','-','Valeurs mises en attente','Non affichées comme spécifications'],
-  ['Rendement combiné','0,90','-','SIMP','p. 14','-','Hypothèse','η_t × η_g du modèle'],
-  ['ρ ; g','1 000 ; 9,81','kg/m³ ; m/s²','SIMP','p. 14','-','Constantes de démonstration','Équations de puissance'],
-  ['Alimentation de la prise','3 000','m³/s','SIMP','p. 18','-','Configuration de départ','Q_available'],
-  ['Demande reçue','1 500','MW','SIMP','p. 18','-','Configuration de départ','Répartition de la charge'],
-  ['Export maximal','2 000','MW','SIMP','p. 18','-','Configuration de départ','Limite réseau'],
-  ['Pertes de transport','5','%','SIMP','p. 18','-','Configuration de départ','P_received'],
+  ['Inga II : débit maximal par groupe','360','m³/s','SIMP','Hypothèse du modèle','-','Non établi','Hypothèse de simulation'],
+  ['Inga II : ≈ 316 m³/s, roue ≈ 6 m, 16 kV','-','-','UNK','Donnée non confirmée','-','Valeurs mises en attente','Non affichées comme spécifications'],
+  ['Rendement combiné','0,90','-','SIMP','Convention de calcul','-','Hypothèse','η_t × η_g du modèle'],
+  ['ρ ; g','1 000 ; 9,81','kg/m³ ; m/s²','SIMP','Convention de calcul','-','Constantes de démonstration','Équations de puissance'],
+  ['Alimentation de la prise','3 000','m³/s','SIMP','Hypothèse du modèle','-','Configuration de départ','Q_available'],
+  ['Demande reçue','1 500','MW','SIMP','Hypothèse du modèle','-','Configuration de départ','Répartition de la charge'],
+  ['Export maximal','2 000','MW','SIMP','Hypothèse du modèle','-','Configuration de départ','Limite réseau'],
+  ['Pertes de transport','5','%','SIMP','Hypothèse du modèle','-','Configuration de départ','P_received'],
   ['Basses / hautes eaux ; alimentation basse','20 000 / 60 000 ; 1 800','m³/s','SIMP','-','-','Valeurs illustratives','Scénarios ; aucune courbe niveau-débit'],
   ['Inga-Kinshasa','2 × 220 kV ; 400 kV','kV','DOC','S01 S04','2011 / 2016','Double circuit (2011) ; 400 kV annoncée (2016)','Couloir schématique CA'],
   ['Inga-Kolwezi','±500 kV CC, ≈ 1 700 km','kV','DOC','S01 S16','2011','Passe par Selo (près de Kinshasa)','Couloir CC vers le nord-est (azimut ≈ 64°)'],
   ['Mention « environ 80 % »','≈ 80','%','DOC','S02','3 juin 2025','Publication datée','Référence publiée récente, pas un rendement'],
   ['Production historique','745 MW / 7 groupes','-','DOC','S01','2011','Constat historique','Carte d’information uniquement'],
-  ['Répartition Kinshasa / corridor sud','50 / 50','%','UNK','p. 17','-','Aucune ventilation établie','Réglage illustratif'],
+  ['Répartition Kinshasa / corridor sud','50 / 50','%','UNK','Donnée non confirmée','-','Aucune ventilation établie','Réglage illustratif'],
   ['Relief et niveaux d’eau','MNS 30 m','m','DOC','S15','2026 (accès)','Surface : végétation et ouvrages inclus','Terrain réel, relief ×1 ; niveaux d’eau lus sur le MNS'],
-  ['Bathymétrie','-','-','UNK','p. 17','-','Non disponible','Profondeurs d’eau schématiques'],
+  ['Bathymétrie','-','-','UNK','Donnée non confirmée','-','Non disponible','Profondeurs d’eau schématiques'],
   ['Position des ouvrages','≈','-','SIMP','S01 S15','-','Lue sur le MNS et le plan SNEL','Implantation approximative, non relevée'],
-  ['Géométrie interne Francis','-','-','UNK','p. 17','-','Aubes, profils, jeux','Coupe générique']
+  ['Géométrie interne Francis','-','-','UNK','Donnée non confirmée','-','Aubes, profils, jeux','Coupe générique']
 ];
 const LIMITS = [
   ['État instantané des 14 groupes','Inconnu. « Normal » est un scénario, pas un état réel du jour.'],
@@ -795,7 +798,7 @@ let selected = null;
 let activePreset = null;
 let experience = null, resultAnnouncement = 0;
 const RT = {}; BASE.units.forEach(u=>RT[u.id]={rpmVis:rpmOf(u,u.plant), phase:Math.random()*6});
-function recompute(){ R = simulate(S); uiDirty = true; if(experience && !presetBusy) renderExperience(); if(prevBind && R.bind!==prevBind && mode==='live' && !presetBusy) flashConstraint('Contrainte modifiée'); prevBind=R.bind; }
+function recompute(){ R = simulate(S); uiDirty = true; if(experience && !presetBusy) renderExperience(); if(prevBind && R.bind!==prevBind && mode==='live' && !presetBusy) flashConstraint('Contrainte modifiée'); prevBind=R.bind; window.dispatchEvent(new Event('inga:simulationchange')); }
 let presetBusy=false;
 
 /* =====================================================================
@@ -1700,7 +1703,7 @@ function applyTimeline(T){
 function setUI(on){ if(uiVis===on) return; uiVis=on; document.getElementById('app').classList.toggle('hide-ui',!on); applyPanels(); }
 function startTransition(){ if(mode==='live') return; mode='transition'; dir=1; controls.enabled=false; revealV=1.2; T3.terrainMat.uniforms.uReveal.value=1.2; document.getElementById('intro').classList.add('gone'); document.getElementById('detailA').classList.add('gone'); document.getElementById('skipT').classList.add('on'); if(reduced){T=TT;} }
 function finishLive(){ mode='live'; setTimeout(()=>{ const b=$('#tourBtn'); if(b&&!TOUR.on){ b.classList.add('pulse'); } if(TOUR.pending){ TOUR.pending=false; startTour(); } },700); T=TT; applyTimeline(T); controls.enabled=true; document.getElementById('skipT').classList.remove('on'); document.getElementById('toPaper').setAttribute('aria-pressed','false'); setView('site',false); }
-function toPaper(){ if(!webgl) return; if(TOUR.on) endTour(); closeCut(); closeInfo(); setView('site',false); tween=null; mode='transition'; dir=-1; controls.enabled=false; setUI(false); document.getElementById('toPaper').setAttribute('aria-pressed','true'); if(reduced){T=0;} }
+function toPaper(){ if(!webgl) return; window.IngaProduct?.dismiss(); if(TOUR.on) endTour(); closeCut(); closeInfo(); setView('site',false); tween=null; mode='transition'; dir=-1; controls.enabled=false; setUI(false); document.getElementById('toPaper').setAttribute('aria-pressed','true'); if(reduced){T=0;} }
 function finishPaper(){ mode='paper'; T=0; applyTimeline(0); document.getElementById('intro').classList.remove('gone'); document.getElementById('detailA').classList.remove('gone'); document.getElementById('skipT').classList.remove('on'); }
 
 function setView(v,fly=true){
@@ -1737,14 +1740,14 @@ const ST_TXT={off:'Arrêt',start:'Démarrage',sync:'Synchronisé',water:'Limité
 const INFO={
   congo:{t:'Fleuve Congo',what:'Le fleuve au droit du site d’Inga, où il franchit une longue série de rapides et un coude.',does:'Il fournit l’eau. Seule une fraction est dérivée vers Inga I et II ; le reste continue par les rapides, et l’eau turbinée revient en aval.',data:[['Débit moyen ≈ 40 000 m³/s (ordre de grandeur historique, pas une mesure en direct)','DOC','S01'],['Dénivelé naturel des rapides ≈ 97 m : site global, ce n’est pas la chute des turbines','DOC','S02']],conf:['Tracé et niveaux d’eau lus sur le MNS Copernicus GLO-30 (surface, 30 m) [S15] ; pas de bathymétrie.','DOC'],src:['S01','S02','S15']},
   rapids:{t:'Rapides d’Inga',what:'Tronçon de rapides, d’îles et d’affleurements rocheux le long de la dérivation.',does:'C’est ici que le fleuve perd l’essentiel de son altitude. Les centrales exploitent une partie de cette chute grâce au canal parallèle.',data:[['Dénivelé naturel ≈ 97 m sur l’ensemble des rapides','DOC','S02']],conf:['Îles et écume représentées schématiquement.','SIMP'],src:['S02','S01']},
-  intake:{t:'Prise d’eau rive droite',what:'Entrée du système d’amenée sur la rive droite, avec rochers et affleurements à l’entrée sur le plan SNEL.',does:'Elle admet une partie du Congo dans le canal amont. Son ouverture est une commande du simulateur.',data:[['Prise en rive droite, système d’amenée ≈ 8,5 km','DOC','S01'],['Alimentation de la prise : 3 000 m³/s dans la configuration de départ','SIMP','p. 18']],conf:['Géométrie de l’ouvrage reconstituée.','SIMP'],src:['S01']},
-  canal:{t:'Canal amont',what:'Canal de dérivation parallèle au fleuve, avec déversoirs latéraux.',does:'Il transporte l’eau dérivée vers la zone de Fwamalo et les deux centrales. Sa capacité peut limiter la production même quand le Congo est abondant.',data:[['Annotation Q 2 200 m³/s sur le plan historique','DOC','S01'],['Objectif de réhabilitation ≈ 3 000 m³/s (2011)','DOC','S01'],['Capacité opérationnelle actuelle','UNK','p. 17']],conf:['Largeur et profondeur reconstituées.','SIMP'],src:['S01']},
+  intake:{t:'Prise d’eau rive droite',what:'Entrée du système d’amenée sur la rive droite, avec rochers et affleurements à l’entrée sur le plan SNEL.',does:'Elle admet une partie du Congo dans le canal amont. Son ouverture est une commande du simulateur.',data:[['Prise en rive droite, système d’amenée ≈ 8,5 km','DOC','S01'],['Alimentation de la prise : 3 000 m³/s dans la configuration de départ','SIMP','Hypothèse du modèle']],conf:['Géométrie de l’ouvrage reconstituée.','SIMP'],src:['S01']},
+  canal:{t:'Canal amont',what:'Canal de dérivation parallèle au fleuve, avec déversoirs latéraux.',does:'Il transporte l’eau dérivée vers la zone de Fwamalo et les deux centrales. Sa capacité peut limiter la production même quand le Congo est abondant.',data:[['Annotation Q 2 200 m³/s sur le plan historique','DOC','S01'],['Objectif de réhabilitation ≈ 3 000 m³/s (2011)','DOC','S01'],['Capacité opérationnelle actuelle','UNK','Donnée non confirmée']],conf:['Largeur et profondeur reconstituées.','SIMP'],src:['S01']},
   fwamalo:{t:'Fwamalo et canal de Fwamalo',what:'Zone de Fwamalo et large canal qui prolonge la dérivation jusqu’à Shongo.',does:'Il conduit l’eau dérivée jusqu’à la prise d’Inga I et au canal d’amenée d’Inga II.',data:[['Noms et position relative sur le plan SNEL','DOC','S01'],['Dimensions et niveaux','UNK','-']],conf:['Forme lue sur le plan, sans relevé.','SIMP'],src:['S01']},
   fwdam:{t:'Barrage de Fwamalo',what:'Ouvrage en remblai entre le système de dérivation et le fleuve.',does:'Il sépare l’eau dérivée du lit du Congo pour maintenir le niveau dans le canal de Fwamalo.',data:[['Nommé et localisé sur le plan SNEL','DOC','S01'],['Hauteur et longueur','UNK','-']],conf:['Volume reconstitué.','SIMP'],src:['S01']},
   pexvii:{t:'PE XVII et déversoir aval',what:'Déversoirs entre le canal de Fwamalo et le fleuve.',does:'Ils évacuent un excès d’eau vers le Congo. Ce simulateur ne modélise pas de déversement interne : l’eau non turbinée reste au fleuve.',data:[['Nommés sur le plan SNEL','DOC','S01']],conf:['Ouvrages représentés sans modèle hydraulique.','SIMP'],src:['S01']},
   shongo:{t:'Barrage de Shongo',what:'Barrage en bout du canal de Fwamalo ; la centrale Inga I y est intégrée (station de Shongo sur le plan).',does:'Il retient l’eau dérivée et alimente les six conduites d’Inga I ; le canal d’amenée d’Inga II part juste en amont.',data:[['Barrage de Shongo et station Inga I sur le plan','DOC','S01']],conf:['Volume reconstitué.','SIMP'],src:['S01']},
   inga1:{t:'Inga I',what:'Première centrale du site (1972) : six groupes Francis à axe vertical.',does:'Elle transforme l’énergie de l’eau du canal en électricité, en parallèle avec Inga II.',data:[['351 MW, mise en service 1972','DOC','S02'],['6 × 55 MW nominal = 330 MW','DOC','S03'],['6 × 58,5 MW maximum de référence','DOC','S01'],['Chute brute 50 m','DOC','S03'],['Chute nette 48 m retenue dans le modèle','SIMP','hypothèse'],['140 m³/s par groupe ; 136 tr/min','DOC','S03'],['Conduites Ø 5,5 m, 60 m ; centrale 150 × 25 m','DOC','S03']],conf:['Positions G11-G16 dans la maquette non vérifiées.','SIMP'],src:['S02','S03','S01','S09']},
-  inga2:{t:'Inga II',what:'Seconde centrale (1982) : huit groupes Francis, grand bâtiment bas au bord du fleuve.',does:'Alimentée par son canal d’amenée et ses conduites inclinées, elle produit l’essentiel de la puissance du site.',data:[['1 424 MW, mise en service 1982','DOC','S02'],['8 × 162 MW nominal historique = 1 296 MW','DOC','S09'],['8 × 178 MW maximum de référence','DOC','S01'],['Chute 56,20 m (1982), utilisée comme chute nette','SIMP','S08'],['107,1 tr/min (groupe 5, 2024) étendu aux 8 groupes','EST','S11'],['Conduites G27 / G28 Ø 8 m','DOC','S05'],['Débit maximal par groupe : 360 m³/s','SIMP','p. 5']],conf:['Proportions lues sur photos aériennes.','SIMP'],src:['S02','S09','S01','S04','S08','S11','S05']},
+  inga2:{t:'Inga II',what:'Seconde centrale (1982) : huit groupes Francis, grand bâtiment bas au bord du fleuve.',does:'Alimentée par son canal d’amenée et ses conduites inclinées, elle produit l’essentiel de la puissance du site.',data:[['1 424 MW, mise en service 1982','DOC','S02'],['8 × 162 MW nominal historique = 1 296 MW','DOC','S09'],['8 × 178 MW maximum de référence','DOC','S01'],['Chute 56,20 m (1982), utilisée comme chute nette','SIMP','S08'],['107,1 tr/min (groupe 5, 2024) étendu aux 8 groupes','EST','S11'],['Conduites G27 / G28 Ø 8 m','DOC','S05'],['Débit maximal par groupe : 360 m³/s','SIMP','Donnée non confirmée']],conf:['Proportions lues sur photos aériennes.','SIMP'],src:['S02','S09','S01','S04','S08','S11','S05']},
   switchyard:{t:'Poste électrique d’Inga',what:'Poste à haute tension entre les centrales et le fleuve.',does:'Il élève et répartit la puissance des deux centrales vers les lignes de transport.',data:[['Visible entre les centrales et le fleuve sur la vue aérienne','DOC','S06']],conf:['Géométrie reconstituée par lecture visuelle.','SIMP'],src:['S06']},
   hvdc:{t:'Liaison CC Inga-Kolwezi',what:'Station de conversion d’Inga, sur le plateau à l’ouest d’Inga II, et liaison à courant continu d’environ 1 700 km.',does:'Elle transporte une partie de la puissance sur une très longue distance en courant continu.',data:[['Station de conversion et liaison 500 kV CC','DOC','S01'],['±500 kV, ≈ 1 700 km ; stations Selo, Kikwit, Kananga, Kamina, Kolwezi','EST','S16'],['Position de la station d’Inga (5°31′27″ S, 13°36′39″ E)','EST','S16'],['Tracé exact des pylônes','UNK','-']],conf:['Direction générale vers Selo ; tracé détaillé non représenté.','SIMP'],src:['S01','S16']},
   kinshasa:{t:'Couloir Inga-Kinshasa',what:'Lignes à courant alternatif vers Kinshasa.',does:'Elles alimentent la capitale depuis le poste d’Inga.',data:[['Double circuit 220 kV (2011)','DOC','S01'],['Ligne 400 kV annoncée construite (2016)','DOC','S04'],['Tracé géographique','UNK','-']],conf:['Couloir schématique, pas de tracé SIG.','SIMP'],src:['S01','S04']}
@@ -1860,7 +1863,7 @@ function buildUI(){
   $('#recenter').onclick=()=>{if(webgl&&mode==='live'){setView('site',false);flyTo(ov(),1.2);}};
   $('#openReg').onclick=()=>{ if(TOUR.on) endTour(); openReg('params'); };
   $('#tourBtn').onclick=()=>{ TOUR.on?endTour():startTour(); };
-  $('#tPrev').onclick=()=>tourStop(TOUR.i-1); $('#tNext').onclick=()=>{ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(); };
+  $('#tPrev').onclick=()=>tourStop(TOUR.i-1); $('#tNext').onclick=()=>{ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(true); };
   $('#tPlay').onclick=()=>{ TOUR.playing=!TOUR.playing; $('#tPlay').textContent=TOUR.playing?'Pause':'Reprendre'; if(TOUR.playing) narrResume(); else narrPause(); };
   $('#tSnd').onclick=()=>{ NARR.on=!NARR.on; $('#tSnd').textContent=NARR.on?'Son : activé':'Son : coupé'; $('#tSnd').setAttribute('aria-pressed',String(NARR.on)); if(NARR.on){ ambStart(); ambLevel(AMB_BED,1); narrate(TOUR.i); } else { narrStop(); ambLevel(0,0.4); $('#tour-note').textContent='Texte affiché · narration désactivée'; } }; $('#tQuit').onclick=endTour;
   $('#go').onclick=startTransition; $('#skip').onclick=()=>{startTransition();T=TT;};
@@ -2105,7 +2108,7 @@ const TOUR_SPOKEN=[
  "Depuis Inga, deux couloirs partent vers le nord-est. Les lignes à courant alternatif alimentent Kinshasa. La liaison à courant continu de plus ou moins cinq cents kilovolts passe d'abord par Selo, près de Kinshasa, puis file vers l'est jusqu'à Kolwezi, au Katanga, à environ mille sept cents kilomètres."
 ];
 // Narration: recorded clips (voix/stopN.mp3, ElevenLabs) when published with the page, otherwise the browser's French voice.
-const NARR={on:true,busy:false,audio:null,clipsOK:null,voice:null,generation:0,pending:null,resume:null,speechTimer:null,utterance:null};
+const NARR={on:true,busy:false,audio:null,clipsOK:null,voice:null,generation:0,pending:null,resume:null,watch:null,fail:null,utterance:null};
 function pickVoice(){ try{ const vs=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)); NARR.voice = vs.find(v=>/natural|online|neural/i.test(v.name)) || vs.find(v=>/fr-FR/i.test(v.lang)) || vs[0] || null; }catch(e){} }
 try{ if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; } }catch(e){}
 // Soft river ambience under the tour (generated noise, no file): ducked while the narrator speaks.
@@ -2127,32 +2130,52 @@ const AMB_BED=0.055, AMB_DUCK=0.022;
 // Clips play through Web Audio: the context is unlocked by the click that starts the tour and stays unlocked,
 // so later stops (auto-advance, no click) are not blocked by autoplay rules in iframes, kiosks or mobile browsers.
 const NB={buf:{},prom:{},gain:null,src:null,cur:null,startAt:0,off:0,paused:false};
+const NARR_LIMITS={load:8000,start:6000,stall:8000,speechStart:3500};
 function narrCtx(){ ambStart(); const c=AMB.ctx; if(c&&!NB.gain){ NB.gain=c.createGain(); NB.gain.gain.value=1; NB.gain.connect(c.destination); } return c; }
-function loadClip(i){ if(i<0||i>=TOUR_SPOKEN.length) return Promise.reject(); if(NB.buf[i]) return Promise.resolve(NB.buf[i]); if(NB.prom[i]) return NB.prom[i];
+function loadClip(i){
+  if(i<0||i>=TOUR_SPOKEN.length) return Promise.reject(new Error('no clip'));
+  if(NB.buf[i]) return Promise.resolve(NB.buf[i]); if(NB.prom[i]) return NB.prom[i];
   const c=narrCtx(); if(!c) return Promise.reject(new Error('noctx'));
-  NB.prom[i]=fetch('voix/stop'+(i+1)+'.mp3').then(r=>{ if(!r.ok) throw new Error('http '+r.status); return r.arrayBuffer(); })
-    .then(ab=>new Promise((res,rej)=>c.decodeAudioData(ab,res,rej))).then(b=>{ NB.buf[i]=b; return b; }).catch(e=>{ delete NB.prom[i]; throw e; });
-  return NB.prom[i]; }
+  // One deadline covers the request, body and decoder. A late decoder cannot cache a timed-out clip.
+  const controller=new AbortController();
+  const request=new Promise((resolve,reject)=>{
+    let settled=false;
+    const finish=(error,buf)=>{ if(settled) return; settled=true; clearTimeout(timer); if(error) reject(error); else { NB.buf[i]=buf; resolve(buf); } };
+    const timer=setTimeout(()=>{ controller.abort(); finish(new Error('Narration load timeout')); },NARR_LIMITS.load);
+    fetch('voix/stop'+(i+1)+'.mp3',{signal:controller.signal})
+      .then(r=>{ if(!r.ok) throw new Error('http '+r.status); return r.arrayBuffer(); })
+      .then(ab=>new Promise((resolve,reject)=>c.decodeAudioData(ab,resolve,reject)))
+      .then(buf=>finish(null,buf),error=>finish(error));
+  });
+  NB.prom[i]=request; request.then(()=>{ if(NB.prom[i]===request) delete NB.prom[i]; },()=>{ if(NB.prom[i]===request) delete NB.prom[i]; });
+  return request;
+}
 function nbStopSrc(){ const s=NB.src; NB.src=null; if(s){ try{ s.onended=null; s.stop(); }catch(e){} } }
 function nbPlay(buf,off,onEnd){ const c=narrCtx(); nbStopSrc(); const s=c.createBufferSource(); s.buffer=buf; s.connect(NB.gain);
   s.onended=()=>{ if(NB.src===s){ NB.src=null; onEnd&&onEnd(); } }; NB.src=s; NB.cur={buf,onEnd}; NB.startAt=c.currentTime-off; NB.paused=false; s.start(0,off); }
+// A single pause-aware deadline follows whichever audio engine owns this narration.
+function narrWatchClear(){ if(NARR.watch){ clearTimeout(NARR.watch.timer); NARR.watch=null; } }
+function narrWatchResume(){ const w=NARR.watch; if(!w||!TOUR.playing||w.timer!==null) return; w.at=performance.now(); w.timer=setTimeout(()=>{ if(NARR.watch===w){ NARR.watch=null; w.fail(); } },w.remaining); }
+function narrWatch(ms,fail){ narrWatchClear(); NARR.watch={remaining:ms,at:performance.now(),timer:null,fail}; narrWatchResume(); }
+function narrWatchPause(){ const w=NARR.watch; if(!w||w.timer===null) return; clearTimeout(w.timer); w.remaining=Math.max(0,w.remaining-(performance.now()-w.at)); w.timer=null; }
 function narrPause(){
-  clearTimeout(NARR.speechTimer);
+  narrWatchPause();
   if(NB.src&&AMB.ctx){ NB.off=Math.max(0,AMB.ctx.currentTime-NB.startAt); NB.paused=true; nbStopSrc(); }
   try{ if(NARR.audio) NARR.audio.pause(); if(window.speechSynthesis) speechSynthesis.pause(); }catch(e){}
 }
 function narrResume(){
   if(!TOUR.on||!TOUR.playing||!NARR.on) return;
+  narrWatchResume();
   if(NARR.pending){ const start=NARR.pending; NARR.pending=null; if(NARR.utterance&&NARR.resume) NARR.resume(); start(); return; }
-  if(NB.paused&&NB.cur){ const c=narrCtx(); if(c&&c.state==='suspended') c.resume().catch(()=>{}); nbPlay(NB.cur.buf,NB.off,NB.cur.onEnd); return; }
+  if(NB.paused&&NB.cur){ try{ const c=narrCtx(); if(c&&c.state==='suspended') c.resume().catch(()=>{}); nbPlay(NB.cur.buf,NB.off,NB.cur.onEnd); }catch(e){ if(NARR.fail) NARR.fail(); } return; }
   if(NARR.resume) NARR.resume();
 }
 function narrStop(){
-  // Invalidate every fetch, decode, playback promise and speech callback, even if the next tour opens the same stop.
-  NARR.generation++; NARR.busy=false; NARR.pending=null; NARR.resume=null; clearTimeout(NARR.speechTimer);
+  // Invalidate every fetch, decode, playback promise and speech callback, including same-stop retries.
+  NARR.generation++; NARR.busy=false; NARR.pending=null; NARR.resume=null; NARR.fail=null; narrWatchClear();
   nbStopSrc(); NB.paused=false; NB.cur=null; NB.off=0;
   const a=NARR.audio; NARR.audio=null;
-  try{ if(a){ a.onended=a.onplaying=a.onerror=null; a.pause(); a.removeAttribute('src'); a.load(); } }catch(e){}
+  try{ if(a){ a.onended=a.onplaying=a.onerror=a.ontimeupdate=null; a.pause(); a.removeAttribute('src'); a.load(); } }catch(e){}
   if(NARR.utterance){ NARR.utterance.onstart=NARR.utterance.onend=NARR.utterance.onerror=null; NARR.utterance=null; }
   try{ window.speechSynthesis&&speechSynthesis.cancel(); }catch(e){}
 }
@@ -2161,36 +2184,48 @@ function narrate(i){
   const generation=NARR.generation;
   const active=()=>NARR.generation===generation&&TOUR.on&&TOUR.i===i&&NARR.on;
   const note=t=>{ if(!active()) return; const n=document.getElementById('tour-note'); if(n) n.textContent=t; };
-  const done=()=>{ if(!active()) return; NARR.busy=false; NARR.pending=null; NARR.resume=null; NB.cur=null; NB.paused=false; clearTimeout(NARR.speechTimer); NARR.generation++; ambLevel(AMB_BED,1.2); };
+  const done=()=>{ if(!active()) return; narrStop(); ambLevel(AMB_BED,1.2); };
   const whenPlaying=start=>{ if(!active()) return; if(!TOUR.playing){ NARR.pending=()=>{ if(active()) start(); }; return; } start(); };
-  note('Chargement de la narration…');
+  const textOnly=(message='Narration indisponible. La visite continue avec le texte.',label='Réessayer la narration')=>{
+    if(!active()) return; narrStop(); ambLevel(AMB_BED,1.2); TOUR.t=0;
+    const retryGeneration=NARR.generation,n=document.getElementById('tour-note'); if(!n) return;
+    n.textContent=message+' '; const b=document.createElement('button'); b.className='btn'; b.textContent=label;
+    b.onclick=()=>{ if(NARR.generation===retryGeneration&&TOUR.on&&TOUR.i===i&&NARR.on){ narrCtx(); narrate(i); } }; n.appendChild(b);
+  };
+  NARR.fail=()=>textOnly(); note('Chargement de la narration…');
   // The recorded seventh stop describes a canal limit. Other configurations use their actual explanation.
   const dynamic=i===6&&R.bind!=='canal';
   const spoken=dynamic?`Dans votre configuration actuelle, la contrainte est la suivante. ${BIND_TXT[R.bind]} Changez de scénario après la visite pour voir la contrainte se déplacer.`:TOUR_SPOKEN[i];
   const speak=()=>{ if(!active()) return; whenPlaying(()=>{ try{
-      if(!window.speechSynthesis){ note('Narration audio indisponible dans ce navigateur : texte affiché seulement.'); done(); return; }
+      if(!window.speechSynthesis){ textOnly(); return; }
       if(!NARR.voice) pickVoice();
-      const parts=(spoken.match(/[^.!?:]+[.!?:]?/g)||[]).map(t=>t.trim()).filter(Boolean); let started=false, k=0;
-      const watch=()=>{ clearTimeout(NARR.speechTimer); if(!started) NARR.speechTimer=setTimeout(()=>{
-        if(active()&&TOUR.playing&&!started){ note('Aucune voix française disponible : texte affiché seulement.'); done(); speechSynthesis.cancel(); }
-      },3000); };
-      const next=()=>{ if(!active()) return; whenPlaying(()=>{
+      const parts=(spoken.match(/[^.!?:]+[.!?:]?/g)||[]).map(t=>t.trim()).filter(Boolean); let k=0;
+      const next=()=>{ if(!active()) return; narrWatchClear(); whenPlaying(()=>{
         if(k>=parts.length){ done(); return; }
         const u=new SpeechSynthesisUtterance(parts[k++]); NARR.utterance=u; u.lang='fr-FR'; if(NARR.voice) u.voice=NARR.voice; u.rate=0.97; u.pitch=1;
-        u.onstart=()=>{ if(!active()) return; started=true; clearTimeout(NARR.speechTimer); if(!TOUR.playing) speechSynthesis.pause(); ambLevel(AMB_DUCK,0.5); note(NARR.voice?('Narration : voix du navigateur ('+NARR.voice.name+')'):'Narration : voix du navigateur'); };
-        u.onend=next; u.onerror=()=>{ if(!active()) return; note('Narration audio indisponible : texte affiché seulement.'); done(); };
-        speechSynthesis.speak(u);
+        const current=()=>active()&&NARR.utterance===u;
+        u.onstart=()=>{ if(!current()) return; if(!TOUR.playing) speechSynthesis.pause();
+          narrWatch(Math.min(60000,Math.max(10000,u.text.length*140+5000)),()=>{ if(current()) textOnly(); });
+          ambLevel(AMB_DUCK,0.5); note(NARR.voice?('Narration : voix du navigateur ('+NARR.voice.name+')'):'Narration : voix du navigateur'); };
+        u.onend=()=>{ if(!current()) return; u.onstart=u.onend=u.onerror=null; next(); };
+        u.onerror=()=>{ if(current()) textOnly(); };
+        narrWatch(NARR_LIMITS.speechStart,()=>{ if(current()) textOnly(); }); speechSynthesis.speak(u);
       }); };
-      speechSynthesis.cancel(); NARR.resume=()=>{ if(!active()) return; try{ speechSynthesis.resume(); watch(); }catch(e){ done(); } };
+      speechSynthesis.cancel(); NARR.resume=()=>{ if(!active()) return; try{ speechSynthesis.resume(); }catch(e){ textOnly(); } };
       NARR.resume(); next();
-    }catch(e){ note('Narration audio indisponible : texte affiché seulement.'); done(); } }); };
-  const tapToListen=()=>{ if(!active()) return; NARR.busy=false; const n=document.getElementById('tour-note'); if(!n) return; n.textContent=''; const b=document.createElement('button'); b.className='btn'; b.style.cssText='padding:4px 10px;font-size:12px;border-color:var(--power);color:var(--power)'; b.textContent='▶ Écouter cette étape'; b.onclick=()=>{ if(active()){ narrCtx(); narrate(i); } }; n.appendChild(b); };
+    }catch(e){ textOnly(); } }); };
+  const tapToListen=()=>textOnly('La visite continue avec le texte. Touchez Écouter pour activer le son.','▶ Écouter cette étape');
   const html5=()=>{ if(!active()) return; whenPlaying(()=>{ try{
-      const a=new Audio('voix/stop'+(i+1)+'.mp3'); NARR.audio=a; a.onended=done;
-      a.onplaying=()=>{ if(!active()||NARR.audio!==a){ a.pause(); return; } if(!TOUR.playing){ a.pause(); return; } ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); };
-      const fallback=err=>{ if(!active()||NARR.audio!==a) return; a.onended=a.onplaying=a.onerror=null; a.pause(); NARR.audio=null; NARR.resume=null; if(err&&err.name==='NotAllowedError') tapToListen(); else speak(); };
+      const a=new Audio('voix/stop'+(i+1)+'.mp3'); NARR.audio=a; a.preload='auto'; let lastTime=0;
+      const current=()=>active()&&NARR.audio===a;
+      const fallback=err=>{ if(!current()) return; narrWatchClear(); a.onended=a.onplaying=a.onerror=a.ontimeupdate=null;
+        try{ a.pause(); a.removeAttribute('src'); a.load(); }catch(e){} NARR.audio=null; NARR.resume=null;
+        if(err&&err.name==='NotAllowedError') tapToListen(); else speak(); };
+      a.onended=()=>{ if(current()) done(); };
+      a.onplaying=()=>{ if(!current()||!TOUR.playing){ a.pause(); return; } narrWatch(NARR_LIMITS.stall,fallback); ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); };
+      a.ontimeupdate=()=>{ if(current()&&TOUR.playing&&a.currentTime>lastTime){ lastTime=a.currentTime; narrWatch(NARR_LIMITS.stall,fallback); } };
       a.onerror=fallback;
-      NARR.resume=()=>{ if(active()&&NARR.audio===a) whenPlaying(()=>{ a.play().catch(fallback); }); };
+      NARR.resume=()=>{ if(current()) whenPlaying(()=>{ narrWatch(NARR_LIMITS.start,fallback); try{ Promise.resolve(a.play()).catch(fallback); }catch(e){ fallback(e); } }); };
       NARR.resume();
     }catch(e){ speak(); } }); };
   if(dynamic){ speak(); return; }
@@ -2199,13 +2234,12 @@ function narrate(i){
   if(c.state==='suspended'){ try{ c.resume().catch(()=>{}); }catch(e){} }
   const play=buf=>whenPlaying(()=>{
     if(c.state!=='running'){
-      c.resume().catch(()=>{}); setTimeout(()=>{
-        if(!active()) return;
-        whenPlaying(()=>{ if(c.state!=='running') tapToListen(); else play(buf); });
-      },350); return;
+      try{ c.resume().catch(()=>{}); }catch(e){}
+      narrWatch(350,()=>{ if(!active()) return; whenPlaying(()=>{ if(c.state!=='running') tapToListen(); else play(buf); }); }); return;
     }
-    nbPlay(buf,0,done); ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)');
-    loadClip(i+1).catch(()=>{});
+    try{ nbPlay(buf,0,done); }catch(e){ html5(); return; }
+    narrWatch(Math.max(NARR_LIMITS.stall,buf.duration*1000+4000),()=>{ if(active()) textOnly(); });
+    ambLevel(AMB_DUCK,0.5); note('Narration : Perle (ElevenLabs)'); loadClip(i+1).catch(()=>{});
   });
   loadClip(i).then(buf=>{ if(active()) play(buf); }).catch(()=>{ if(active()) html5(); });
 }
@@ -2227,8 +2261,8 @@ function tourStop(i){
 function tourPos(st,which){ const v=st[which]; if(st.v==='grid'||!camera) return v.p; const asp=camera.aspect; if(asp>=0.9) return v.p;
   const k=clamp(0.78/asp,1,1.75); const o=[v.p[0]-v.t[0],v.p[1]-v.t[1],v.p[2]-v.t[2]];
   return [v.t[0]+o[0]*k, v.t[1]+o[1]*k*1.3, v.t[2]+o[2]*k]; }
-function startTour(){ if(mode!=='live'||!webgl) return; TOUR.on=true; TOUR.playing=true; TOUR.saved={...PANELS}; PANELS.dash=false; PANELS.ctrl=false; applyPanels(); document.body.classList.add('touring'); $('#tourBtn').setAttribute('aria-pressed','true'); $('#tourBtn .ft').textContent='Arrêter la visite'; $('#tourBtn').classList.remove('pulse'); $('#tour').hidden=false; $('#tPlay').textContent='Pause'; controls.enabled=false; if(NARR.on){ ambStart(); ambLevel(AMB_BED,2); } tourStop(0); }
-function endTour(){ if(!TOUR.on) return; TOUR.on=false; narrStop(); ambLevel(0,1.2); $('#tour').hidden=true; document.body.classList.remove('touring'); $('#tourBtn').setAttribute('aria-pressed','false'); $('#tourBtn .ft').textContent='Visite guidée'; closeCut(); if(TOUR.saved){Object.assign(PANELS,TOUR.saved);} applyPanels(); setView('site',false); controls.enabled=true; flyTo(ov(),2.0); }
+function startTour(){ if(mode!=='live'||!webgl) return; window.IngaProduct?.dismiss(); TOUR.on=true; TOUR.playing=true; TOUR.saved={...PANELS}; PANELS.dash=false; PANELS.ctrl=false; applyPanels(); document.body.classList.add('touring'); $('#tourBtn').setAttribute('aria-pressed','true'); $('#tourBtn .ft').textContent='Arrêter la visite'; $('#tourBtn').classList.remove('pulse'); $('#tour').hidden=false; $('#tPlay').textContent='Pause'; controls.enabled=false; if(NARR.on){ ambStart(); ambLevel(AMB_BED,2); } tourStop(0); }
+function endTour(completed=false){ if(!TOUR.on) return; TOUR.on=false; narrStop(); ambLevel(0,1.2); $('#tour').hidden=true; document.body.classList.remove('touring'); $('#tourBtn').setAttribute('aria-pressed','false'); $('#tourBtn .ft').textContent='Visite guidée'; closeCut(); if(TOUR.saved){Object.assign(PANELS,TOUR.saved);} applyPanels(); setView('site',false); controls.enabled=true; flyTo(ov(),2.0); if(completed===true) window.dispatchEvent(new Event('inga:tour-complete')); }
 // Keep the subject in the clear area between the title block and the tour card (shifts the projection, not the camera).
 let viewOffY=0;
 function tourClearArea(){ const h=innerHeight; const c=$('#tour'); const tb=document.querySelector('.tb');
@@ -2247,10 +2281,12 @@ function updateTour(rdt){
   if(TOUR.playing) TOUR.t+=rdt;
   $('#tour-prog').style.width=clamp(TOUR.t/st.dur*100,0,100)+'%';
   if(!reduced && !tween && (!st.cut || innerWidth<900)){ const k=ease(clamp((TOUR.t-2.6)/(st.dur-2.6),0,1)); const pa=tourPos(st,'a'), pb=tourPos(st,'b'); setCam([0,1,2].map(j=>lerp(pa[j],pb[j],k)),[0,1,2].map(j=>lerp(st.a.t[j],st.b.t[j],k)),42); }
-  if(TOUR.playing && TOUR.t>=st.dur && !NARR.busy){ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(); }
+  if(TOUR.playing && TOUR.t>=st.dur && !NARR.busy){ if(TOUR.i<TOUR_STOPS.length-1) tourStop(TOUR.i+1); else endTour(true); }
 }
 
 function resetAll(){
+  window.IngaProduct?.reset();
+  document.querySelectorAll('.modal').forEach(modal=>{ modal.hidden=true; });
   if(TOUR.on) endTour();
   S=clone(BASE); activePreset=null; experience=null; clearTimeout(resultAnnouncement); $('#result-feedback').hidden=true; $('#result-announcement').textContent=''; selected=null; closeCut(); closeInfo(); recompute(); syncControls();
   $('#exp').classList.remove('on'); document.querySelectorAll('.pre').forEach(b=>b.setAttribute('aria-pressed','false'));
@@ -2262,8 +2298,8 @@ function resetAll(){
 const MUSEE=/[?&#](musee|kiosk)(=1)?\b/i.test(location.search+location.hash) || window.INGA_MUSEE===true;
 if(MUSEE){
   document.documentElement.classList.add('musee');
-  let last=performance.now(), endedAt=0, wasTour=false;
-  const poke=()=>{ last=performance.now(); };
+  let last=performance.now(), endedAt=0, wasTour=false, restartTimer=0;
+  const poke=()=>{ last=performance.now(); clearTimeout(restartTimer); restartTimer=0; };
   ['pointerdown','keydown','wheel','touchstart'].forEach(ev=>addEventListener(ev,poke,{passive:true,capture:true}));
   addEventListener('contextmenu',e=>e.preventDefault());
   addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('a[href]'); if(a){ e.preventDefault(); } },true);
@@ -2272,7 +2308,13 @@ if(MUSEE){
     if(mode==='paper' && idle>6){ try{ startTransition(); }catch(e){} return; }
     if(mode!=='live') return;
     const sinceEnd=(performance.now()-endedAt)/1000;
-    if(!TOUR.on && idle>60 && sinceEnd>12){ try{ $('#reg').hidden=true; resetAll(); }catch(e){} setTimeout(()=>{ if(!TOUR.on) startTour(); },1800); last=performance.now()-60000; }
+    const overlay=activeModal();
+    const abandoned=!TOUR.on || !TOUR.playing || (overlay && overlay.id!=='cut');
+    if(abandoned && idle>60 && sinceEnd>12 && !restartTimer){
+      resetAll();
+      const resetAt=performance.now(); last=resetAt;
+      restartTimer=setTimeout(()=>{ restartTimer=0; if(last===resetAt && !TOUR.on && mode==='live') startTour(); },1800);
+    }
   },1000);
 }
 
@@ -2281,9 +2323,9 @@ function openReg(tab){
   $('#reg').hidden=false; document.querySelectorAll('.rtabs [data-rt]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.rt===tab))); syncTablist($('.rtabs'));
   const B=$('#reg-body');
   if(tab==='params') B.innerHTML=`<p class="note" style="margin:0 0 10px">Chaque paramètre porte un statut. Les valeurs DOCUMENTÉ restent liées à leur date et à leur périmètre ; les autres sont des choix de modèle signalés comme tels.</p><div class="tw"><table><thead><tr><th>Paramètre</th><th>Valeur</th><th>Unité</th><th>Statut</th><th>Source</th><th>Date</th><th>Périmètre</th><th>Usage dans le modèle</th></tr></thead><tbody>${REGISTRY.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td>${chip(r[3])}</td><td class="num">${r[4]}</td><td class="num">${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td></tr>`).join('')}</tbody></table></div>`;
-  if(tab==='srcs') B.innerHTML=`<div class="srcl">${Object.entries(SOURCES).map(([k,s])=>`<div><b>${k}</b>${s.t}<p>${s.d} · ${s.loc}</p><p>${s.use}</p><a href="${s.url}" target="_blank" rel="noopener">${s.url}</a></div>`).join('')}</div><p class="note">Images de référence du dossier : plan SNEL (F02), photographies Ivanhoe Mines, Elecnor, Evolutio, Radio Okapi (CC BY 2.0), ANDRITZ, ABELINGA. Aucune image générée n’a servi à établir la géométrie.</p>`;
+  if(tab==='srcs') B.innerHTML=`<div class="srcl">${Object.entries(SOURCES).map(([k,s])=>`<div><b>${k}</b>${s.t}<p>${s.d} · ${s.loc}</p><p>${s.use}</p><a href="${s.url}" target="_blank" rel="noopener">${s.url}</a></div>`).join('')}</div><p class="note">La reconstruction s’appuie sur le plan SNEL publié par la Banque mondiale, les documents cités ci-dessus et le relief Copernicus. Les références documentaires ne constituent pas une validation de la maquette par leurs auteurs.</p><p class="note">Relief dérivé de Copernicus DEM GLO-30, reprojeté et échantillonné pour cette représentation pédagogique. © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. <a href="THIRD_PARTY_NOTICES.md" target="_blank" rel="noopener">Crédits et licences</a>.</p>`;
   if(tab==='limits') B.innerHTML=`<div class="tw"><table><thead><tr><th>Élément</th><th>Traitement</th></tr></thead><tbody>${LIMITS.map(l=>`<tr><td>${l[0]}</td><td>${l[1]}</td></tr>`).join('')}</tbody></table></div>
-    <p class="note">Modèle quasi stationnaire (pp. 14-15) : il explique le bilan d’énergie, pas les remous, les coups de bélier ni la stabilité du réseau. Les démarrages et arrêts animés sont des transitoires illustratifs, pas un modèle de régulateur.</p>`;
+    <p class="note">Modèle quasi stationnaire : il explique le bilan d’énergie, pas les remous, les coups de bélier ni la stabilité du réseau. Les démarrages et arrêts animés sont des transitoires illustratifs, pas un modèle de régulateur.</p>`;
   if(tab==='valid'){ const res=runValidation(); const ok=res.filter(r=>r.ok).length;
     B.innerHTML=`<p style="margin:0 0 10px"><b class="${ok===res.length?'pass':'fail'}">${ok} / ${res.length} tests réussis</b> <span class="note">exécutés à l’instant dans votre navigateur, sur le moteur de calcul réel.</span></p><div class="tw"><table><thead><tr><th>Test</th><th>Résultat</th><th>Détail</th></tr></thead><tbody>${res.map(r=>`<tr><td>${r.name}</td><td class="${r.ok?'pass':'fail'}">${r.ok?'OK':'ÉCHEC'}</td><td class="num" style="white-space:normal">${r.detail||''}</td></tr>`).join('')}</tbody></table></div>`; }
 }
@@ -2522,5 +2564,7 @@ window.__INGA={dbg(){return {n:T3.chans&&T3.chans.length, vis:T3.chans&&T3.chans
 init();
 </script>
 
-<script>if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }</script>
+<script src="product.js"></script>
+<script src="offline.js"></script>
+<script src="polish.js"></script>
 </body></html>

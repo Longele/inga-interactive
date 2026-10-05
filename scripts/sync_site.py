@@ -15,7 +15,12 @@ marker = b'<style>html,body{margin:0;background:#0d1315}</style>'
 assert source.count(marker) == 1, 'Museum insertion marker is missing or ambiguous'
 museum = source.replace(marker, b'<script>window.INGA_MUSEE=true;</script>\n' + marker)
 worker = (root / 'sw.js').read_text()
+# Runtime extensions and the release identifier are part of the same atomic offline edition.
 paths = json.loads(re.search(r'const FILES=(\[.*?\]);', worker).group(1))
+paths = sorted(set(paths) | {p.name for p in root.glob('*.css')} |
+               {p.name for p in root.glob('*.js') if p.name != 'sw.js'} |
+               ({'VERSION'} if (root / 'VERSION').exists() else set()))
+worker = re.sub(r'const FILES=\[.*?\];', 'const FILES=' + json.dumps(paths, ensure_ascii=False) + ';', worker)
 digest = hashlib.sha256()
 for name in sorted(set(paths)):
     data = source if name in ('./', 'index.html') else museum if name == 'musee.html' else (root / name).read_bytes()

@@ -1,63 +1,50 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Inga I + II · Guide de diffusion</title>
+<title>Inga Interactive · Guide d'utilisation</title>
 <style>
-:root{--bg:#f6f2e8;--ink:#1d1c19;--mut:#5d584d;--line:#d9d1bf;--acc:#b5781f;--card:#fffdf8}
-@media (prefers-color-scheme:dark){:root{--bg:#121718;--ink:#ece7d9;--mut:#a1aca8;--line:#2b3436;--acc:#e8b45a;--card:#192022}}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:780px;margin:0 auto;padding:40px 16px 80px}
-h1{font-size:30px;line-height:1.15;margin:0 0 6px}h2{font-size:20px;margin:36px 0 8px;padding-top:18px;border-top:1px solid var(--line)}
-.k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
-p,li{color:var(--ink)}small,.m{color:var(--mut)}
-code,kbd{font:13px ui-monospace,Menlo,Consolas,monospace;background:var(--card);border:1px solid var(--line);border-radius:3px;padding:1px 5px}
-.box{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:4px;padding:12px 14px;margin:14px 0}
-table{border-collapse:collapse;width:100%;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
-ol li,ul li{margin:4px 0}
+:root{color-scheme:light dark;--bg:#f5f1e7;--ink:#20302e;--mut:#596561;--line:#d4d8ce;--acc:#765017;--card:#fffdf7}
+@media(prefers-color-scheme:dark){:root{--bg:#111c1d;--ink:#eceadf;--mut:#afbcb6;--line:#354849;--acc:#edc77e;--card:#19282a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:860px;margin:auto;padding:48px 20px 80px}h1{font-size:clamp(30px,6vw,46px);line-height:1.15;margin:12px 0 20px}h2{font-size:24px;line-height:1.3;margin:42px 0 12px;padding-top:20px;border-top:1px solid var(--line)}a{color:var(--acc);text-underline-offset:.2em}a:focus-visible{outline:3px solid var(--acc);outline-offset:5px}.k{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}.m,small{color:var(--mut)}nav{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}nav a{padding:10px 16px;border:1px solid var(--line);border-radius:6px;background:var(--card)}code,kbd{font:14px ui-monospace,Consolas,monospace;background:var(--card);border:1px solid var(--line);border-radius:3px;padding:2px 5px;overflow-wrap:anywhere}.box{background:var(--card);border-left:3px solid var(--acc);border-radius:4px;padding:16px 20px;margin:20px 0}li{margin:8px 0}dl{display:grid;grid-template-columns:minmax(120px,1fr) 3fr;gap:12px}dt{font-weight:650}dd{margin:0}@media(max-width:550px){dl{display:block}dt{margin-top:20px}dd{margin-top:4px}}
+@media print{nav{display:none}body{font-size:11pt}main{padding:0}h2{break-after:avoid}.box{break-inside:avoid}}
 </style></head><body><main>
-<div class="k">Inga I + II · du fleuve au réseau</div>
-<h1>Guide de diffusion</h1>
-<p class="m">Ce dossier contient toute la simulation : page, moteur 3D, polices, voix de narration. Il fonctionne sans Internet, sur ordinateur, tablette et téléphone, dans tout navigateur récent avec WebGL.</p>
+<div class="k">Inga I + II · Du fleuve au réseau</div>
+<h1>Guide d'utilisation</h1>
+<p>Explorez le site d'Inga, suivez le parcours de l'eau et découvrez comment les centrales produisent puis transportent l'électricité.</p>
+<nav aria-label="Accès à l'expérience"><a href="index.html">Ouvrir l'expérience</a><a href="musee.html">Ouvrir le mode musée</a><a href="#installation">Installer</a><a href="#depannage">Dépanner</a></nav>
 
-<table>
-<tr><th>Contenu</th><th>Rôle</th></tr>
-<tr><td><code>index.html</code></td><td>Version normale : intro, simulation, visite guidée.</td></tr>
-<tr><td><code>musee.html</code></td><td>Version borne : démarre seule, boucle la visite quand personne ne touche l’écran, se réinitialise après le départ d’un visiteur.</td></tr>
-<tr><td><code>Lancer_musee.bat</code></td><td>Windows : ouvre <code>musee.html</code> en plein écran, son automatique, hors ligne. Quitter : <kbd>Alt</kbd> + <kbd>F4</kbd>.</td></tr>
-<tr><td><code>Ouvrir_Inga.bat</code></td><td>Windows : ouvre la simulation dans une fenêtre d’application normale.</td></tr>
-<tr><td><code>voix/</code></td><td>Narration Perle (ElevenLabs), une piste par étape.</td></tr>
-</table>
+<h2>Choisir son parcours</h2>
+<dl><dt>Découvrir</dt><dd>La visite guidée accompagne l'observation de la maquette. Vous pouvez la mettre en pause, revenir à l'étape précédente ou passer à la suivante.</dd>
+<dt>Explorer</dt><dd>Déplacez la vue, sélectionnez un ouvrage ou un groupe et comparez les scénarios proposés. Les changements de puissance affichés proviennent du modèle.</dd>
+<dt>Mode musée</dt><dd>Une version adaptée à une borne d'accueil, avec reprise de la visite après une période sans interaction.</dd></dl>
+<p>Dans <b>Apprendre</b>, essayez trois défis : canal ensablé, groupe indisponible et réseau limité. Faites une prédiction, observez le résultat puis consultez l'explication. Un glossaire aide à distinguer débit, chute, puissance et énergie. Sur mobile, ces accès sont regroupés dans <b>Plus</b>.</p>
+<p>À la souris, faites glisser pour tourner et utilisez la molette pour zoomer. Sur écran tactile, faites glisser avec un doigt pour tourner et pincez avec deux doigts pour zoomer. Les boutons de vue permettent aussi de retrouver un cadrage. Au clavier, utilisez <kbd>Tab</kbd> et <kbd>Maj</kbd> + <kbd>Tab</kbd> ; <kbd>Échap</kbd> ferme une fenêtre.</p>
+<div class="box">Le registre distingue les données documentées, les hypothèses et les éléments inconnus. Les résultats affichés sont simulés : ils ne représentent pas la production actuelle de la SNEL.</div>
 
-<h2>1. Partager un lien (le plus simple)</h2>
-<p>Mettez le dossier en ligne sur un hébergement statique gratuit. Vous obtenez une adresse à envoyer ou à mettre en QR code.</p>
-<ol>
-<li><b>Netlify Drop</b> : ouvrez <code>app.netlify.com/drop</code> et glissez le dossier <code>Inga_I_II</code>. L’adresse est prête en une minute.</li>
-<li>Autres options équivalentes : Cloudflare Pages, GitHub Pages.</li>
-<li>Partagez <code>…/index.html</code> pour le public, <code>…/musee.html</code> pour une borne.</li>
-</ol>
-<div class="box">Une fois en ligne, la simulation s’installe comme une application : sur téléphone, menu du navigateur puis « Ajouter à l’écran d’accueil » ; sur ordinateur, l’icône « Installer » de la barre d’adresse. Après la première visite, elle fonctionne hors ligne.</div>
+<h2 id="installation">Installer sur le web</h2>
+<ol><li>Publiez le contenu du dossier <code>site/</code> de l'archive sur un hébergement statique HTTPS : GitHub Pages, Cloudflare Pages ou un hébergement équivalent.</li><li>Ouvrez <code>…/index.html</code> pour l'expérience publique et <code>…/musee.html</code> pour une borne.</li><li>Ouvrez <b>Hors ligne</b> (dans <b>Plus</b> sur mobile). Attendez la confirmation que la visite complète est disponible sur l'appareil. Si le téléchargement est incomplet, utilisez la commande pour le réessayer. Vérifiez ensuite le fonctionnement par un rechargement sans réseau.</li></ol>
+<p>Selon le navigateur, l'option « Installer » ou « Ajouter à l'écran d'accueil » peut créer un accès direct. Le cache hors ligne exige HTTPS ou localhost et suffisamment d'espace. La navigation privée, l'effacement des données ou l'éviction du stockage peuvent supprimer les ressources enregistrées. Les liens vers les sources externes nécessitent toujours Internet.</p>
 
-<h2>2. Écran de musée (recommandé : mini-PC Windows + écran tactile)</h2>
-<ol>
-<li>Copiez le dossier sur le mini-PC (par exemple <code>C:\Inga_I_II</code>).</li>
-<li>Double-cliquez <code>Lancer_musee.bat</code>. Chrome ou Edge s’ouvre en plein écran, sans barre ni menu.</li>
-<li>Démarrage automatique : touches <kbd>Win</kbd> + <kbd>R</kbd>, tapez <code>shell:startup</code>, puis placez-y un raccourci vers <code>Lancer_musee.bat</code>.</li>
-<li>Paramètres Windows : désactivez la mise en veille de l’écran et de l’ordinateur, et les mises à jour pendant les heures d’ouverture.</li>
-<li>Option pour les sites exposés au public : « Accès attribué » (mode kiosque de Windows) pour verrouiller le poste.</li>
-</ol>
-<p><b>Comportement en mode musée</b> : la page entre seule dans le site 3D, lance la visite commentée après 60 secondes sans contact, la rejoue en boucle, et revient à l’état initial quand un visiteur s’en va. Les liens externes et le clic droit sont désactivés.</p>
-<p class="m">Matériel conseillé : processeur graphique récent (Intel Iris Xe, AMD Radeon intégré ou mieux), écran 1080p tactile, haut-parleurs ou casque. Un Raspberry Pi est trop faible pour ce rendu 3D.</p>
+<h2>Installer une borne Windows</h2>
+<ol><li>Décompressez l'archive, par exemple dans <code>C:\Inga</code>. Conservez les dossiers <code>lib</code>, <code>fonts</code>, <code>icons</code> et <code>voix</code> à côté des pages, dans <code>site/</code>.</li><li>Installez Chrome ou Edge. Dans <code>site/</code>, lancez <code>Ouvrir_Inga.bat</code> pour une fenêtre normale ou <code>Lancer_musee.bat</code> pour le plein écran. Ces lanceurs sont fournis dans l'archive de livraison.</li><li>Quittez le plein écran avec <kbd>Alt</kbd> + <kbd>F4</kbd>. Vérifiez image, son et visite complète sur le matériel prévu avant l'ouverture au public.</li><li>Pour un démarrage automatique, créez un raccourci vers <code>Lancer_musee.bat</code> dans le dossier Windows <code>shell:startup</code>.</li></ol>
+<p>Ces lanceurs utilisent les fichiers sur disque : le service worker et l'installation web ne s'appliquent pas à une adresse <code>file:</code>. Les comportements du navigateur et les politiques informatiques du poste doivent être vérifiés pendant la recette.</p>
+<p>Réglez la veille selon les heures d'accueil et planifiez les mises à jour du système. Pour une borne exposée au public, configurez le verrouillage du poste avec l'administrateur ; le plein écran du navigateur ne verrouille pas à lui seul Windows.</p>
 
-<h2>3. Tablette en borne</h2>
-<ul>
-<li><b>Android</b> : application « Fully Kiosk Browser », adresse <code>…/musee.html</code> (version en ligne), avec la lecture automatique des médias autorisée.</li>
-<li><b>iPad</b> : ouvrez l’adresse dans Safari, « Sur l’écran d’accueil », puis « Accès guidé » (Réglages, Accessibilité). Apple exige un premier toucher avant le son : un bouton « Écouter cette étape » apparaît alors dans la visite.</li>
-</ul>
+<h2>Tablette et téléphone</h2>
+<p>Ouvrez l'adresse HTTPS dans le navigateur. L'expérience s'adapte au portrait et au paysage ; en cas d'espace limité, le paysage facilite la lecture de la maquette et des panneaux. Sur iPad, l'Accès guidé peut limiter la navigation hors de l'application. Le comportement exact doit être validé sur le modèle d'appareil et la version du navigateur retenus.</p>
 
-<h2>4. Son et navigateurs</h2>
-<p>Le premier toucher (bouton « Visite guidée ») débloque le son pour toute la visite. Si un navigateur bloque quand même l’audio, la visite affiche un bouton « Écouter cette étape ». En mode borne lancé par <code>Lancer_musee.bat</code>, le son démarre sans toucher.</p>
+<h2>Son et visite automatique</h2>
+<p>Activez le son depuis la visite et vérifiez le volume du système. Un premier toucher peut être nécessaire, notamment sur mobile. Si le navigateur bloque la lecture, utilisez la commande d'écoute proposée. Le texte de chaque étape reste disponible indépendamment de la narration.</p>
+<p>En mode musée, la visite reprend après environ une minute sans interaction lorsque les conditions de reprise sont réunies. Il est possible de l'interrompre pour explorer. Les liens externes et le menu contextuel sont désactivés dans ce mode.</p>
 
-<h2>5. Mise à jour</h2>
-<p>Remplacez le dossier par la nouvelle version, ou glissez-le de nouveau sur Netlify. Les appareils qui ont installé l’application récupèrent la mise à jour à la visite suivante.</p>
+<h2 id="depannage">Dépannage rapide</h2>
+<dl><dt>Pas d'image 3D</dt><dd>Vérifiez la prise en charge de WebGL et l'accélération graphique. Fermez les autres applications gourmandes, puis rechargez la page avec le navigateur accepté à l'installation.</dd>
+<dt>Pas de son</dt><dd>Vérifiez volume, sortie audio et mode silencieux. Touchez la commande d'écoute dans la visite.</dd>
+<dt>Pas de mode hors ligne</dt><dd>Reconnectez-vous et laissez toutes les ressources se télécharger. Vérifiez HTTPS, l'espace libre et l'absence de navigation privée.</dd>
+<dt>Ancienne version</dt><dd>Ouvrez <b>Hors ligne</b>, vérifiez les mises à jour, puis installez celle qui est prête. Si nécessaire, fermez les autres fenêtres de l'application et rouvrez le site en ligne.</dd></dl>
 
-<p class="m" style="margin-top:40px">Simulation éducative et reconstruction partielle : aucune télémétrie SNEL. Relief : Copernicus GLO-30. Sources détaillées dans le Registre de l’application.</p>
+<h2>Mettre à jour</h2>
+<p>Conservez une copie de la version précédente. Testez le nouveau paquet sur un poste de recette, puis remplacez le dossier complet ou publiez une nouvelle version complète du site. Évitez de mélanger les fichiers de deux versions. Sur le site hébergé, ouvrez <b>Hors ligne</b> puis <b>Vérifier les mises à jour</b>. Lorsque le téléchargement est terminé, <b>Installer la mise à jour</b> redémarre la page et remet la visite à zéro : choisissez un moment entre deux visites. Vérifiez ensuite la coupe Francis, le son et le rechargement hors ligne.</p>
+<p>En cas d'incident, transmettez au responsable de support désigné lors de la livraison la version, l'appareil, le navigateur et les étapes qui reproduisent le problème. La version du paquet est inscrite dans le fichier <a href="VERSION">VERSION</a>.</p>
+
+<p class="m" style="margin-top:40px">Simulation pédagogique et reconstruction partielle, sans télémétrie ni certification SNEL. Relief : Copernicus GLO-30. Sources détaillées dans le registre de l'application. <a href="THIRD_PARTY_NOTICES.md">Avis sur les ressources tierces</a>.</p>
 </main></body></html>

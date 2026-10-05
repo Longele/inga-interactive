@@ -1,31 +1,150 @@
-name: Deploy Inga Interactive to GitHub Pages
+name: Validate and deploy Inga Interactive
 
 on:
   push:
     branches: ["main"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: "inga-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      suites: ${{ steps.suites.outputs.suites }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build a versioned distribution
+        run: python3 scripts/build_release.py
+
+      - name: Discover all browser suites
+        id: suites
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          suites = [p.name for p in sorted(Path('tests').glob('browser-*.cjs'))]
+          if not suites:
+              raise SystemExit('No browser tests were found')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('suites=' + json.dumps(suites) + '\n')
+          PY
+
+      - name: Retain the exact candidate that will be tested
+        uses: actions/upload-artifact@v4
+        with:
+          name: inga-build-candidate
+          path: dist/
+          include-hidden-files: true
+          retention-days: 1
+
+  browser-tests:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: ${{ fromJSON(needs.prepare.outputs.suites) }}
+    env:
+      NODE_PATH: ${{ runner.temp }}/inga-browser/node_modules
+      INGA_TEST_URL: http://127.0.0.1:8001
+      INGA_URL: http://127.0.0.1:8001/index.html
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/download-artifact@v4
+        with:
+          name: inga-build-candidate
+          path: dist/
+
+      - name: Install the pinned browser test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/inga-browser" --no-audit --no-fund --ignore-scripts playwright@1.62.1
+          "$RUNNER_TEMP/inga-browser/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Test the public distribution
+        env:
+          TEST_SUITE: ${{ matrix.suite }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROMIUM_PATH="$(node -p 'require("playwright").chromium.executablePath()')"
+          python3 -m http.server 8001 --bind 127.0.0.1 --directory dist/site > "$RUNNER_TEMP/inga-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          python3 - <<'PY'
+          import time, urllib.request
+          for attempt in range(50):
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:8001/VERSION', timeout=1) as response:
+                      assert response.status == 200
+                  break
+              except OSError:
+                  time.sleep(0.2)
+          else:
+              raise SystemExit('The distribution server did not become ready')
+          PY
+          node "tests/$TEST_SUITE"
+
+      - name: Keep failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostics-${{ matrix.suite }}
+          path: |
+            ${{ runner.temp }}/inga-server.log
+            /tmp/inga-*.png
+          if-no-files-found: ignore
+          retention-days: 7
+
+  release-package:
+    needs: [prepare, browser-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: inga-build-candidate
+          path: dist/
+      - name: Verify archive checksums
+        working-directory: dist
+        run: sha256sum --check SHA256SUMS
+      - name: Retain the validated client package
+        uses: actions/upload-artifact@v4
+        with:
+          name: inga-interactive-release
+          path: |
+            dist/inga-interactive-*.zip
+            dist/MANIFEST.json
+            dist/SHA256SUMS
+          retention-days: 90
+
   deploy:
+    needs: [prepare, browser-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check generated pages and offline version
-        run: python3 scripts/sync_site.py --check
+      - uses: actions/download-artifact@v4
+        with:
+          name: inga-build-candidate
+          path: dist/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -33,7 +152,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist/site
 
       - name: Deploy
         id: deployment

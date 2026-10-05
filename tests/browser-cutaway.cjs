@@ -7,7 +7,7 @@ const cases = [
   { file: 'index.html', width: 390, height: 844, cancellation: true },
   { file: 'index.html', width: 844, height: 390 },
   { file: 'index.html', width: 900, height: 700 },
-  { file: 'index.html', width: 1440, height: 900 },
+  { file: 'index.html', width: 1440, height: 900, motion: 'no-preference' },
   { file: 'musee.html', width: 390, height: 844 }
 ];
 const report = [];
@@ -125,7 +125,7 @@ async function assertNoLatePopup(page, leave) {
       const context = await browser.newContext({
         viewport: { width: test.width, height: test.height },
         isMobile: test.width < 900, hasTouch: test.width < 900,
-        reducedMotion: 'reduce', serviceWorkers: 'block'
+        reducedMotion: test.motion || 'reduce', serviceWorkers: 'block'
       });
       try {
         const page = await context.newPage();
@@ -134,6 +134,10 @@ async function assertNoLatePopup(page, leave) {
         page.on('pageerror', error => errors.push(error.message));
         await page.goto(`${base}/${test.file}`, { waitUntil: 'domcontentloaded' });
         await page.waitForFunction(() => window.__INGA && document.querySelector('#loading').classList.contains('gone'));
+        // Keep the live tour/camera loop and 2D cutaway drawing; its modal layout
+        // does not depend on repeatedly drawing the software-rendered terrain.
+        // The UX suite separately exercises the real WebGL render path.
+        await page.evaluate(() => { renderer.render = () => {}; });
         if (test.file === 'musee.html') {
           // Kiosk mode leaves the introduction automatically; start from its live controls.
           await page.waitForFunction(() => __INGA.mode === 'live');

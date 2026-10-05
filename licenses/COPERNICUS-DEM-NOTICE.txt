@@ -1,0 +1,17 @@
+Copernicus DEM GLO-30 attribution
+
+© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided
+under COPERNICUS by the European Union and ESA; all rights reserved.
+
+This attribution is reproduced from the terms_of_use field of Google's
+official Earth Engine catalog entry for COPERNICUS/DEM/GLO30:
+https://github.com/google/earthengine-catalog/blob/master/catalog/COPERNICUS/COPERNICUS_DEM_GLO30.jsonnet
+
+The entry links to the Copernicus DEM licence:
+https://docs.sentinel-hub.com/api/latest/static/files/data/dem/resources/license/License-COPDEM-30.pdf
+
+The relief in Inga Interactive is derived from Copernicus DEM GLO-30,
+tile S06 E013, reprojected to UTM 33S, according to the application's
+source registry. This file preserves the verified attribution; it is
+not a replacement for the complete applicable licence. See
+THIRD_PARTY_NOTICES.md for the acquisition/licence record to retain.

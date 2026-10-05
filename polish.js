@@ -27,7 +27,7 @@
     if (e.target.closest('button')) close();
   }, true);
   new MutationObserver(() => syncAccessibility()).observe(options, { attributes: true, attributeFilter: ['hidden'] });
-  const moved = ['toPaper', 'recenter', 'openReg', 'resetAll', 'learningBtn', 'canalBtn', 'offline-status'].map(id => {
+  const moved = ['toPaper', 'recenter', 'openReg', 'resetAll', 'learningBtn', 'canalBtn', 'alternatorBtn', 'offline-status'].map(id => {
     const el = document.getElementById(id);
     if (!el) return null;
     const home = document.createComment(`${id} home`);

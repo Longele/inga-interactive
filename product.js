@@ -106,7 +106,7 @@
     <div class="learning-scene-switch" role="group" aria-label="Comparer les états de la maquette"><button type="button" data-learning-scene="before" aria-pressed="false"><span>Avant</span><strong></strong></button><button type="button" data-learning-scene="after" aria-pressed="false"><span>Après</span><strong></strong></button></div>
     <p id="learning-scene-observation" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="learning-scene-auto">Le changement s’appliquera après le cadrage. Touchez Avant ou Après pour comparer à votre rythme.</p>
-    <div class="learning-scene-actions"><button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button><button type="button" class="learning-button" data-learning-scene="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut" hidden>Voir le canal en coupe</button></div>`;
+    <div class="learning-scene-actions"><button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button><button type="button" class="learning-button" data-learning-scene="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut" hidden>Voir le canal en coupe</button><button type="button" class="learning-button" data-learning-scene="alternator-cut" aria-haspopup="dialog" aria-controls="alternator-cut" hidden>Voir l’alternateur en coupe</button></div>`;
   app.append(scene);
   const content = modal.querySelector('#learning-content');
   const heading = modal.querySelector('#learning-title');
@@ -170,7 +170,8 @@
     document.body.classList.add('learning-observing');
     scene.querySelector('#learning-scene-title').textContent = current.title;
     scene.querySelector('[data-learning-scene="canal-cut"]').hidden = current.id !== 'sed';
-    scene.querySelector('.learning-scene-actions').classList.toggle('has-canal', current.id === 'sed');
+    scene.querySelector('[data-learning-scene="alternator-cut"]').hidden = current.id !== 'one';
+    scene.querySelector('.learning-scene-actions').classList.toggle('has-cutaway', current.id === 'sed' || current.id === 'one');
     scene.querySelector('[data-learning-scene="before"] strong').textContent = mw(result.before.Pgen);
     scene.querySelector('[data-learning-scene="after"] strong').textContent = mw(result.after.Pgen);
     sceneState(initial, !automatic);
@@ -199,6 +200,7 @@
   };
   scene.querySelector('[data-learning-scene="close"]').onclick = stopObservation;
   scene.querySelector('[data-learning-scene="canal-cut"]').onclick = () => window.IngaCanal?.open();
+  scene.querySelector('[data-learning-scene="alternator-cut"]').onclick = () => window.IngaAlternator?.open('G24');
   window.addEventListener('inga:simulationchange', () => { if (observing && !ownedChange) stopObservation(); });
   window.addEventListener('resize', () => {
     if (!observing) return;
@@ -263,12 +265,18 @@
         <span><strong>Le canal en coupe</strong><small>Voyez comment le sable réduit le passage de l’eau, puis dégagez le canal.</small></span>
         <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
       </button>
+      <button type="button" class="learning-canal-entry" data-learning="alternator-cut" aria-haspopup="dialog" aria-controls="alternator-cut">
+        <svg class="learning-canal-illustration" viewBox="0 0 92 64" aria-hidden="true"><rect width="92" height="64" rx="5" fill="#efe5d2"/><circle cx="32" cy="32" r="24" fill="#d6c7a3" stroke="#6f6959" stroke-width="1.4"/><circle cx="32" cy="32" r="17" fill="#f7efdf" stroke="#92866e" stroke-width="1"/><g fill="#bd8855" stroke="#8f603b" stroke-width="1"><rect x="28" y="9" width="8" height="9" rx="2"/><rect x="28" y="46" width="8" height="9" rx="2"/><rect x="9" y="28" width="9" height="8" rx="2"/><rect x="46" y="28" width="9" height="8" rx="2"/></g><path d="M21 32a11 11 0 0 1 22 0Z" fill="#b97669"/><path d="M21 32a11 11 0 0 0 22 0Z" fill="#719ba5"/><circle cx="32" cy="32" r="3" fill="#f7efdf" stroke="#6f6959"/><path d="M22 22c5-6 13-6 19-1m-1-5 1 5-5 1" fill="none" stroke="#6f6959" stroke-width="1.2"/><path d="M61 32h27" stroke="#a79a7e" stroke-width="1"/><path d="M61 32c4-17 9-17 13 0s9 17 13 0" fill="none" stroke="#3e8290" stroke-width="1.7"/></svg>
+        <span><strong>L’alternateur en coupe</strong><small>Rotor → bobines fixes → tensions alternées.</small></span>
+        <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
       <div class="learning-footer-links"><button type="button" class="learning-button" data-learning="glossary">Ouvrir le lexique</button><button type="button" class="learning-button learning-button-quiet" data-learning="recap">Les 3 idées essentielles</button></div>
       <p class="learning-note">Ces expériences utilisent le modèle pédagogique de l’application. Elles ne décrivent pas l’état actuel des installations.</p>`);
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
     bind('glossary', glossary);
     bind('recap', recap);
     bind('canal-cut', () => window.IngaCanal?.open());
+    bind('alternator-cut', () => window.IngaAlternator?.open());
     bind('resume', () => resultView === 'scene' ? observe() : resultView === 'explain' ? explanation() : comparison());
   }
 

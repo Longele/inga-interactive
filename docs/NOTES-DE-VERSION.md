@@ -1,5 +1,19 @@
 # Notes de version
 
+## 1.2.0
+
+Nouvelle coupe interactive de l'alternateur, reliée aux groupes du simulateur.
+
+- Choix du groupe observé et parcours en trois étapes : rotor, stator et tensions alternatives.
+- Dessin sur fond de parchemin avec champ magnétique affichable, une ou trois phases, pause et avance par quart de tour. La rotation est ralentie dix fois.
+- Consigne de charge ajustable, raccourcis 30 % et 100 %, marche/arrêt, panne et réparation du groupe choisi ; les autres réglages sont conservés.
+- Vitesse et puissance issues du modèle pour montrer la différence entre vitesse de synchronisme et charge, ainsi que la possibilité d'une tension sans puissance livrée.
+- Accès depuis les outils, Plus sur mobile, Apprendre et l'expérience G24 ; passage direct entre la coupe Francis et celle de l'alternateur du même groupe.
+- Limites explicites : rotor à deux pôles illustratifs, tensions normalisées et champ supposé établi en marche. Aucun nombre réel de pôles, niveau de tension ou fréquence du site n'est déduit du dessin ; l'excitation n'est pas simulée.
+- Vitesses de référence documentées : environ 136 tr/min pour Inga I [S03] ; 107,1 tr/min pour Inga II, valeur du groupe 5 étendue aux autres groupes par hypothèse du modèle [S11].
+
+Le détail des vérifications de cette version et leur portée figurent dans [VALIDATION.md](VALIDATION.md). La publication reste conditionnée aux onze suites navigateur de GitHub Actions pour le commit livré.
+
 ## 1.1.0
 
 Nouvelle coupe interactive du canal pour comprendre le lien entre les dépôts de sable, le passage de l'eau et la production électrique.

@@ -1,5 +1,23 @@
 # Validation technique
 
+## Version 1.2.0 — coupe interactive de l'alternateur
+
+Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-alternator.cjs` : 18 vérifications réussies. Choix du groupe, vitesse de synchronisme aux consignes 0 %, 30 % et 100 %, tensions normalisées à puissance nulle, conservation des autres réglages, instantanés d'état et refus des appels invalides à l'API.
+- Marche/arrêt, montée en vitesse, panne/réparation, champ magnétique, une ou trois phases, pause, quart de tour et réduction des animations vérifiés.
+- Accès depuis les outils, Apprendre, l'expérience G24 et la coupe Francis ; retour entre turbine et alternateur, navigation au clavier, fermeture et interruption des animations vérifiés.
+- Cinq formats vérifiés et inspectés visuellement : 320×568, 390×844, 740×800, 844×390 et 1440×900. Les mesures restent visibles et les commandes accessibles pendant le défilement.
+- Contrôles syntaxiques, génération du mode musée et du cache, construction de la distribution et vérification du diff réussis.
+
+Pour reproduire la suite, servir `dist/site` sur le port 8001 après construction et utiliser l'environnement Playwright décrit dans le README :
+
+```sh
+node tests/browser-alternator.cjs
+```
+
+La publication est conditionnée aux onze suites navigateur découvertes automatiquement par GitHub Actions, dont les parcours musée et hors ligne. Le résultat distant doit être vérifié pour le commit livré. Les preuves des versions précédentes ci-dessous restent distinctes.
+
 ## Version 1.1.0 — coupe interactive du canal
 
 Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :

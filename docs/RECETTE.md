@@ -29,6 +29,10 @@ Ce document sert à accepter une version sur le matériel réellement installé.
 | Comparer Dégagé et Ensablé, déplacer le curseur, vérifier le débit et la puissance sans modifier les autres réglages | À tester |
 | Animer l'ensablement et le nettoyage, arrêter la transformation, mettre le dessin en pause et vérifier la réduction des animations | À tester |
 | Fermer la coupe du canal au clavier ou au toucher ; confirmer le retour au parcours et la disponibilité hors ligne après préparation du cache | À tester |
+| Ouvrir la coupe de l'alternateur depuis les outils, Plus sur mobile, Apprendre et l'expérience G24 ; passer de la turbine à l'alternateur puis revenir pour le même groupe | À tester |
+| Choisir un groupe d'Inga I puis d'Inga II, comparer les charges 30 % et 100 %, arrêter/redémarrer et simuler/réparer une panne sans modifier les autres réglages | À tester |
+| Parcourir rotor/stator/alternatif, afficher le champ et les phases, mettre en pause et avancer d'un quart de tour ; vérifier commandes, clavier, petit écran et réduction des animations | À tester |
+| Confirmer l'accès à la coupe de l'alternateur après préparation du cache puis coupure du réseau | À tester |
 | Exécuter Registre → Validation : aucun contrôle interne en échec | À tester |
 | Naviguer au clavier : focus visible, boîtes de dialogue, Échap et retour au déclencheur | À tester |
 | Sur téléphone/tablette : portrait et paysage, aucun bouton essentiel inaccessible | À tester |

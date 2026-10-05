@@ -398,6 +398,7 @@ button:disabled{cursor:default;opacity:.6}
 <link rel="stylesheet" href="product.css">
 <link rel="stylesheet" href="offline.css">
 <link rel="stylesheet" href="canal.css">
+<link rel="stylesheet" href="alternator.css">
 <link rel="stylesheet" href="polish.css">
 <div id="app" class="hide-ui">
   <canvas id="gl" aria-label="Reconstruction 3D interactive du site d’Inga"></canvas>
@@ -609,7 +610,7 @@ button:disabled{cursor:default;opacity:.6}
             </div>
             <div class="fld" style="margin-top:12px"><div class="fld-h"><label for="c-load">Consigne de charge</label><output id="o-cload"></output></div><input type="range" id="c-load" min="0" max="100" step="1"></div>
             <div class="refbox" id="cut-ref"></div>
-            <div class="btnrow"><button class="btn pri" data-close="cut">Retour au site</button></div>
+            <div class="btnrow"><button class="btn" id="c-alternator" type="button" aria-haspopup="dialog">Voir l’alternateur</button><button class="btn pri" data-close="cut">Retour au site</button></div>
           </div>
         </div>
       </div>
@@ -1703,7 +1704,7 @@ function applyTimeline(T){
 function setUI(on){ if(uiVis===on) return; uiVis=on; document.getElementById('app').classList.toggle('hide-ui',!on); applyPanels(); }
 function startTransition(){ if(mode==='live') return; mode='transition'; dir=1; controls.enabled=false; revealV=1.2; T3.terrainMat.uniforms.uReveal.value=1.2; document.getElementById('intro').classList.add('gone'); document.getElementById('detailA').classList.add('gone'); document.getElementById('skipT').classList.add('on'); if(reduced){T=TT;} }
 function finishLive(){ mode='live'; setTimeout(()=>{ const b=$('#tourBtn'); if(b&&!TOUR.on){ b.classList.add('pulse'); } if(TOUR.pending){ TOUR.pending=false; startTour(); } },700); T=TT; applyTimeline(T); controls.enabled=true; document.getElementById('skipT').classList.remove('on'); document.getElementById('toPaper').setAttribute('aria-pressed','false'); setView('site',false); }
-function toPaper(){ if(!webgl) return; window.IngaCanal?.close(); window.IngaProduct?.dismiss(); if(TOUR.on) endTour(); closeCut(); closeInfo(); setView('site',false); tween=null; mode='transition'; dir=-1; controls.enabled=false; setUI(false); document.getElementById('toPaper').setAttribute('aria-pressed','true'); if(reduced){T=0;} }
+function toPaper(){ if(!webgl) return; window.IngaAlternator?.close(); window.IngaCanal?.close(); window.IngaProduct?.dismiss(); if(TOUR.on) endTour(); closeCut(); closeInfo(); setView('site',false); tween=null; mode='transition'; dir=-1; controls.enabled=false; setUI(false); document.getElementById('toPaper').setAttribute('aria-pressed','true'); if(reduced){T=0;} }
 function finishPaper(){ mode='paper'; T=0; applyTimeline(0); document.getElementById('intro').classList.remove('gone'); document.getElementById('detailA').classList.remove('gone'); document.getElementById('skipT').classList.remove('on'); }
 
 function setView(v,fly=true){
@@ -1820,6 +1821,45 @@ function setCanalCapacity(value){
   editSimulation(()=>{ S.canal=capacity; S.canalCond=condition; });
   return capacity;
 }
+function getAlternatorUnit(id=selected||'G24'){
+  const unit=unitById(id);
+  if(!unit) return null;
+  const r=R.units.find(result=>result.id===id), plant=PLANTS[unit.plant];
+  return {
+    unit:{...unit},
+    result:{id:r.id,plant:r.plant,q:r.q,P:r.P,Ph:r.Ph,Hn:r.Hn,rating:r.rating},
+    rpm:RT[id].rpmVis,
+    rpmTarget:rpmOf(unit,unit.plant),
+    status:R.status[id],
+    plantSource:{
+      rpm:plant.rpm,
+      reference:unit.plant==='I'?'S03':'S11',
+      note:unit.plant==='I'?'Valeur arrondie documentée pour Inga I.':'Donnée du groupe 5, étendue aux groupes d’Inga II dans ce modèle.'
+    }
+  };
+}
+function setUnitLoad(id,value){
+  const unit=unitById(id);
+  if(!unit || typeof value!=='number' || !Number.isFinite(value)) return false;
+  const load=clamp(value,0,1);
+  if(unit.load!==load) editSimulation(()=>{ unit.load=load; });
+  return load;
+}
+function setUnitEnabled(id,on){
+  const unit=unitById(id);
+  if(!unit || typeof on!=='boolean' || unit.failed) return false;
+  if(unit.on!==on) setUnitOn(id,on);
+  return on;
+}
+function setUnitFault(id,failed){
+  const unit=unitById(id);
+  if(!unit || typeof failed!=='boolean') return false;
+  if(unit.failed!==failed) editSimulation(()=>{
+    unit.failed=failed;
+    if(failed) unit.starting=0;
+  });
+  return failed;
+}
 function showResults(){
   if(innerWidth<=900) setMob('dash'); else {PANELS.dash=true;applyPanels();}
   $('#dash').scrollTop=0;
@@ -1887,6 +1927,7 @@ function buildUI(){
   $('#c-on').onchange=e=>{ if(selected) setUnitOn(selected,e.target.checked); };
   $('#c-load').oninput=e=>{if(selected) editSimulation(()=>{unitById(selected).load=e.target.value/100;});};
   $('#c-fail').onclick=()=>{if(selected) editSimulation(()=>{const u=unitById(selected);u.failed=!u.failed;if(u.failed)u.starting=0;});};
+  $('#c-alternator').onclick=()=>window.IngaAlternator?.open(selected);
   window.addEventListener('keydown',e=>{
     if(e.key==='Escape'){ if(TOUR.on && $('#cut').hidden){ endTour(); return; } if(!$('#cut').hidden) closeCut(); else if(!$('#reg').hidden) $('#reg').hidden=true; else closeInfo(); }
     if(mode!=='live'||activeModal()||e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable]')) return;
@@ -2272,7 +2313,7 @@ function tourStop(i){
 function tourPos(st,which){ const v=st[which]; if(st.v==='grid'||!camera) return v.p; const asp=camera.aspect; if(asp>=0.9) return v.p;
   const k=clamp(0.78/asp,1,1.75); const o=[v.p[0]-v.t[0],v.p[1]-v.t[1],v.p[2]-v.t[2]];
   return [v.t[0]+o[0]*k, v.t[1]+o[1]*k*1.3, v.t[2]+o[2]*k]; }
-function startTour(){ if(mode!=='live'||!webgl) return; window.IngaCanal?.close(); window.IngaProduct?.dismiss(); TOUR.on=true; TOUR.playing=true; TOUR.saved={...PANELS}; PANELS.dash=false; PANELS.ctrl=false; applyPanels(); document.body.classList.add('touring'); $('#tourBtn').setAttribute('aria-pressed','true'); $('#tourBtn .ft').textContent='Arrêter la visite'; $('#tourBtn').classList.remove('pulse'); $('#tour').hidden=false; $('#tPlay').textContent='Pause'; controls.enabled=false; if(NARR.on){ ambStart(); ambLevel(AMB_BED,2); } tourStop(0); }
+function startTour(){ if(mode!=='live'||!webgl) return; window.IngaAlternator?.close(); window.IngaCanal?.close(); window.IngaProduct?.dismiss(); TOUR.on=true; TOUR.playing=true; TOUR.saved={...PANELS}; PANELS.dash=false; PANELS.ctrl=false; applyPanels(); document.body.classList.add('touring'); $('#tourBtn').setAttribute('aria-pressed','true'); $('#tourBtn .ft').textContent='Arrêter la visite'; $('#tourBtn').classList.remove('pulse'); $('#tour').hidden=false; $('#tPlay').textContent='Pause'; controls.enabled=false; if(NARR.on){ ambStart(); ambLevel(AMB_BED,2); } tourStop(0); }
 function endTour(completed=false){ if(!TOUR.on) return; TOUR.on=false; narrStop(); ambLevel(0,1.2); $('#tour').hidden=true; document.body.classList.remove('touring'); $('#tourBtn').setAttribute('aria-pressed','false'); $('#tourBtn .ft').textContent='Visite guidée'; closeCut(); if(TOUR.saved){Object.assign(PANELS,TOUR.saved);} applyPanels(); setView('site',false); controls.enabled=true; flyTo(ov(),2.0); if(completed===true) window.dispatchEvent(new Event('inga:tour-complete')); }
 // Keep the subject in the clear area between the title block and the tour card (shifts the projection, not the camera).
 let viewOffY=0;
@@ -2319,6 +2360,7 @@ function updateTour(rdt){
 }
 
 function resetAll(){
+  window.IngaAlternator?.close();
   window.IngaCanal?.close();
   window.IngaProduct?.reset();
   document.querySelectorAll('.modal').forEach(modal=>{ modal.hidden=true; });
@@ -2595,7 +2637,7 @@ async function init(){
   const res=runValidation(); const ok=res.filter(r=>r.ok).length; console.info(`[Inga] validation ${ok}/${res.length}`); res.filter(r=>!r.ok).forEach(r=>console.warn('[Inga] FAIL',r.name,r.detail));
   requestAnimationFrame(frame);
 }
-window.__INGA={dbg(){return {n:T3.chans&&T3.chans.length, vis:T3.chans&&T3.chans.map(m=>m.visible), op:T3.chanMat&&T3.chanMat.uniforms.uOpacity.value, rise:T3.chanMat&&T3.chanMat.uniforms.uRise.value, y0:T3.chans&&T3.chans[0].geometry.attributes.aH.array[10], pos:T3.chans&&Array.from(T3.chans[0].geometry.attributes.position.array.slice(0,6)), h:hAt(SW.approach[2][0],SW.approach[2][1]), cl:canalLevel(SW.approach[2][0],SW.approach[2][1])};},tour(i){if(!TOUR.on)startTour();tourStop(i);},hideIntro(){document.getElementById('intro').classList.add('gone');},cam(v){tween=null;setCam(v.p,v.t,v.fov||40);document.getElementById('labels').style.display=v.nolabel?'none':'';},fly(n){flyTo(VIEWS[n],0.01);},jump(t){revealV=1.2;document.getElementById('detailA').classList.add('gone');T=t;if(t>=TT)finishLive();else{mode='transition';applyTimeline(T);}},simulate,BASE,runValidation,applyPreset,get S(){return S;},get R(){return R;},get mode(){return mode;},setView,resetAll,selectUnit,focusLearning,setCanalCapacity};
+window.__INGA={dbg(){return {n:T3.chans&&T3.chans.length, vis:T3.chans&&T3.chans.map(m=>m.visible), op:T3.chanMat&&T3.chanMat.uniforms.uOpacity.value, rise:T3.chanMat&&T3.chanMat.uniforms.uRise.value, y0:T3.chans&&T3.chans[0].geometry.attributes.aH.array[10], pos:T3.chans&&Array.from(T3.chans[0].geometry.attributes.position.array.slice(0,6)), h:hAt(SW.approach[2][0],SW.approach[2][1]), cl:canalLevel(SW.approach[2][0],SW.approach[2][1])};},tour(i){if(!TOUR.on)startTour();tourStop(i);},hideIntro(){document.getElementById('intro').classList.add('gone');},cam(v){tween=null;setCam(v.p,v.t,v.fov||40);document.getElementById('labels').style.display=v.nolabel?'none':'';},fly(n){flyTo(VIEWS[n],0.01);},jump(t){revealV=1.2;document.getElementById('detailA').classList.add('gone');T=t;if(t>=TT)finishLive();else{mode='transition';applyTimeline(T);}},simulate,BASE,runValidation,applyPreset,get S(){return S;},get R(){return R;},get mode(){return mode;},setView,resetAll,selectUnit,focusLearning,setCanalCapacity,getAlternatorUnit,setUnitLoad,setUnitEnabled,setUnitFault};
 init();
 </script>
 
@@ -2603,5 +2645,7 @@ init();
 <script src="offline.js"></script>
 <script src="canal-drawing.js"></script>
 <script src="canal.js"></script>
+<script src="alternator-drawing.js"></script>
+<script src="alternator.js"></script>
 <script src="polish.js"></script>
 </body></html>

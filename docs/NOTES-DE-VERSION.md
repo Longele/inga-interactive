@@ -1,5 +1,19 @@
 # Notes de version
 
+## 1.1.0
+
+Nouvelle coupe interactive du canal pour comprendre le lien entre les dépôts de sable, le passage de l'eau et la production électrique.
+
+- Dessin animé sur fond de parchemin, commandes Dégagé et Ensablé et curseur de dépôts illustratifs de 0 à 100 %.
+- Dessin maintenu visible pendant le défilement des commandes sur petit écran, avec commande de pause dans l'en-tête.
+- Capacité du canal ajustée de 2 200 à 1 600 m³/s, avec mise à jour du débit et de la puissance calculés par le simulateur.
+- Comparaison avec un canal dégagé en conservant les autres réglages : fleuve, groupes, demande et réseau. Une contrainte ailleurs dans le système peut limiter l'effet de l'ensablement sur la puissance.
+- Transformation automatique d'ensablement ou de nettoyage en huit secondes, arrêt manuel, pause du dessin et prise en compte de la réduction des animations.
+- Accès par Coupe du canal dans la barre d'outils, Plus sur mobile, Le canal en coupe dans Apprendre et l'expérience du canal.
+- Origine des chiffres explicitée : 2 200 m³/s est une valeur historique documentée [S01] ; 1 600 m³/s et la progression des dépôts sont des hypothèses pédagogiques. Le dessin ne représente pas une mesure ou une simulation de sédimentation réelle.
+
+Le détail des vérifications de cette version et leur portée figurent dans [VALIDATION.md](VALIDATION.md). La publication reste conditionnée aux suites navigateur de GitHub Actions pour le commit livré.
+
 ## 1.0.2
 
 Les expériences d'Apprendre montrent désormais le changement directement sur la maquette.

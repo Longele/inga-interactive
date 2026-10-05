@@ -106,7 +106,7 @@
     <div class="learning-scene-switch" role="group" aria-label="Comparer les états de la maquette"><button type="button" data-learning-scene="before" aria-pressed="false"><span>Avant</span><strong></strong></button><button type="button" data-learning-scene="after" aria-pressed="false"><span>Après</span><strong></strong></button></div>
     <p id="learning-scene-observation" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="learning-scene-auto">Le changement s’appliquera après le cadrage. Touchez Avant ou Après pour comparer à votre rythme.</p>
-    <button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button>`;
+    <div class="learning-scene-actions"><button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button><button type="button" class="learning-button" data-learning-scene="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut" hidden>Voir le canal en coupe</button></div>`;
   app.append(scene);
   const content = modal.querySelector('#learning-content');
   const heading = modal.querySelector('#learning-title');
@@ -169,6 +169,8 @@
     scene.hidden = false;
     document.body.classList.add('learning-observing');
     scene.querySelector('#learning-scene-title').textContent = current.title;
+    scene.querySelector('[data-learning-scene="canal-cut"]').hidden = current.id !== 'sed';
+    scene.querySelector('.learning-scene-actions').classList.toggle('has-canal', current.id === 'sed');
     scene.querySelector('[data-learning-scene="before"] strong').textContent = mw(result.before.Pgen);
     scene.querySelector('[data-learning-scene="after"] strong').textContent = mw(result.after.Pgen);
     sceneState(initial, !automatic);
@@ -196,6 +198,7 @@
     open('compare');
   };
   scene.querySelector('[data-learning-scene="close"]').onclick = stopObservation;
+  scene.querySelector('[data-learning-scene="canal-cut"]').onclick = () => window.IngaCanal?.open();
   window.addEventListener('inga:simulationchange', () => { if (observing && !ownedChange) stopObservation(); });
   window.addEventListener('resize', () => {
     if (!observing) return;
@@ -255,11 +258,17 @@
           <span><strong>${challenge.title}</strong><small>${challenge.topic} · environ 2 min${explored.has(challenge.id) ? ' · exploré' : ''}</small></span>
           <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>`).join('')}</div>
+      <button type="button" class="learning-canal-entry" data-learning="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut">
+        <svg class="learning-canal-illustration" viewBox="0 0 92 64" aria-hidden="true"><rect width="92" height="64" rx="5" fill="#efe5d2"/><path d="M11 12 31 53h30l20-41" fill="#d6c7a3" stroke="#6f6959" stroke-width="1.6"/><path d="M18 26h56L61 51H31Z" fill="#a9cfd0"/><path d="M25 40c11-9 23 7 42-2l-6 13H31Z" fill="#c69c60"/><path d="M19 25c7-2 11 2 18 0s11 2 18 0 11 2 18 0" fill="none" stroke="#3e8290" stroke-width="1.4"/><path d="M34 34h22m-5-4 5 4-5 4" fill="none" stroke="#3e8290" stroke-width="1.4"/><g fill="#8f703e"><circle cx="36" cy="45" r="1"/><circle cx="45" cy="48" r="1"/><circle cx="54" cy="44" r="1"/></g></svg>
+        <span><strong>Le canal en coupe</strong><small>Voyez comment le sable réduit le passage de l’eau, puis dégagez le canal.</small></span>
+        <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
       <div class="learning-footer-links"><button type="button" class="learning-button" data-learning="glossary">Ouvrir le lexique</button><button type="button" class="learning-button learning-button-quiet" data-learning="recap">Les 3 idées essentielles</button></div>
       <p class="learning-note">Ces expériences utilisent le modèle pédagogique de l’application. Elles ne décrivent pas l’état actuel des installations.</p>`);
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
     bind('glossary', glossary);
     bind('recap', recap);
+    bind('canal-cut', () => window.IngaCanal?.open());
     bind('resume', () => resultView === 'scene' ? observe() : resultView === 'explain' ? explanation() : comparison());
   }
 

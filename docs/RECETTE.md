@@ -25,6 +25,10 @@ Ce document sert à accepter une version sur le matériel réellement installé.
 | Explorer la maquette à la souris ou au toucher ; sélectionner un groupe et revenir | À tester |
 | Changer un scénario ; vérifier le comparatif avant/après et le retour à une situation connue | À tester |
 | Parcourir les trois défis et le glossaire dans Apprendre | À tester |
+| Ouvrir la coupe du canal depuis les outils, Plus sur mobile et Apprendre ; vérifier le dessin et les commandes | À tester |
+| Comparer Dégagé et Ensablé, déplacer le curseur, vérifier le débit et la puissance sans modifier les autres réglages | À tester |
+| Animer l'ensablement et le nettoyage, arrêter la transformation, mettre le dessin en pause et vérifier la réduction des animations | À tester |
+| Fermer la coupe du canal au clavier ou au toucher ; confirmer le retour au parcours et la disponibilité hors ligne après préparation du cache | À tester |
 | Exécuter Registre → Validation : aucun contrôle interne en échec | À tester |
 | Naviguer au clavier : focus visible, boîtes de dialogue, Échap et retour au déclencheur | À tester |
 | Sur téléphone/tablette : portrait et paysage, aucun bouton essentiel inaccessible | À tester |

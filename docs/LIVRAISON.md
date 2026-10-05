@@ -2,7 +2,9 @@
 
 ## Objet du produit
 
-Inga Interactive explique le chemin de l'eau et de l'électricité à Inga I et II. Il est destiné à la médiation scientifique, à l'accueil de visiteurs et à l'apprentissage des principes. Il comprend une maquette 3D, une visite en français, une coupe de groupe Francis, des scénarios interactifs, des repères documentaires et un mode musée.
+Inga Interactive explique le chemin de l'eau et de l'électricité à Inga I et II. Il est destiné à la médiation scientifique, à l'accueil de visiteurs et à l'apprentissage des principes. Il comprend une maquette 3D, une visite en français, une coupe de groupe Francis, une coupe interactive du canal, des scénarios interactifs, des repères documentaires et un mode musée.
+
+La coupe du canal permet d'ajuster des dépôts illustratifs et de suivre leur effet sur la capacité de passage et la puissance simulée, tout en conservant les autres réglages. La plage de 2 200 à 1 600 m³/s relie une valeur historique documentée à une hypothèse pédagogique ; le curseur ne mesure pas l'état réel du canal.
 
 Les puissances et débits affichés sont calculés par un modèle pédagogique. Le produit ne reçoit pas de télémétrie et n'est pas un outil de commande, de dimensionnement ou de formation qualifiante à l'exploitation des centrales. Il ne revendique aucune certification ni approbation de la SNEL.
 

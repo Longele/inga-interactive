@@ -20,6 +20,11 @@
 .learning-challenge strong{display:block;font-family:var(--f-display);font-size:20px;font-weight:500;line-height:1.25}
 .learning-challenge small{display:block;font-size:12px;line-height:1.5;color:var(--muted);margin-top:4px}
 .learning-arrow{margin-left:auto;flex:none;width:18px;height:18px;color:var(--muted)}
+.learning-canal-entry{display:flex;align-items:center;gap:16px;width:100%;padding:16px;margin-top:18px;border:1px solid rgba(199,173,126,.4);border-radius:5px;background:linear-gradient(120deg,rgba(199,173,126,.08),rgba(140,195,209,.04));color:var(--ink);text-align:left}
+.learning-canal-entry:hover{border-color:var(--water);background:rgba(140,195,209,.07)}
+.learning-canal-illustration{flex:none;width:92px;height:64px}
+.learning-canal-entry strong{display:block;font-family:var(--f-display);font-size:21px;font-weight:500;line-height:1.25}
+.learning-canal-entry small{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin-top:5px}
 .learning-footer-links,.learning-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .learning-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 16px;border:1px solid var(--line2);border-radius:4px;background:transparent;color:var(--ink);font-size:13px;font-weight:500;line-height:1.35;text-align:center}
 .learning-button:hover{border-color:var(--water);background:rgba(140,195,209,.07)}
@@ -125,6 +130,9 @@ body.learning-observing .tb-badge{display:none}
 #learning-scene-observation{font-size:14px;line-height:1.6;margin:14px 0 10px;min-height:4.8em}
 #learning-scene-auto{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 14px;min-height:3em}
 #learning-scene [data-learning-scene="results"]{width:100%}
+.learning-scene-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.learning-scene-actions.has-canal{grid-template-columns:repeat(2,minmax(0,1fr))}
+.learning-scene-actions.has-canal .learning-button{min-width:0;min-height:44px;padding:6px 8px;font-size:12px;line-height:1.25}
 @media(max-width:900px) and (orientation:portrait){
   #learning-scene{top:auto;bottom:max(8px,env(safe-area-inset-bottom,0px));left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));width:auto;max-height:52dvh;padding:12px}
   #learning-scene header{margin-bottom:9px}
@@ -155,6 +163,10 @@ body.learning-observing .tb-badge{display:none}
   .learning-challenge strong{font-size:19px}
   .learning-challenge small{font-size:12px}
   .learning-arrow{width:15px;height:15px}
+  .learning-canal-entry{gap:11px;padding:12px}
+  .learning-canal-illustration{width:64px;height:48px}
+  .learning-canal-entry strong{font-size:19px}
+  .learning-canal-entry small{font-size:12px}
   .learning-footer-links,.learning-actions{gap:9px}
   .learning-actions .learning-button{flex:1 1 180px}
   .learning-lead{font-size:14px;line-height:1.6}

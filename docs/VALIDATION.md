@@ -1,5 +1,22 @@
 # Validation technique
 
+## Version 1.1.0 — coupe interactive du canal
+
+Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-canal.cjs` : 21 vérifications réussies. Accès depuis les outils et Apprendre, correspondance du curseur et des boutons avec le modèle, conservation des autres réglages, référence de puissance à canal dégagé, animation visible du dessin, transformation et arrêt, réduction des animations, navigation au clavier et fermeture.
+- Cinq formats vérifiés : 320×568, 390×844, 740×800, 844×390 et 1440×900. Le dessin reste visible pendant le défilement des commandes et la pause reste accessible dans l'en-tête. Aucune erreur JavaScript signalée par la suite.
+- Inspection visuelle des formats 320×568, 390×844, 844×390 et 1440×900 ; capture du format tablette 740×800 produite par le test.
+- Contrôles syntaxiques, génération du mode musée et du cache, construction de la distribution et vérification du diff réussis.
+
+Pour reproduire la suite, servir `dist/site` sur le port 8001 après construction, puis utiliser l'environnement Playwright décrit dans le README :
+
+```sh
+node tests/browser-canal.cjs
+```
+
+La publication est conditionnée aux dix suites navigateur découvertes automatiquement par GitHub Actions, dont les parcours musée et hors ligne. Les résultats distants doivent être vérifiés pour le commit effectivement publié. Les preuves des versions précédentes ci-dessous restent distinctes.
+
 ## Version 1.0.2 — expérience visible dans la maquette
 
 Vérifications exécutées sur `dist/site` sous Chromium/Linux avec Playwright 1.62.1 :
@@ -53,7 +70,7 @@ Les tests consacrés à l'audio et à certains panneaux désactivent le dessin r
 - Compilation syntaxique des scripts externes et des scripts intégrés aux deux pages.
 - Construction du dossier public et de l'archive versionnée par `scripts/build_release.py`.
 - Deux constructions successives produisent la même empreinte SHA-256 de l'archive.
-- La CI est configurée pour exécuter les huit suites sur le dossier public produit, avant déploiement. Son résultat distant doit être consulté pour le commit effectivement publié ; ce document rapporte les exécutions locales effectuées.
+- La CI découvre toutes les suites `tests/browser-*.cjs` et les exécute sur le dossier public produit, avant déploiement. Son résultat distant doit être consulté pour le commit effectivement publié ; seules les sections assorties de résultats ci-dessus rapportent des exécutions effectuées.
 
 ## Vérifications à effectuer sur l'installation livrée
 

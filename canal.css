@@ -1,0 +1,105 @@
+/* A live engineering plate, paired with controls that leave the drawing in view. */
+.canal-modal{padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-sizing:border-box}
+.canal-modal *{box-sizing:border-box}
+.canal-box{width:min(1200px,100%);height:min(820px,100%);display:flex;flex-direction:column;overflow:hidden;border-radius:8px;background:linear-gradient(135deg,#19262a,#141c1e 65%)}
+.canal-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 22px 16px;border-bottom:1px solid var(--line);flex:none}
+.canal-header p{margin:0 0 4px;font:500 10px/1.5 var(--f-display);text-transform:uppercase;letter-spacing:.14em;color:var(--water)}
+.canal-header h2{margin:0;font:600 27px/1.15 var(--f-display)}
+.canal-close{flex:none;display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line2);border-radius:50%;background:transparent;color:var(--muted);font-size:27px;line-height:1}
+.canal-close:hover{color:var(--ink);border-color:var(--water)}
+.canal-body{flex:1;min-height:0;padding:20px 22px;overflow:hidden}
+.canal-lab{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,1fr);grid-template-rows:minmax(0,1fr);gap:24px;height:100%;min-height:0}
+.canal-figure{min-width:0;min-height:0;align-self:center;margin:0}
+.canal-plate{position:relative;overflow:hidden;border-radius:3px;background:#e9e1ca;border:1px solid #f2ead5;box-shadow:0 6px 24px #0002}
+#canal-canvas{display:block;width:100%;height:auto;aspect-ratio:900/620}
+.canal-header-actions{display:flex;flex:none;gap:8px}
+#canal-motion{display:grid;place-items:center;width:44px;height:44px;padding:0;background:#8cc3d10a;color:var(--water);border:1px solid var(--line2);border-radius:50%}
+#canal-motion:hover{background:#8cc3d118;border-color:var(--water)}
+.canal-figure figcaption{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:6px 16px;margin-top:10px;font-size:10px;line-height:1.5;color:var(--muted)}
+.canal-figure figcaption span:last-child{margin-left:auto}
+.canal-figure figcaption i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}
+.canal-water-dot{background:var(--water)}
+.canal-sand-dot{background:#c0a267}
+.canal-console{min-height:0;overflow:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent;overscroll-behavior:contain}
+.canal-invitation{font:500 23px/1.2 var(--f-display);margin:0 0 8px;max-width:22ch}
+.canal-intro{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 18px}
+.canal-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.canal-presets button{min-height:59px;padding:9px 12px;text-align:left;background:transparent;color:var(--ink);border:1px solid var(--line2);border-radius:4px;font-size:13px}
+.canal-presets button span{display:block;margin-top:3px;font:400 11px/1.4 var(--f-mono);color:var(--muted)}
+.canal-presets button:hover{border-color:var(--water)}
+.canal-presets button[aria-pressed=true]{background:#8cc3d112;border-color:var(--water);box-shadow:inset 3px 0 var(--water)}
+.canal-presets button[data-canal-preset=sed][aria-pressed=true]{background:#c0a26712;border-color:#c0a267;box-shadow:inset 3px 0 #c0a267}
+.canal-slider>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px}
+#canal-sediment-value{font:400 12px/1.4 var(--f-mono);color:#ddc494}
+#canal-sediment{height:44px;accent-color:#d9c496;cursor:ew-resize}
+#canal-sediment:disabled{cursor:default;opacity:.5}
+.canal-slider-ends{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted);margin-top:-5px}
+#canal-slider-note{font-size:10px;line-height:1.5;color:var(--muted);margin:8px 0 15px}
+#canal-range-note{font-size:12px;line-height:1.5;padding:10px;border-left:2px solid var(--water);background:#8cc3d10a;margin:0 0 12px}
+.canal-play{width:100%;min-height:44px;padding:10px 13px;background:var(--concrete);border:1px solid var(--concrete);border-radius:4px;color:#192124;font-size:13px;font-weight:500}
+.canal-play:hover{background:#e9dfc9}
+.canal-play[aria-pressed=true]{background:transparent;color:var(--concrete)}
+#canal-animation{font-size:10px;line-height:1.4;min-height:2.8em;margin:7px 0 10px;color:var(--muted)}
+.canal-measures{display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--line);padding-top:14px;margin-bottom:16px}
+.canal-measures>div>span{display:block;font-size:10px;line-height:1.5;color:var(--muted)}
+.canal-measures strong{display:block;font:500 19px/1.5 var(--f-mono);color:var(--water);white-space:nowrap;font-variant-numeric:tabular-nums}
+.canal-measures>div:last-child strong{color:var(--power)}
+.canal-meter{height:4px;overflow:hidden;background:#ffffff08;margin:6px 0 8px;border-radius:1px}
+.canal-meter i{height:100%;display:block;background:var(--water);transition:width .12s linear}
+.canal-meter-power i{background:var(--power)}
+.canal-measures small{display:block;font-size:9px;line-height:1.5;color:var(--muted)}
+.canal-measures b{font-weight:400;white-space:nowrap}
+.canal-lesson{padding:13px 14px;border-left:2px solid #c0a267;background:#c0a26709;margin-bottom:15px}
+#canal-impact{font:500 16px/1.3 var(--f-display);color:#e2ceac}
+#canal-why{font-size:12px;line-height:1.65;margin:6px 0 0}
+.canal-sources{font-size:11px;line-height:1.6;color:var(--muted)}
+.canal-sources summary{min-height:44px;padding:10px 0;cursor:pointer;color:var(--water)}
+.canal-sources p{margin:0 0 12px}
+.canal-sources button{min-height:44px;padding:8px 12px;margin-bottom:3px;background:transparent;border:1px solid var(--line2);border-radius:3px;color:var(--ink);font-size:11px}
+.canal-footer{display:flex;flex:none;align-items:center;justify-content:space-between;gap:14px;padding:12px 22px;border-top:1px solid var(--line)}
+.canal-footer>span{font-size:11px;line-height:1.5;color:var(--muted)}
+.canal-footer button{min-height:44px;flex:none;padding:10px 16px}
+@media(max-width:760px) and (orientation:portrait){
+  .canal-modal{padding:max(8px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  .canal-box{height:100%}
+  .canal-header{padding:12px 12px 10px;gap:8px}
+  .canal-header p{font-size:9px;letter-spacing:.09em}
+  .canal-header h2{font-size:22px}
+  .canal-body{padding:10px 10px 0}
+  .canal-lab{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:12px}
+  .canal-figure{align-self:start}
+  .canal-plate{width:min(100%,379px);margin-inline:auto}
+  .canal-figure figcaption{font-size:9px;gap:4px 10px;margin-top:6px}
+  .canal-figure figcaption span:last-child{display:none}
+  .canal-console{padding:0 4px 12px 0}
+  .canal-invitation{font-size:18px;max-width:none;margin-bottom:9px}
+  .canal-intro{display:none}
+  .canal-presets{margin-bottom:12px}
+  .canal-presets button{min-height:51px;padding:6px 11px}
+  #canal-slider-note{margin:6px 0 12px}
+  #canal-animation{min-height:1.4em}
+  .canal-measures{gap:12px;padding-top:12px}
+  .canal-measures strong{font-size:18px}
+  .canal-footer{padding:8px 10px;gap:10px}
+  .canal-footer>span{font-size:10px;max-width:15ch}
+  .canal-footer button{font-size:11px;padding:8px 12px}
+}
+@media(max-width:359px){.canal-header p{display:none}.canal-header h2{font-size:20px}.canal-header-actions{gap:4px}}
+@media(orientation:landscape) and (max-height:620px){
+  .canal-modal{padding:8px max(8px,env(safe-area-inset-right,0px)) 8px max(8px,env(safe-area-inset-left,0px))}
+  .canal-header{padding:7px 14px}
+  .canal-header p{font-size:9px;margin:0}
+  .canal-header h2{font-size:21px}
+  .canal-body{padding:10px 14px}
+  .canal-lab{grid-template-columns:minmax(240px,1.35fr) minmax(255px,1fr);gap:18px}
+  .canal-figure{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .canal-plate{height:calc(100% - 24px);max-width:100%;aspect-ratio:900/620;flex:none}
+  #canal-canvas{height:100%;width:auto;max-width:100%}
+  .canal-figure figcaption{width:100%;margin-top:5px;font-size:9px;gap:4px 12px}
+  .canal-figure figcaption span:last-child{display:none}
+  .canal-invitation{font-size:19px}
+  .canal-footer{padding:6px 14px}
+  .canal-footer>span{font-size:10px}
+  .canal-footer button{padding:6px 12px}
+}
+@media(prefers-reduced-motion:reduce){.canal-meter i{transition:none}}

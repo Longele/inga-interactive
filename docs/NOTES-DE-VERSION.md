@@ -1,5 +1,11 @@
 # Notes de version
 
+## 1.4.1
+
+Explications du parcours simplifiées pour les visiteurs qui découvrent l’hydroélectricité : phrases courtes, mots courants et liens entre l’eau, la rotation et l’électricité. Un récapitulatif « À retenir » apparaît à l’étape Ville avant les chiffres.
+
+Les six textes de narration sont réécrits avec un objectif simple par étape et un résumé final. La voix ElevenLabs fournie est conservée ; aucun nouvel audio n’est généré ni annoncé comme disponible.
+
 ## 1.4.0
 
 Nouveau parcours visible « Du fleuve à la ville », accessible depuis la maquette et Apprendre.

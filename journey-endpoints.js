@@ -108,6 +108,7 @@
     $('#journey-detail-console').innerHTML = `
       <p class="endpoint-live"><span></span>Votre simulation · aucune mesure SNEL en direct</p>
       <p class="endpoint-lead">${river ? 'Suivez une partie de l’eau du Congo jusqu’aux centrales, puis retrouvez-la dans le fleuve.' : 'Suivez l’électricité jusqu’à la distribution, puis aux usages du quotidien.'}</p>
+      ${river ? '' : '<p id="endpoint-recap" class="endpoint-note"><strong>À retenir</strong><br>L’eau fait tourner la turbine, qui entraîne l’alternateur. Il produit l’électricité, transportée par les lignes. Les transformateurs adaptent la tension. L’eau retourne au fleuve.</p>'}
       <div class="endpoint-measures">${river
         ? metric('Débit du fleuve', 'endpoint-river-flow', 'm³/s') + metric('Vers les turbines', 'endpoint-diverted', 'm³/s') + metric('Reste dans le fleuve', 'endpoint-bypass', 'm³/s')
         : metric('Produit aux centrales', 'endpoint-generated', 'MW') + metric('Livré au réseau', 'endpoint-delivered', 'MW') + metric('Part vers Kinshasa', 'endpoint-kinshasa', 'MW', 'Répartition illustrative du modèle.')}</div>

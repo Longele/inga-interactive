@@ -1,32 +1,52 @@
 # Narration — Du fleuve à la ville
 
-**Statut : textes prêts ; fichiers audio non générés.** Voix ElevenLabs fournie par l'éditeur : `UaGvaD7NWzU5mJNoUqoY`. Ce document prépare six narrations pédagogiques indépendantes ; aucun son correspondant n'est annoncé comme disponible dans l'interface.
+**Statut : textes prêts, relecture terminée ; fichiers audio non générés.** Voix ElevenLabs fournie par l'éditeur : `UaGvaD7NWzU5mJNoUqoY`. Ces six narrations s'adressent à une personne qui découvre entièrement l'hydroélectricité. Aucun son correspondant n'est annoncé comme disponible dans l'interface.
 
-Lecture proposée : français naturel, chaleureux et posé, avec une courte respiration entre les idées. Chaque texte vise environ 15 à 25 secondes ; la durée sera à vérifier après génération. Les ouvrages décrivent le principe de fonctionnement, sans prétendre reproduire les installations réelles dans tous leurs détails.
+Lecture proposée : français naturel, chaleureux et posé, avec une courte respiration entre les idées. Chaque texte comporte 45 à 65 mots ; la durée sera vérifiée après génération, sans accélérer la voix pour tenir un minutage. Les objectifs ci-dessous guident la rédaction et ne sont pas à lire à voix haute. Les dessins expliquent des principes, sans reproduire tous les détails des installations réelles.
+
+Ne pas ajouter de chiffres ou d'unités techniques non indispensables à la compréhension. Garder un ton calme ; aucun effet sonore ne doit masquer la voix.
 
 ## 1. Fleuve
 
-> Tout commence avec le Congo. Une partie de son eau est dirigée vers les centrales d'Inga, tandis que le reste poursuit son chemin dans le fleuve. L'eau transporte une énergie liée à sa hauteur et à son mouvement. Suivons la partie dérivée : elle entre maintenant dans le canal.
+**Objectif :** comprendre que seule une partie de l'eau est dirigée vers les centrales et que sa descente peut faire tourner une machine.
+
+> Tout commence avec l'eau du Congo. À Inga, elle peut descendre d'un niveau élevé vers un niveau plus bas. Cette descente peut faire tourner une machine. On dirige donc une partie de l'eau vers les centrales, les installations qui produisent l'électricité. Le reste continue dans le fleuve. Suivons maintenant l'eau qui entre dans le canal.
 
 ## 2. Canal
 
-> Le canal conduit l'eau vers les centrales. Son passage disponible compte autant que l'abondance du fleuve. Si des dépôts de sable le réduisent, moins d'eau peut atteindre les turbines. Dans cette expérience, vous pouvez ajouter du sable, puis dégager le canal, et observer ce qui change dans la production.
+**Objectif :** relier l'espace disponible dans le canal à la quantité d'eau qui peut arriver aux machines.
+
+> Le canal est un passage aménagé pour conduire l'eau jusqu'aux machines. Si du sable s'accumule, il reste moins de place pour l'eau. Moins d'eau peut alors arriver aux machines, et la production d'électricité peut diminuer. En retirant les dépôts, on libère le passage. Suivons l'eau jusqu'à la roue qu'elle va faire tourner.
 
 ## 3. Turbine
 
-> L'eau descend vers la turbine et pousse les pales de sa roue. Cette roue fait tourner un arbre qui entraîne l'alternateur. La turbine transforme donc l'énergie de l'eau en rotation ; elle ne produit pas seule l'électricité. Après son passage, l'eau rejoint le fleuve, en aval de la centrale.
+**Objectif :** comprendre que l'eau fait tourner une roue reliée à la machine électrique, puis retourne au fleuve.
+
+> L'eau fait alors tourner la roue de la turbine. La roue entraîne une grande tige en métal, appelée l'arbre. Cette tige transmet le mouvement à l'alternateur, la machine qui produit l'électricité. Après ce passage, l'eau retourne au fleuve. Suivons maintenant la rotation de la tige.
 
 ## 4. Alternateur
 
-> L'arbre entraîne le rotor de l'alternateur. Son champ magnétique tourne devant des bobines qui, elles, restent fixes. Cela crée des tensions alternatives ; lorsqu'on fournit de l'énergie au réseau, un courant alternatif circule. L'alternateur transforme ainsi la rotation en électricité. La prochaine étape consiste à transporter cette énergie.
+**Objectif :** distinguer la roue entraînée par l'eau de l'alternateur qui transforme sa rotation en électricité, et comprendre le mot « alternatif ».
+
+> La roue entraîne maintenant l'alternateur, la machine qui produit l'électricité. À l'intérieur, une pièce aimantée tourne devant des fils enroulés qui restent immobiles. Le mouvement de la pièce aimantée agit sur ces fils et permet de produire l'électricité. Le courant change régulièrement de sens : c'est le courant alternatif. Il faut ensuite transporter cette énergie jusqu'aux lieux où elle sera utilisée.
 
 ## 5. Transformateur
 
-> Pour transporter l'électricité, le transformateur élève la tension, pas la puissance. À puissance envoyée identique, une tension plus élevée permet de réduire le courant dans les lignes, et donc leurs pertes en chaleur. Comparez les deux tensions proposées : davantage de la puissance envoyée peut alors parvenir à l'arrivée.
+**Objectif :** comprendre pourquoi augmenter la tension réduit le courant nécessaire au transport et les pertes en chaleur, sans créer d'énergie.
+
+> Le transformateur augmente la tension, mesurée en volts, sans créer d'énergie. La tension permet de faire circuler le courant : le mouvement de minuscules particules dans les fils. Pour transporter la même énergie chaque seconde, une tension plus élevée demande moins de courant. Les fils chauffent alors moins, et davantage d'énergie arrive à destination.
 
 ## 6. Ville
 
-> À l'arrivée, une partie de la puissance envoyée a été perdue pendant le transport. Des postes abaissent ensuite la tension, puis d'autres adaptations la rendent utilisable dans les bâtiments. Du fleuve aux usages, chaque maillon compte. Le bilan affiché ici est celui du simulateur : il ne mesure pas l'alimentation réelle d'une ville.
+**Objectif :** raconter le chemin complet de l'eau aux usages et comprendre que la tension est abaissée avant les bâtiments.
+
+> Nous arrivons en ville. Avant les bâtiments, la tension est abaissée pour alimenter les lampes et les appareils. Résumons : l'eau fait tourner une roue ; la roue entraîne l'alternateur, qui produit l'électricité ; le transformateur prépare le transport ; les lignes acheminent l'énergie jusqu'aux utilisateurs. Après avoir fait tourner la roue, l'eau est retournée au fleuve.
+
+## Vérification de compréhension facultative
+
+Proposition à la fin du parcours, sans note ni passage obligé : **« Avec vos mots, comment l'eau du fleuve permet-elle d'allumer une lampe en ville ? »**
+
+Repères pour accompagner la réponse : l'eau fait tourner la roue ; l'alternateur transforme cette rotation en électricité ; le transformateur facilite le transport avec moins de pertes ; la tension est ensuite abaissée pour les usages. L'eau rejoint le fleuve après la turbine. Il suffit de retrouver ces liens ; aucun vocabulaire exact n'est exigé. En cas d'hésitation, proposer de revoir l'étape concernée.
 
 ## Lecture et sons à prévoir
 

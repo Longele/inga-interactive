@@ -48,6 +48,8 @@
 .endpoint-stages button[aria-pressed=true]{border-color:var(--water);color:var(--water);background:#8cc3d10b}
 .endpoint-explanation{font-size:13px;line-height:1.65;min-height:5em;margin:0 0 17px;padding:10px 12px;border-left:2px solid var(--water);background:#8cc3d108}
 .endpoint-note{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 14px}
+#endpoint-recap{padding:12px 14px;border-left:2px solid var(--power);background:#e8b45a08;color:var(--ink);font-size:14px}
+#endpoint-recap strong{display:inline-block;margin-bottom:5px;color:var(--power)}
 @keyframes endpoint-water-flow{to{stroke-dashoffset:-96}}
 @keyframes endpoint-branch-flow{to{stroke-dashoffset:-76}}
 @keyframes endpoint-energy-flow{to{stroke-dashoffset:-124}}

@@ -1,5 +1,15 @@
 # Validation technique
 
+## Version 1.4.1 — explications pour débutants
+
+Les six scripts de narration ont été relus pour simplifier le vocabulaire et expliciter les liens entre eau, rotation, production et transport. Il s’agit d’une relecture éditoriale, pas d’une mesure de compréhension auprès de visiteurs. Aucun audio correspondant n’a été généré.
+
+La sélection `INGA_JOURNEY_CASE=layout` de `browser-journey.cjs` réussit sur la distribution construite : cinq formats, six étapes par format et absence d’erreurs JavaScript, soit six contrôles réussis. Les titres et explications plus longs conservent les commandes accessibles. Les scripts modifiés passent le contrôle syntaxique ; le cache est synchronisé et les 65 fichiers publics sont construits.
+
+Inspection visuelle à 320×568 : guides Transformateur et Ville entièrement visibles ; récapitulatif final lisible en 14 px, avec ses commandes de navigation accessibles.
+
+La publication reste conditionnée aux treize suites navigateur du commit livré dans GitHub Actions.
+
 ## Version 1.4.0 — du fleuve à la ville
 
 Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :

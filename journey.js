@@ -5,11 +5,11 @@
   if (!api || !app) return;
   const steps = [
     { id: 'river', name: 'Fleuve', short: 'Fleuve', title: 'Tout commence avec le Congo', text: 'Une partie de l’eau rejoint le canal. Le reste continue dans le fleuve.', action: 'Voir le chemin de l’eau', modal: 'journey-detail', kind: 'water' },
-    { id: 'canal', name: 'Canal', short: 'Canal', title: 'Le canal conduit l’eau aux centrales', text: 'Son passage disponible limite l’eau qui peut atteindre les turbines.', action: 'Ouvrir le canal en coupe', modal: 'canal-cut', kind: 'water' },
-    { id: 'turbine', name: 'Turbine', short: 'Turbine', title: 'L’eau fait tourner la turbine', text: 'La roue entraîne un arbre vertical. Après la turbine, l’eau retourne au fleuve.', action: 'Ouvrir la turbine en coupe', modal: 'cut', kind: 'water' },
-    { id: 'alternator', name: 'Alternateur', short: 'Alternat.', title: 'La rotation devient électricité', text: 'L’arbre entraîne le rotor de l’alternateur. Son champ induit des tensions dans les bobines fixes.', action: 'Ouvrir l’alternateur en coupe', modal: 'alternator-cut', kind: 'power' },
-    { id: 'transformer', name: 'Transformateur', short: 'Transfo.', title: 'Une tension élevée pour voyager', text: 'Comparez les pertes de la ligne dans une expérience indépendante à puissance constante.', action: 'Voir le transformateur et la ligne', modal: 'transformer-cut', kind: 'power' },
-    { id: 'city', name: 'Ville', short: 'Ville', title: 'L’électricité arrive aux usages', text: 'Le réseau distribue l’énergie. La tension est abaissée avant les bâtiments. Liaison schématique.', action: 'Voir l’arrivée en ville', modal: 'journey-detail', kind: 'power' }
+    { id: 'canal', name: 'Canal', short: 'Canal', title: 'Le canal conduit l’eau aux centrales', text: 'Le canal est un chemin pour l’eau. Du sable peut rétrécir ce passage et laisser passer moins d’eau.', action: 'Ouvrir le canal en coupe', modal: 'canal-cut', kind: 'water' },
+    { id: 'turbine', name: 'Turbine', short: 'Turbine', title: 'L’eau fait tourner la turbine', text: 'L’eau fait tourner une roue : la turbine. Une tige transmet cette rotation à l’alternateur. L’eau retourne ensuite au fleuve.', action: 'Ouvrir la turbine en coupe', modal: 'cut', kind: 'water' },
+    { id: 'alternator', name: 'Alternateur', short: 'Alternat.', title: 'La rotation devient électricité', text: 'Une pièce aimantée tourne devant des fils enroulés. C’est ainsi que l’alternateur transforme la rotation de la turbine en électricité.', action: 'Ouvrir l’alternateur en coupe', modal: 'alternator-cut', kind: 'power' },
+    { id: 'transformer', name: 'Transformateur', short: 'Transfo.', title: 'Préparer le transport de l’électricité', text: 'Le transformateur augmente la tension, mesurée en volts. Cela permet de transporter l’énergie avec moins de pertes en chaleur dans les lignes.', action: 'Voir le transformateur et la ligne', modal: 'transformer-cut', kind: 'power' },
+    { id: 'city', name: 'Ville', short: 'Ville', title: 'L’électricité fait fonctionner les appareils', text: 'À l’arrivée, d’autres transformateurs abaissent la tension pour les bâtiments. L’électricité sert à éclairer et à faire fonctionner des appareils. Liaison schématique.', action: 'Voir l’arrivée en ville', modal: 'journey-detail', kind: 'power' }
   ];
   const entry = document.createElement('button');
   entry.id = 'journey-entry'; entry.type = 'button'; entry.hidden = true;
@@ -169,7 +169,7 @@
   function reset() { stop(); visited.clear(); complete = false; current = 'river'; unitId = 'G24'; update(); }
   function finish() {
     complete = visited.size === steps.length; stop();
-    announcement.textContent = complete ? 'Les six étapes sont explorées. L’eau retourne au fleuve ; l’énergie poursuit son chemin jusqu’à la ville.' : 'Retour à la maquette. Vous pouvez reprendre les étapes du parcours à tout moment.';
+    announcement.textContent = complete ? 'Les six étapes sont explorées. À retenir : l’eau fait tourner la turbine ; l’alternateur produit l’électricité ; les transformateurs adaptent la tension ; les lignes apportent l’énergie aux bâtiments. L’eau retourne au fleuve.' : 'Retour à la maquette. Vous pouvez reprendre les étapes du parcours à tout moment.';
   }
   function fromScene(key, requestedUnit) {
     if (!active) return false;

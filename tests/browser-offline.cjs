@@ -111,6 +111,18 @@ const base = (process.env.INGA_TEST_URL || 'http://127.0.0.1:8001').replace(/\/$
     assert.equal(updateFailed.current.ready,true);
     assert.equal(updateFailed.pending.ready,false);
     assert.match(await page.locator('#offline-detail').textContent(),/version actuelle reste disponible/);
+    await page.waitForFunction(async()=>!!(await navigator.serviceWorker.getRegistration()).waiting,null,{polling:100});
+    const denied=await page.evaluate(async()=>{
+      const r=await navigator.serviceWorker.getRegistration(),worker=r.waiting;
+      return new Promise((resolve,reject)=>{
+        const channel=new MessageChannel();
+        const timeout=setTimeout(()=>{channel.port1.close();reject(new Error('Activation refusal was not acknowledged'));},5000);
+        channel.port1.onmessage=e=>{clearTimeout(timeout);channel.port1.close();resolve(e.data);};
+        worker.postMessage({type:'INGA_OFFLINE_ACTIVATE'},[channel.port2]);
+      });
+    });
+    assert.equal(denied.accepted,false,'An incomplete worker must acknowledge refusal to activate');
+    assert.equal(await page.evaluate(()=>__INGA_OFFLINE.state.current.version),version+'-test1');
     failAsset=false;
     await page.locator('#offline-retry').click();
     await waitMode(page,'update');

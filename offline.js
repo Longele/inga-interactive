@@ -10,7 +10,7 @@
   tools.append(button);
   const panel=document.createElement('div');
   panel.id='offline-panel'; panel.className='modal'; panel.hidden=true;
-  panel.innerHTML='<section class="mbox" role="dialog" aria-modal="true" aria-labelledby="offline-title"><button type="button" class="x" id="offline-close" aria-label="Fermer la fenêtre hors ligne">×</button><div class="mhead"><div class="k">Installation sur cet appareil</div><h2 id="offline-title">Inga, même sans connexion</h2></div><div class="mbody"><p id="offline-summary" role="status" aria-live="polite"></p><progress id="offline-progress" aria-label="Ressources enregistrées" max="1" value="0"></progress><p id="offline-detail"></p><div class="btnrow"><button type="button" class="btn pri" id="offline-retry" hidden>Réessayer le téléchargement</button><button type="button" class="btn pri" id="offline-update" hidden>Installer la mise à jour</button><button type="button" class="btn" id="offline-check" hidden>Vérifier les mises à jour</button></div><p class="offline-help">Le navigateur conserve le plan, la maquette et les huit narrations sur cet appareil. Gardez cette adresse en favori. Si les données du navigateur sont effacées, une connexion sera nécessaire pour les télécharger à nouveau.</p></div></section>';
+  panel.innerHTML='<section class="mbox" role="dialog" aria-modal="true" aria-labelledby="offline-title"><button type="button" class="x" id="offline-close" aria-label="Fermer la fenêtre hors ligne">×</button><div class="mhead"><div class="k">Installation sur cet appareil</div><h2 id="offline-title">Inga, même sans connexion</h2></div><div class="mbody"><p id="offline-summary" role="status" aria-live="polite"></p><progress id="offline-progress" aria-label="Ressources enregistrées" max="1" value="0"></progress><p id="offline-detail"></p><div class="btnrow"><button type="button" class="btn pri" id="offline-retry" hidden>Réessayer le téléchargement</button><button type="button" class="btn pri" id="offline-update" hidden>Installer la mise à jour</button><button type="button" class="btn" id="offline-check" hidden>Vérifier les mises à jour</button></div><p class="offline-help">Le navigateur conserve le plan, la maquette et toutes les narrations sur cet appareil. Gardez cette adresse en favori. Si les données du navigateur sont effacées, une connexion sera nécessaire pour les télécharger à nouveau.</p></div></section>';
   app.append(panel);
   const get=id=>document.getElementById(id);
   const state={mode:'checking',current:null,pending:null,error:'',updating:false,checking:false};
@@ -56,7 +56,7 @@
       if(pending&&current&&current.ready)detail+=' La version actuelle reste disponible hors ligne.';
     }else if(current&&current.ready){
       mode='ready';summary='La visite complète est disponible hors ligne sur cet appareil.';
-      detail=current.cached+' / '+current.total+' fichiers vérifiés, dont les huit narrations. '+(connected?'Connexion disponible.':'Vous utilisez actuellement le mode hors ligne.');
+      detail=current.cached+' / '+current.total+' fichiers vérifiés, dont toutes les narrations. '+(connected?'Connexion disponible.':'Vous utilisez actuellement le mode hors ligne.');
       if(state.error)detail+=' La vérification des mises à jour n’a pas abouti ; vous pouvez réessayer.';
     }else if(state.error){
       mode='error';summary='La disponibilité hors ligne n’a pas pu être vérifiée.';
@@ -80,13 +80,13 @@
     get('offline-check').textContent=state.checking?'Vérification…':'Vérifier les mises à jour';
     window.dispatchEvent(new CustomEvent('inga:offline',{detail:{...state}}));
   }
-  function query(worker){
+  function query(worker,command='INGA_OFFLINE_STATUS'){
     if(!worker)return Promise.resolve(null);
     return new Promise((resolve,reject)=>{
       const channel=new MessageChannel();
       const timeout=setTimeout(()=>{channel.port1.close();reject(new Error('Worker did not answer'));},5000);
       channel.port1.onmessage=event=>{clearTimeout(timeout);channel.port1.close();resolve(event.data);};
-      try{worker.postMessage({type:'INGA_OFFLINE_STATUS'},[channel.port2]);}
+      try{worker.postMessage({type:command},[channel.port2]);}
       catch(error){clearTimeout(timeout);channel.port1.close();reject(error);}
     });
   }
@@ -150,12 +150,13 @@
       const verified=await query(worker);
       if(!verified.ready){await refresh();return;}
       applying=true;state.updating=true;state.error='';render();
-      worker.postMessage({type:'INGA_OFFLINE_ACTIVATE'});
       clearTimeout(applyTimer);
       applyTimer=setTimeout(()=>{
         applying=false;state.updating=false;state.error='Update did not activate';render();
       },15000);
-    }catch(error){state.error=error.message;state.updating=false;render();}
+      const activated=await query(worker,'INGA_OFFLINE_ACTIVATE');
+      if(!activated.accepted)throw new Error('Update is incomplete');
+    }catch(error){clearTimeout(applyTimer);applying=false;state.error=error.message;state.updating=false;render();}
   });
   window.__INGA_OFFLINE={get state(){return {...state};},check:refresh};
   render();

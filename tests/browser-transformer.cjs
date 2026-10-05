@@ -203,9 +203,9 @@ async function reachable(page, locator, width, height, name) {
       for (const key of [...Array(24).fill('Tab'), ...Array(24).fill('Shift+Tab')]) { await page.keyboard.press(key); assert.equal(await page.evaluate(() => !!document.activeElement.closest('#transformer-cut')), true); }
       await page.locator('#transformer-field').focus(); await page.keyboard.press('Tab');
       assert.equal(await page.evaluate(() => document.activeElement.tagName), 'SUMMARY');
-      await page.keyboard.press('Enter'); assert.equal(await page.locator('#transformer-cut details').getAttribute('open'), '');
+      await page.keyboard.press('Enter'); assert.equal(await page.locator('#transformer-cut details.canal-sources').getAttribute('open'), '');
       await page.keyboard.press('Tab'); assert.equal(await page.evaluate(() => document.activeElement.id), 'transformer-sources');
-      await page.keyboard.press('Shift+Tab'); await page.keyboard.press('Enter'); assert.equal(await page.locator('#transformer-cut details').getAttribute('open'), null);
+      await page.keyboard.press('Shift+Tab'); await page.keyboard.press('Enter'); assert.equal(await page.locator('#transformer-cut details.canal-sources').getAttribute('open'), null);
       await page.keyboard.press('Escape'); assert.equal(await page.evaluate(() => document.activeElement.id), 'transformerBtn');
       // The shared keyboard guard must preserve native sliders in the other engineering lessons too.
       await page.evaluate(() => IngaCanal.open()); await page.locator('#canal-sediment').focus();
@@ -235,7 +235,7 @@ async function reachable(page, locator, width, height, name) {
         if (width === 740) assert.ok(canvas.height <= height * .45, 'tablet drawing leaves space for controls');
         assert.equal(await page.locator('.transformer-console').evaluate(el => el.scrollWidth <= el.clientWidth + 1), true);
         await reachable(page, closeButton(page), width, height, 'close');
-        for (const selector of ['[data-transformer-power="example"]', '[data-transformer-power="site"]', '[data-transformer-voltage="200"]', '[data-transformer-voltage="400"]', '#transformer-voltage', '#transformer-compare', '[data-transformer-stage="city"]', '#transformer-field', '#transformer-cut summary', '#transformer-motion', '#transformer-alternator', '#transformer-return']) await reachable(page, page.locator(selector), width, height, selector);
+        for (const selector of ['[data-transformer-power="example"]', '[data-transformer-power="site"]', '[data-transformer-voltage="200"]', '[data-transformer-voltage="400"]', '#transformer-voltage', '#transformer-compare', '[data-transformer-stage="city"]', '#transformer-field', '#transformer-cut .canal-sources summary', '#transformer-motion', '#transformer-alternator', '#transformer-return']) await reachable(page, page.locator(selector), width, height, selector);
         await page.locator('#transformer-voltage').scrollIntoViewIfNeeded();
         for (const selector of ['#transformer-current', '#transformer-loss', '#transformer-received']) await reachable(page, page.locator(selector), width, height, `sticky ${selector}`);
         await page.locator('.transformer-console').evaluate(el => { el.scrollTop = 0; }); await page.screenshot({ path: `/tmp/inga-transformer-test-${width}.png` }); await closeButton(page).click();

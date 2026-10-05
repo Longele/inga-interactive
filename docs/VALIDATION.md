@@ -9,6 +9,7 @@
 - Commandes et texte repliable accessibles dans les six coupes à 320×568, 390×844, 740×800, 844×390 et 1440×900. Capture Ville à 320×568 inspectée visuellement.
 - Le cache fournit des réponses partielles MP3 correctes : préfixe, suffixe et plage impossible. Le test vérifie les octets et les en-têtes ; il ne constitue pas un essai sur un iPhone physique.
 - Les sept groupes de `browser-offline.cjs` passent, y compris mise à jour, migration et redémarrage hors ligne. La sélection de mise en page de `browser-journey.cjs` passe ses cinq formats et le contrôle d’absence d’erreurs. Vérifications syntaxiques, synchronisation du mode musée et du cache, construction des 72 fichiers publics et contrôle du diff réussis.
+- Après le premier contrôle distant, les sélecteurs de la suite transformateur distinguent le texte de narration des hypothèses techniques : ses dix-neuf vérifications passent localement. L’activation hors ligne accuse réception de la version vérifiée sans prolonger l’événement de message jusqu’à l’activation ; les sept groupes hors ligne repassent localement, avec un contrôle supplémentaire du refus d’activer un téléchargement incomplet.
 
 La nouvelle suite porte à quatorze les suites navigateur exécutées automatiquement avant publication. Le résultat distant doit être vérifié pour le commit livré.
 

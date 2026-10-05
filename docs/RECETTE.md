@@ -33,6 +33,9 @@ Ce document sert à accepter une version sur le matériel réellement installé.
 | Choisir un groupe d'Inga I puis d'Inga II, comparer les charges 30 % et 100 %, arrêter/redémarrer et simuler/réparer une panne sans modifier les autres réglages | À tester |
 | Parcourir rotor/stator/alternatif, afficher le champ et les phases, mettre en pause et avancer d'un quart de tour ; vérifier commandes, clavier, petit écran et réduction des animations | À tester |
 | Confirmer l'accès à la coupe de l'alternateur après préparation du cache puis coupure du réseau | À tester |
+| Ouvrir Transformateur et transport depuis les outils, Apprendre et l'alternateur ; comparer 200 et 400 kV à 100 MW puis animer et mettre en pause | À tester |
+| Capturer la puissance du site pour une comparaison et vérifier que les réglages et le bilan principal restent inchangés | À tester |
+| Vérifier les commandes du transport au clavier et sur petit écran, puis l'accès hors ligne après préparation du cache | À tester |
 | Exécuter Registre → Validation : aucun contrôle interne en échec | À tester |
 | Naviguer au clavier : focus visible, boîtes de dialogue, Échap et retour au déclencheur | À tester |
 | Sur téléphone/tablette : portrait et paysage, aucun bouton essentiel inaccessible | À tester |

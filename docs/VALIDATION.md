@@ -1,5 +1,24 @@
 # Validation technique
 
+## Version 1.3.0 — transformateur et transport
+
+Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-transformer.cjs` : 19 vérifications réussies, sans erreur JavaScript. Références à 100 MW : 288,675 A et 2,5 MW de pertes à 200 kV ; 144,338 A et 0,625 MW à 400 kV. Conservation de la puissance, limites du calcul, cas zéro et indépendance du modèle principal vérifiés.
+- Boutons, curseur au clavier, comparaison animée, arrêt, pause, flux magnétique, étapes et préférence de réduction des animations vérifiés. La puissance du site est mémorisée au clic et reste fixe lors des changements ultérieurs du simulateur.
+- Liens depuis l'alternateur, Apprendre, l'expérience réseau et les informations CA ; fermeture, Échap, réinitialisation, visite, plan et remplacement de fenêtre vérifiés. Aucun changement différé après annulation.
+- Cinq formats vérifiés et inspectés visuellement : 320×568, 390×844, 740×800, 844×390 et 1440×900. Dessin et mesures restent visibles ; les commandes défilantes sont accessibles. Tous les boutons de la barre à 1024 px sont également accessibles.
+- Correction du conflit entre les flèches des champs et la caméra : les curseurs du transformateur et du canal répondent au clavier sans déplacer la vue.
+- Contrôles syntaxiques, génération du mode musée et du cache, construction de la distribution et vérification du diff réussis.
+
+Pour reproduire la suite, servir `dist/site` sur le port 8001 et utiliser l'environnement Playwright décrit dans le README :
+
+```sh
+node tests/browser-transformer.cjs
+```
+
+La publication est conditionnée aux douze suites navigateur découvertes automatiquement par GitHub Actions, dont les parcours musée et hors ligne. Le résultat distant doit être vérifié pour le commit livré. Les résultats historiques ci-dessous restent distincts.
+
 ## Version 1.2.0 — coupe interactive de l'alternateur
 
 Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :

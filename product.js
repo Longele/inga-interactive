@@ -106,7 +106,7 @@
     <div class="learning-scene-switch" role="group" aria-label="Comparer les états de la maquette"><button type="button" data-learning-scene="before" aria-pressed="false"><span>Avant</span><strong></strong></button><button type="button" data-learning-scene="after" aria-pressed="false"><span>Après</span><strong></strong></button></div>
     <p id="learning-scene-observation" role="status" aria-live="polite" aria-atomic="true"></p>
     <p id="learning-scene-auto">Le changement s’appliquera après le cadrage. Touchez Avant ou Après pour comparer à votre rythme.</p>
-    <div class="learning-scene-actions"><button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button><button type="button" class="learning-button" data-learning-scene="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut" hidden>Voir le canal en coupe</button><button type="button" class="learning-button" data-learning-scene="alternator-cut" aria-haspopup="dialog" aria-controls="alternator-cut" hidden>Voir l’alternateur en coupe</button></div>`;
+    <div class="learning-scene-actions"><button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button><button type="button" class="learning-button" data-learning-scene="canal-cut" aria-haspopup="dialog" aria-controls="canal-cut" hidden>Voir le canal en coupe</button><button type="button" class="learning-button" data-learning-scene="alternator-cut" aria-haspopup="dialog" aria-controls="alternator-cut" hidden>Voir l’alternateur en coupe</button><button type="button" class="learning-button" data-learning-scene="transformer-cut" aria-haspopup="dialog" aria-controls="transformer-cut" hidden>Voir le transport</button></div>`;
   app.append(scene);
   const content = modal.querySelector('#learning-content');
   const heading = modal.querySelector('#learning-title');
@@ -171,7 +171,8 @@
     scene.querySelector('#learning-scene-title').textContent = current.title;
     scene.querySelector('[data-learning-scene="canal-cut"]').hidden = current.id !== 'sed';
     scene.querySelector('[data-learning-scene="alternator-cut"]').hidden = current.id !== 'one';
-    scene.querySelector('.learning-scene-actions').classList.toggle('has-cutaway', current.id === 'sed' || current.id === 'one');
+    scene.querySelector('[data-learning-scene="transformer-cut"]').hidden = current.id !== 'grid';
+    scene.querySelector('.learning-scene-actions').classList.toggle('has-cutaway', ['sed', 'one', 'grid'].includes(current.id));
     scene.querySelector('[data-learning-scene="before"] strong').textContent = mw(result.before.Pgen);
     scene.querySelector('[data-learning-scene="after"] strong').textContent = mw(result.after.Pgen);
     sceneState(initial, !automatic);
@@ -201,6 +202,7 @@
   scene.querySelector('[data-learning-scene="close"]').onclick = stopObservation;
   scene.querySelector('[data-learning-scene="canal-cut"]').onclick = () => window.IngaCanal?.open();
   scene.querySelector('[data-learning-scene="alternator-cut"]').onclick = () => window.IngaAlternator?.open('G24');
+  scene.querySelector('[data-learning-scene="transformer-cut"]').onclick = () => window.IngaTransformer?.open();
   window.addEventListener('inga:simulationchange', () => { if (observing && !ownedChange) stopObservation(); });
   window.addEventListener('resize', () => {
     if (!observing) return;
@@ -270,6 +272,11 @@
         <span><strong>L’alternateur en coupe</strong><small>Rotor → bobines fixes → tensions alternées.</small></span>
         <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
       </button>
+      <button type="button" class="learning-canal-entry" data-learning="transformer-cut" aria-haspopup="dialog" aria-controls="transformer-cut">
+        <svg class="learning-canal-illustration" viewBox="0 0 92 64" aria-hidden="true"><rect width="92" height="64" rx="5" fill="#efe5d2"/><path d="M12 16h25v33H12Zm7 7v19h11V23Z" fill="#a9a48f" fill-rule="evenodd" stroke="#6f6959" stroke-width="1.2"/><g fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M9 25h13m-13 6h13m-13 6h13" stroke="#b97f4d"/><path d="M27 23h13m-13 5h13m-13 5h13m-13 5h13m-13 5h13" stroke="#3e8290"/></g><path d="M40 23c6 5 11 5 17 0m-17 8c6 5 11 5 17 0m5-14-8 35m8-35 8 35m-21 0h25M54 43h14m-12-9h10m-14-10h18m-15 0 10 19m2-19-11 19M62 12v7m6 5c6 5 10 5 16 0" fill="none" stroke="#6f6959" stroke-width="1.2"/><path d="M76 51V38h7V31h5v20" fill="#d6c7a3" stroke="#6f6959" stroke-width="1.2"/><path d="M79 41v3m6-9v3m0 5v3" stroke="#3e8290" stroke-width="1.5"/></svg>
+        <span><strong>Le transformateur et la ligne</strong><small>Tension, courant et pertes : suivez l’électricité jusqu’à la ville.</small></span>
+        <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
       <div class="learning-footer-links"><button type="button" class="learning-button" data-learning="glossary">Ouvrir le lexique</button><button type="button" class="learning-button learning-button-quiet" data-learning="recap">Les 3 idées essentielles</button></div>
       <p class="learning-note">Ces expériences utilisent le modèle pédagogique de l’application. Elles ne décrivent pas l’état actuel des installations.</p>`);
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
@@ -277,6 +284,7 @@
     bind('recap', recap);
     bind('canal-cut', () => window.IngaCanal?.open());
     bind('alternator-cut', () => window.IngaAlternator?.open());
+    bind('transformer-cut', () => window.IngaTransformer?.open());
     bind('resume', () => resultView === 'scene' ? observe() : resultView === 'explain' ? explanation() : comparison());
   }
 

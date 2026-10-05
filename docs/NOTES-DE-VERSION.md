@@ -1,5 +1,18 @@
 # Notes de version
 
+## 1.3.0
+
+Nouvelle expérience du transformateur à la ville pour comprendre le transport en courant alternatif.
+
+- Comparaison de 200 à 400 kV à puissance envoyée constante : le courant est divisé par deux et les pertes résistives par quatre.
+- Exemple de 100 MW, curseur de tension, comparaison animée, pause et affichage du courant, des pertes et de la puissance reçue.
+- Possibilité de mémoriser la production simulée du site au moment du clic pour la comparer localement, sans modifier ni suivre ensuite les réglages du modèle principal.
+- Accès depuis les outils, Plus sur mobile, Apprendre, l'expérience du réseau limité, les informations du poste et de la liaison vers Kinshasa, et la coupe de l'alternateur.
+- Les flèches du clavier règlent les champs et parcourent les fenêtres sans être captées par la caméra 3D.
+- Hypothèses explicites : transformateur idéal, source de 20 kV, résistance de 10 Ω par conducteur, ligne triphasée équilibrée à facteur de puissance unitaire. Les valeurs sont pédagogiques et la liaison en courant continu Inga–Kolwezi n'est pas modélisée par cette expérience.
+
+Les 19 vérifications de la suite dédiée réussissent sur la distribution construite ; les résultats et limites sont consignés dans [VALIDATION.md](VALIDATION.md). La publication reste conditionnée aux suites navigateur de GitHub Actions pour le commit livré.
+
 ## 1.2.0
 
 Nouvelle coupe interactive de l'alternateur, reliée aux groupes du simulateur.

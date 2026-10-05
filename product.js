@@ -252,6 +252,10 @@
   function hub() {
     layout('Comprendre Inga pas à pas', 'Apprendre · 3 expériences', `
       <p class="learning-lead">Que se passe-t-il si le canal se bouche, si une machine s’arrête ou si le réseau est limité ?</p>
+      <div class="learning-reassurance"><button type="button" class="learning-challenge" data-learning="journey">
+        <span><strong>Du fleuve à la ville</strong><small>Six étapes sur la maquette. Ouvrez chaque ouvrage, puis continuez le chemin de l’énergie.</small></span>
+        <svg class="learning-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16 16 4M5 4h11v11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button></div>
       <p class="learning-how"><strong>Comment ça marche ?</strong>Choisissez une situation et donnez votre avis. La fenêtre se ferme pour vous montrer le changement sur la maquette. Comparez Avant / Après, puis ouvrez l’explication.</p>
       <p class="learning-reassurance">Pas besoin de connaître la bonne réponse : vous pouvez aussi choisir « Je ne sais pas, montrez-moi ». Il n’y a pas de note.</p>
       ${result && current ? `<button type="button" class="learning-button learning-resume" data-learning="resume">Revoir mon résultat : ${current.title}</button>` : ''}
@@ -280,6 +284,7 @@
       <div class="learning-footer-links"><button type="button" class="learning-button" data-learning="glossary">Ouvrir le lexique</button><button type="button" class="learning-button learning-button-quiet" data-learning="recap">Les 3 idées essentielles</button></div>
       <p class="learning-note">Ces expériences utilisent le modèle pédagogique de l’application. Elles ne décrivent pas l’état actuel des installations.</p>`);
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
+    bind('journey', () => window.IngaJourney?.start('river'));
     bind('glossary', glossary);
     bind('recap', recap);
     bind('canal-cut', () => window.IngaCanal?.open());

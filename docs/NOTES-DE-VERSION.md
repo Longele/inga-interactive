@@ -1,5 +1,17 @@
 # Notes de version
 
+## 1.4.0
+
+Nouveau parcours visible « Du fleuve à la ville », accessible depuis la maquette et Apprendre.
+
+- Six étapes reliées : Fleuve, Canal, Turbine, Alternateur, Transformateur et Ville.
+- Panneau de navigation sur la maquette et commandes précédente/suivante dans les fenêtres des ouvrages.
+- Nouvelles vues illustrées du fleuve et de la ville, alimentées par le bilan du simulateur en lecture seule ; réutilisation des coupes interactives aux étapes intermédiaires.
+- Groupe observé conservé entre turbine et alternateur, notamment pour G11 et G24 ; navigation sans réinitialisation des réglages.
+- Distinction explicite entre le bilan principal affiché à l'étape Ville et l'expérience indépendante du transformateur, qui capture la puissance du site uniquement sur demande.
+
+Les 19 vérifications de la suite dédiée réussissent sur la distribution construite ; les résultats et leur portée figurent dans [VALIDATION.md](VALIDATION.md). La publication reste conditionnée aux treize suites navigateur de GitHub Actions pour le commit livré.
+
 ## 1.3.0
 
 Nouvelle expérience du transformateur à la ville pour comprendre le transport en courant alternatif.

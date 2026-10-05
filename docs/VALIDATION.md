@@ -1,5 +1,24 @@
 # Validation technique
 
+## Version 1.4.0 — du fleuve à la ville
+
+Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-journey.cjs` : 19 vérifications réussies, sans erreur JavaScript. Parcours des six étapes, navigation précédente/suivante, retour à la maquette, conservation des réglages et fin du parcours vérifiés.
+- Clic réel sur G11 dans la maquette, continuité du groupe entre turbine et alternateur, raccourcis d'Apprendre et ouverture d'un ouvrage depuis son repère sur la scène vérifiés. Ce repère reste accessible lorsque le panneau d'informations habituel est masqué.
+- Vues Fleuve et Ville actualisées avec les débits, la production, les pertes et la puissance livrée du modèle ; expérience du transformateur indépendante du bilan principal et des réglages conservés.
+- Clavier, maintien et restitution du focus, Échap, pause et réduction des animations vérifiés. Les changements rapides d'étape et les interruptions par la visite, la réinitialisation, le plan ou Apprendre ne rouvrent pas une ancienne fenêtre.
+- Cinq formats vérifiés avec WebGL actif : 320×568, 390×844, 740×800, 844×390 et 1440×900. Guide et commandes de bas de fenêtre accessibles aux six étapes ; inspection visuelle du guide Canal et des vues Fleuve et Ville. La barre d'outils et le menu Plus restent utilisables à côté de l'entrée du parcours.
+- Contrôles syntaxiques réussis pour les 13 scripts externes, les deux scripts intégrés à l'index et les trois du mode musée. Page musée et cache synchronisés, construction de 65 fichiers publics et vérification du diff réussies.
+
+Pour reproduire la suite, servir `dist/site` sur le port 8001 après construction et utiliser l'environnement Playwright décrit dans le README :
+
+```sh
+node tests/browser-journey.cjs
+```
+
+La publication est conditionnée aux treize suites navigateur découvertes automatiquement par GitHub Actions, dont les parcours musée et hors ligne. Le résultat distant doit être vérifié pour le commit livré. Les résultats historiques ci-dessous restent distincts.
+
 ## Version 1.3.0 — transformateur et transport
 
 Vérifications exécutées sur la distribution construite sous Chromium/Linux avec Playwright 1.62.1 :

@@ -25,6 +25,9 @@ Ce document sert à accepter une version sur le matériel réellement installé.
 | Explorer la maquette à la souris ou au toucher ; sélectionner un groupe et revenir | À tester |
 | Changer un scénario ; vérifier le comparatif avant/après et le retour à une situation connue | À tester |
 | Parcourir les trois défis et le glossaire dans Apprendre | À tester |
+| Ouvrir Du fleuve à la ville depuis la maquette et Apprendre ; parcourir les six étapes et les commandes précédente/suivante des ouvrages | À tester |
+| Vérifier l'actualisation des vues Fleuve et Ville, la conservation des réglages et du groupe G11 puis G24 entre turbine et alternateur | À tester |
+| Distinguer les résultats de l'expérience indépendante du transformateur du bilan principal affiché à l'étape Ville ; vérifier le parcours au clavier et sur petit écran | À tester |
 | Ouvrir la coupe du canal depuis les outils, Plus sur mobile et Apprendre ; vérifier le dessin et les commandes | À tester |
 | Comparer Dégagé et Ensablé, déplacer le curseur, vérifier le débit et la puissance sans modifier les autres réglages | À tester |
 | Animer l'ensablement et le nettoyage, arrêter la transformation, mettre le dessin en pause et vérifier la réduction des animations | À tester |

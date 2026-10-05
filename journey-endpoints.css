@@ -1,0 +1,74 @@
+/* First and last engineering plates in the continuous journey. */
+#journey-detail-motion{display:grid;place-items:center;width:44px;height:44px;padding:0;background:#8cc3d10a;color:var(--water);border:1px solid var(--line2);border-radius:50%}
+#journey-detail-motion:hover{background:#8cc3d118;border-color:var(--water)}
+#journey-detail-motion:disabled{opacity:.5;cursor:default}
+.endpoint-drawing{display:block;width:100%;height:auto;aspect-ratio:900/620}
+.endpoint-drawing text{font-family:var(--f-hand,'Architects Daughter',cursive);font-size:27px;fill:#393328}
+.endpoint-drawing .endpoint-svg-title{font-size:32px}
+.endpoint-drawing .endpoint-svg-note{font-family:var(--f-body,sans-serif);font-size:18px;fill:#796b53}
+.endpoint-drawing .endpoint-svg-conclusion{font-size:25px}
+.endpoint-drawing .endpoint-key-text{font-size:24px;fill:#6b614c}
+.endpoint-drawing .endpoint-use-label{font-size:25px}
+.endpoint-drawing .endpoint-river-name{font-size:31px;fill:#345f70}
+.endpoint-river-bank{fill:none;stroke:#8c8973;stroke-width:124;stroke-linecap:round;stroke-linejoin:round}
+.endpoint-river-water{fill:none;stroke:url(#endpoint-water);stroke-width:119;stroke-linecap:round;stroke-linejoin:round}
+.endpoint-flow{fill:none;stroke:#397c92;stroke-width:4.5;stroke-dasharray:1 23;stroke-linecap:round;animation:endpoint-water-flow 7s linear infinite;animation-play-state:paused}
+.endpoint-diversion-flow{stroke-width:3.6;stroke-dasharray:1 18;animation-name:endpoint-branch-flow;animation-duration:6s}
+.endpoint-city-flow{fill:none;stroke:#b88731;stroke-width:5;stroke-dasharray:1 30;stroke-linecap:round;animation:endpoint-energy-flow 8s linear infinite;animation-play-state:paused;opacity:0}
+.endpoint-city-outgoing{stroke-width:4.5;stroke-dasharray:1 26;animation-name:endpoint-distribution-flow}
+.endpoint-running .endpoint-flow,.endpoint-running.endpoint-city-lit .endpoint-city-flow{animation-play-state:running}
+.endpoint-city-lit .endpoint-city-flow{opacity:1}
+.endpoint-no-water .endpoint-river-upstream,.endpoint-no-water .endpoint-river-downstream,.endpoint-no-bypass .endpoint-river-bypass,.endpoint-no-diversion .endpoint-diversion-flow{opacity:0}
+.endpoint-direction{fill:none;stroke:#427c8e;stroke-width:2;marker-end:url(#endpoint-arrow)}
+.endpoint-leader{fill:none;stroke:#928168;stroke-width:1.1}
+.endpoint-emphasis{fill:#d1a65b;fill-opacity:.025;stroke:#b6904a;stroke-opacity:0;stroke-width:8;transition:stroke-opacity .15s,fill-opacity .15s;pointer-events:none}
+.endpoint-modal[data-focus=intake] .endpoint-river-intake,.endpoint-modal[data-focus=split] .endpoint-river-split,.endpoint-modal[data-focus=return] .endpoint-river-return,.endpoint-modal[data-focus=arrival] .endpoint-city-arrival,.endpoint-modal[data-focus=distribution] .endpoint-city-distribution,.endpoint-modal[data-focus=uses] .endpoint-city-uses{stroke-opacity:.24;fill-opacity:.045}
+.endpoint-window{fill:#9b9f92}
+.endpoint-city-lit .endpoint-window{fill:#e6b964}
+.endpoint-workshop-wheel{transform-box:fill-box;transform-origin:center;animation:endpoint-wheel-turn 8s linear infinite;animation-play-state:paused}
+.endpoint-running.endpoint-city-lit .endpoint-workshop-wheel{animation-play-state:running}
+.endpoint-water-key{background:var(--water)}
+.endpoint-modal[data-kind=city] .endpoint-water-key{background:var(--power)}
+.endpoint-modal figcaption b{font-weight:400}
+.endpoint-live{margin:0 0 13px;font-size:11px;line-height:1.55;color:var(--muted)}
+.endpoint-live>span{display:inline-block;width:6px;height:6px;margin-right:7px;background:var(--water);border-radius:50%}
+.endpoint-lead{margin:0 0 18px;font-size:14px;line-height:1.6;color:var(--ink)}
+.endpoint-measures{display:grid;gap:0;border:1px solid var(--line);border-radius:5px;margin-bottom:17px}
+.endpoint-measures>div{position:relative;padding:12px 14px;border-bottom:1px solid var(--line)}
+.endpoint-measures>div:last-child{border-bottom:0}
+.endpoint-measures span{display:block;font-size:12px;line-height:1.5;color:var(--muted)}
+.endpoint-measures strong{display:inline-block;font:500 27px/1.5 var(--f-mono);color:var(--water);font-variant-numeric:tabular-nums}
+.endpoint-measures small{margin-left:8px;font-size:12px;color:var(--muted)}
+.endpoint-measures p{margin:1px 0 0;font-size:11px;line-height:1.5;color:var(--muted)}
+.endpoint-modal[data-kind=city] .endpoint-measures strong{color:var(--power)}
+.endpoint-insight{font:500 20px/1.35 var(--f-display);color:var(--ink);margin:0 0 20px}
+.endpoint-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.endpoint-stages button{min-height:58px;border:1px solid var(--line2);border-radius:4px;background:transparent;color:var(--muted);font-size:12px;line-height:1.4;padding:8px 5px;text-align:center}
+.endpoint-stages button span{display:block;font:400 10px/1.6 var(--f-mono);opacity:.75}
+.endpoint-stages button[aria-pressed=true]{border-color:var(--water);color:var(--water);background:#8cc3d10b}
+.endpoint-explanation{font-size:13px;line-height:1.65;min-height:5em;margin:0 0 17px;padding:10px 12px;border-left:2px solid var(--water);background:#8cc3d108}
+.endpoint-note{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 14px}
+@keyframes endpoint-water-flow{to{stroke-dashoffset:-96}}
+@keyframes endpoint-branch-flow{to{stroke-dashoffset:-76}}
+@keyframes endpoint-energy-flow{to{stroke-dashoffset:-124}}
+@keyframes endpoint-distribution-flow{to{stroke-dashoffset:-108}}
+@keyframes endpoint-wheel-turn{to{rotate:360deg}}
+@media(max-width:760px) and (orientation:portrait){
+  .endpoint-measures{margin-bottom:12px}
+  .endpoint-measures>div{padding:9px 12px}
+  .endpoint-measures strong{font-size:24px}
+  .endpoint-live{font-size:10px;margin-bottom:8px}
+  .endpoint-lead{font-size:13px;margin-bottom:13px}
+  .endpoint-insight{font-size:18px;margin-bottom:15px}
+  .endpoint-stages{gap:6px}
+  .endpoint-stages button{font-size:11px;min-height:54px}
+}
+@media(orientation:landscape) and (max-height:620px){
+  .endpoint-drawing{height:100%;width:auto;max-width:100%}
+  .endpoint-lead{font-size:13px}
+  .endpoint-measures strong{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  .endpoint-flow,.endpoint-city-flow,.endpoint-workshop-wheel{animation:none!important}
+  .endpoint-emphasis{transition:none}
+}

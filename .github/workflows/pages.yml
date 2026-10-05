@@ -55,7 +55,6 @@ jobs:
       matrix:
         suite: ${{ fromJSON(needs.prepare.outputs.suites) }}
     env:
-      NODE_PATH: ${{ runner.temp }}/inga-browser/node_modules
       INGA_TEST_URL: http://127.0.0.1:8001
       INGA_URL: http://127.0.0.1:8001/index.html
     steps:
@@ -75,6 +74,7 @@ jobs:
 
       - name: Test the public distribution
         env:
+          NODE_PATH: ${{ runner.temp }}/inga-browser/node_modules
           TEST_SUITE: ${{ matrix.suite }}
         shell: bash
         run: |

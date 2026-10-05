@@ -1,5 +1,17 @@
 # Validation technique
 
+## Version 1.0.2 — expérience visible dans la maquette
+
+Vérifications exécutées sur `dist/site` sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-learning-scene.cjs` : 12 vérifications réussies avec le rendu 3D actif. Cadrage du sujet hors du panneau, interactions tactiles et boutons accessibles à 320×568, 390×844, 844×390 et 1440×900 ; dépôts du canal, voyant de G24 et valeurs du réseau ; passage automatique ; comparaison manuelle ; annulation à la fermeture, au changement de scénario, à la réinitialisation, au lancement d'une visite et à l'ouverture d'une autre fenêtre.
+- `browser-learning.cjs` : 12 vérifications réussies du parcours pédagogique avec le nouveau passage par la maquette. L'attente du démarrage automatique du musée remplace un clic susceptible de viser un accueil déjà masqué.
+- `browser-navigation.cjs` : 4 groupes réussis.
+- Vérification supplémentaire sans WebGL : le lancement ouvre la comparaison numérique, sans panneau de scène bloqué ni erreur JavaScript.
+- Inspection visuelle du panneau et de la maquette, génération du mode musée et du cache, construction de la distribution réussies.
+
+La publication est conditionnée aux neuf suites navigateur découvertes automatiquement par GitHub Actions. Les résultats distants doivent être vérifiés pour le commit effectivement publié.
+
 ## Version 1.0.1 — parcours Apprendre
 
 Vérifications exécutées sur le dossier public `dist/site` sous Chromium/Linux avec Playwright 1.62.1 :

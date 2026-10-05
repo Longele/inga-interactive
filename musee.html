@@ -2267,10 +2267,33 @@ function endTour(completed=false){ if(!TOUR.on) return; TOUR.on=false; narrStop(
 let viewOffY=0;
 function tourClearArea(){ const h=innerHeight; const c=$('#tour'); const tb=document.querySelector('.tb');
   const top=tb?tb.getBoundingClientRect().bottom+6:0; const bot=(c&&!c.hidden)?c.getBoundingClientRect().top-6:h; return [top,bot]; }
+function learningSceneArea(){
+  const guide=$('#learning-scene');
+  if(!document.body.classList.contains('learning-observing') || !guide || guide.hidden || activeModal()) return null;
+  const box=guide.getBoundingClientRect(), w=innerWidth, h=innerHeight;
+  if(!box.width || !box.height) return null;
+  const title=document.querySelector('.tb'), top=title?Math.max(16,title.getBoundingClientRect().bottom+12):16;
+  const beside=box.width<w*.55 && box.left>w*.4;
+  const area={left:16,top,right:beside?box.left-12:w-16,bottom:beside?h-16:box.top-12};
+  return area.right>area.left && area.bottom>area.top ? area : null;
+}
+function focusLearning(id,onArrive){
+  const key={sed:'canal',one:'inga2',grid:'grid'}[id];
+  if(!key || !webgl || !camera || mode!=='live') return false;
+  setView(id==='grid'?'grid':'flow',false);
+  const area=learningSceneArea(), width=area?area.right-area.left:innerWidth, height=area?area.bottom-area.top:innerHeight;
+  const aspect=width/height, fit=clamp(innerHeight/height*Math.max(1,.78/aspect),1,3.2);
+  const shot=VIEWS[key], tilt=id!=='grid' && aspect<.9?1.15:1;
+  const position=shot.p.map((value,i)=>shot.t[i]+(value-shot.t[i])*fit*(i===1?tilt:1));
+  flyTo({p:position,t:[...shot.t],fov:shot.fov||42},1.8,typeof onArrive==='function'?onArrive:null);
+  return true;
+}
 function updateViewOffset(rdt){ if(!camera) return; const h=innerHeight, w=innerWidth;
-  let tgt=0; if(TOUR.on){ const [a,b]=tourClearArea(); tgt=clamp(h/2-(a+b)/2,0,h*0.32); }
+  let tgt=0, horizontal=viewShiftTarget;
+  if(TOUR.on){ const [a,b]=tourClearArea(); tgt=clamp(h/2-(a+b)/2,0,h*0.32); }
+  else { const area=learningSceneArea(); if(area){ horizontal=(area.left+area.right-w)/2; tgt=(h-area.top-area.bottom)/2; } }
   viewOffY=reduced?tgt:viewOffY+(tgt-viewOffY)*Math.min(1,(rdt||0.016)*3.5);
-  viewShift=reduced?viewShiftTarget:viewShift+(viewShiftTarget-viewShift)*(1-Math.exp(-(rdt||0.016)*5));
+  viewShift=reduced?horizontal:viewShift+(horizontal-viewShift)*(1-Math.exp(-(rdt||0.016)*5));
   if(Math.abs(viewOffY)<0.5&&tgt===0) viewOffY=0;
   const x=Math.abs(viewShift)>0.5?-viewShift:0;
   // Apply the panel and tour-card offsets together; neither may overwrite the other before rendering.
@@ -2560,7 +2583,7 @@ async function init(){
   const res=runValidation(); const ok=res.filter(r=>r.ok).length; console.info(`[Inga] validation ${ok}/${res.length}`); res.filter(r=>!r.ok).forEach(r=>console.warn('[Inga] FAIL',r.name,r.detail));
   requestAnimationFrame(frame);
 }
-window.__INGA={dbg(){return {n:T3.chans&&T3.chans.length, vis:T3.chans&&T3.chans.map(m=>m.visible), op:T3.chanMat&&T3.chanMat.uniforms.uOpacity.value, rise:T3.chanMat&&T3.chanMat.uniforms.uRise.value, y0:T3.chans&&T3.chans[0].geometry.attributes.aH.array[10], pos:T3.chans&&Array.from(T3.chans[0].geometry.attributes.position.array.slice(0,6)), h:hAt(SW.approach[2][0],SW.approach[2][1]), cl:canalLevel(SW.approach[2][0],SW.approach[2][1])};},tour(i){if(!TOUR.on)startTour();tourStop(i);},hideIntro(){document.getElementById('intro').classList.add('gone');},cam(v){tween=null;setCam(v.p,v.t,v.fov||40);document.getElementById('labels').style.display=v.nolabel?'none':'';},fly(n){flyTo(VIEWS[n],0.01);},jump(t){revealV=1.2;document.getElementById('detailA').classList.add('gone');T=t;if(t>=TT)finishLive();else{mode='transition';applyTimeline(T);}},simulate,BASE,runValidation,applyPreset,get S(){return S;},get R(){return R;},get mode(){return mode;},setView,resetAll,selectUnit};
+window.__INGA={dbg(){return {n:T3.chans&&T3.chans.length, vis:T3.chans&&T3.chans.map(m=>m.visible), op:T3.chanMat&&T3.chanMat.uniforms.uOpacity.value, rise:T3.chanMat&&T3.chanMat.uniforms.uRise.value, y0:T3.chans&&T3.chans[0].geometry.attributes.aH.array[10], pos:T3.chans&&Array.from(T3.chans[0].geometry.attributes.position.array.slice(0,6)), h:hAt(SW.approach[2][0],SW.approach[2][1]), cl:canalLevel(SW.approach[2][0],SW.approach[2][1])};},tour(i){if(!TOUR.on)startTour();tourStop(i);},hideIntro(){document.getElementById('intro').classList.add('gone');},cam(v){tween=null;setCam(v.p,v.t,v.fov||40);document.getElementById('labels').style.display=v.nolabel?'none':'';},fly(n){flyTo(VIEWS[n],0.01);},jump(t){revealV=1.2;document.getElementById('detailA').classList.add('gone');T=t;if(t>=TT)finishLive();else{mode='transition';applyTimeline(T);}},simulate,BASE,runValidation,applyPreset,get S(){return S;},get R(){return R;},get mode(){return mode;},setView,resetAll,selectUnit,focusLearning};
 init();
 </script>
 

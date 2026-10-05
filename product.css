@@ -107,6 +107,42 @@
 .learning-cause li:not(:last-child)::after{content:'';position:absolute;left:14px;top:33px;bottom:5px;border-left:1px solid var(--line2)}
 .learning-cause span{display:grid;place-items:center;flex:none;width:29px;height:29px;background:rgba(140,195,209,.09);border:1px solid var(--line2);border-radius:50%;color:var(--water);font-family:var(--f-mono);font-size:12px}
 .learning-cause p{margin:2px 0 0;font-size:15px;line-height:1.6}
+/* The experiment takes place in the scene, with no modal backdrop. */
+body.learning-observing #app>.rail,body.learning-observing #flowbar,body.learning-observing #caption,body.learning-observing .foot,body.learning-observing .scrim,body.learning-observing .tools,body.learning-observing .tabbar,body.learning-observing #tourBtn{display:none!important}
+body.learning-observing .tb-badge{display:none}
+#learning-scene{position:absolute;z-index:12;right:max(16px,env(safe-area-inset-right,0px));top:max(16px,env(safe-area-inset-top,0px));width:340px;max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;padding:16px;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;box-shadow:0 12px 40px rgba(0,0,0,.25);scrollbar-width:thin}
+#learning-scene[hidden]{display:none}
+#learning-scene *{box-sizing:border-box}
+#learning-scene header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px}
+#learning-scene h2{font-family:var(--f-display);font-weight:600;font-size:22px;line-height:1.2;margin:0}
+#learning-scene .learning-eyebrow{font-size:10px;letter-spacing:.045em;margin-bottom:5px}
+#learning-scene [data-learning-scene="close"]{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid var(--line2);border-radius:50%;background:transparent;color:var(--muted);font-size:26px;line-height:1;margin:-4px -4px 0 0}
+.learning-scene-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.learning-scene-switch button{padding:10px 12px;min-height:64px;border:1px solid var(--line2);border-radius:4px;background:transparent;color:var(--ink);text-align:left}
+.learning-scene-switch button[aria-pressed="true"]{background:rgba(140,195,209,.13);border-color:var(--water);box-shadow:inset 0 -3px var(--water)}
+.learning-scene-switch span{display:block;font-size:12px;line-height:1.5}
+.learning-scene-switch strong{display:block;font-family:var(--f-mono);font-size:19px;line-height:1.35;font-weight:500;margin-top:3px}
+#learning-scene-observation{font-size:14px;line-height:1.6;margin:14px 0 10px;min-height:4.8em}
+#learning-scene-auto{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 14px;min-height:3em}
+#learning-scene [data-learning-scene="results"]{width:100%}
+@media(max-width:900px) and (orientation:portrait){
+  #learning-scene{top:auto;bottom:max(8px,env(safe-area-inset-bottom,0px));left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));width:auto;max-height:52dvh;padding:12px}
+  #learning-scene header{margin-bottom:9px}
+  #learning-scene h2{font-size:20px}
+  .learning-scene-switch button{min-height:54px;padding:7px 10px}
+  .learning-scene-switch strong{font-size:17px;margin-top:0}
+  #learning-scene-observation{font-size:13px;line-height:1.5;margin:10px 0 7px;min-height:3em}
+  #learning-scene-auto{font-size:11px;margin-bottom:10px;min-height:3em}
+}
+@media(max-height:500px) and (orientation:landscape){
+  #learning-scene{width:300px;top:max(8px,env(safe-area-inset-top,0px));right:max(8px,env(safe-area-inset-right,0px));max-height:calc(100dvh - 16px);padding:12px}
+  #learning-scene h2{font-size:20px}
+  #learning-scene header{margin-bottom:9px}
+  #learning-scene-observation{font-size:13px;margin:10px 0 7px;min-height:3em}
+  #learning-scene-auto{font-size:11px;margin-bottom:10px;min-height:3em}
+  .learning-scene-switch button{min-height:54px;padding:7px 10px}
+  .learning-scene-switch strong{font-size:17px;margin-top:0}
+}
 @media(max-width:600px){
   .learning-modal{padding:max(8px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
   .learning-box{max-height:100%;border-radius:6px}

@@ -1,5 +1,18 @@
 # Notes de version
 
+## 1.0.2
+
+Les expériences d'Apprendre montrent désormais le changement directement sur la maquette.
+
+- Au lancement, la fenêtre se ferme et la vue cadre le canal, les centrales ou le réseau selon l'expérience choisie.
+- La maquette affiche l'état Avant, puis applique automatiquement le changement trois secondes après l'arrivée de la vue.
+- Un petit panneau laisse la maquette interactive. Ses boutons Avant et Après appliquent les réglages correspondants ; une sélection manuelle arrête le passage automatique.
+- Les chiffres et l'explication s'ouvrent à la demande avec « Résultat et explication », pour laisser le temps d'observer.
+- Les panneaux habituels sont temporairement dégagés pendant l'observation, puis retrouvent leur état précédent à sa fermeture.
+- En l'absence de rendu 3D, l'expérience donne directement accès au résultat chiffré.
+
+Les résultats de validation de cette version seront consignés séparément de ceux des versions précédentes, après exécution des tests.
+
 ## 1.0.1
 
 Parcours Apprendre adapté aux personnes qui découvrent l'hydroélectricité.

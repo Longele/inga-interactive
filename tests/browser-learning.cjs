@@ -16,6 +16,11 @@ async function ready(page, path = '/index.html', inspectIntro = false) {
   // This suite checks the learning UI; the cutaway/UX suites check the rendered scene.
   // Avoid software-GPU redraw contention while exercising DOM focus and layout.
   await page.evaluate(() => { if (typeof renderer !== 'undefined' && renderer) renderer.render = () => {}; });
+  if (path.includes('musee=1') || path.includes('musee.html')) {
+    // Museum startup is automatic; clicking an intro that is leaving races its six-second timer.
+    await page.waitForFunction(() => __INGA.mode === 'live');
+    return;
+  }
   if (await page.evaluate(() => __INGA.mode !== 'live')) {
     if (inspectIntro) {
       await page.waitForFunction(() => !document.querySelector('#intro').classList.contains('gone'));
@@ -39,6 +44,7 @@ async function ready(page, path = '/index.html', inspectIntro = false) {
 }
 
 async function openLearning(page) {
+  if (await page.locator('#learning-scene').isVisible()) await page.locator('[data-learning-scene="close"]').click();
   if (await page.locator('#learning').isVisible()) await page.locator('.learning-close').click();
   const mobile = page.locator('#mobile-learn');
   if (await mobile.count() && await mobile.isVisible()) await mobile.click();
@@ -76,6 +82,19 @@ async function compareValues(page) {
   return values;
 }
 
+async function finishObservation(page) {
+  assert.equal(await page.locator('#learning').isVisible(), false, 'launch leaves the modal to show the actual model');
+  await page.locator('#learning-scene').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#learning-scene').getAttribute('data-phase'), 'before');
+  assert.equal(await page.evaluate(() => document.body.classList.contains('learning-observing')), true);
+  await page.locator('[data-learning-scene="after"]').click();
+  assert.equal(await page.locator('#learning-scene').getAttribute('data-phase'), 'after');
+  await page.locator('[data-learning-scene="results"]').click();
+  assert.equal(await page.locator('#learning-scene').isVisible(), false);
+  assert.equal(await page.evaluate(() => document.body.classList.contains('learning-observing')), false);
+  await page.locator('#learning').waitFor({ state: 'visible' });
+}
+
 async function predict(page, preset, answer) {
   await openLearning(page);
   const original = await page.evaluate(() => JSON.stringify(__INGA.S));
@@ -98,6 +117,7 @@ async function predict(page, preset, answer) {
     assert.match(await skip.textContent(), /Je ne sais pas, montrez-moi/);
     await skip.click();
   }
+  await finishObservation(page);
   await assertStep(page, 2);
   assert.equal(await page.locator('.learning-explanation').isVisible(), false, 'explanation is a separate third step');
   return compareValues(page);
@@ -198,7 +218,9 @@ async function assertPanelFits(page, width, height, screen, actionSelector) {
       await page.keyboard.press('Shift+Tab');
       assert.equal(await summary.evaluate(el => document.activeElement === el), true);
       await page.keyboard.press('Shift+Tab');
-      assert.equal(await page.evaluate(() => document.activeElement.dataset.learning), 'explain', 'reverse tab order passes through summary');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.learning), 'observe', 'reverse tab order passes through summary');
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.learning), 'explain');
       await explain(page);
     });
 
@@ -223,10 +245,13 @@ async function assertPanelFits(page, width, height, screen, actionSelector) {
       assert.equal(await page.evaluate(() => JSON.stringify(__INGA.S)), original);
       await page.locator('[name="prediction"][value="down"]').check();
       await page.locator('#learning-test').click();
+      await finishObservation(page);
       assert.match(await page.locator('.learning-verdict').textContent(), /Votre réponse est correcte/);
       await explain(page);
       await page.locator('[data-learning="observe"]').click();
       assert.equal(await page.locator('#learning').isVisible(), false);
+      assert.equal(await page.locator('#learning-scene').isVisible(), true);
+      assert.equal(await page.locator('#learning-scene').getAttribute('data-phase'), 'after');
       assert.equal(await page.locator('[data-p="sed"]').getAttribute('aria-pressed'), 'true');
       await openLearning(page);
       assert.match(await page.locator('.learning-progress').textContent(), /1 sur 3/, 'retry does not count twice');
@@ -312,6 +337,7 @@ async function assertPanelFits(page, width, height, screen, actionSelector) {
         await page.locator('[name="prediction"][value="down"]').check();
         await assertPanelFits(page, width, height, 'prediction', '#learning-test');
         await page.locator('#learning-test').click();
+        await finishObservation(page);
         await assertStep(page, 2);
         await assertPanelFits(page, width, height, 'result', '[data-learning="explain"]');
         await explain(page);

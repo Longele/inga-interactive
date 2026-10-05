@@ -14,6 +14,10 @@
   let prediction = null;
   let result = null;
   let resultView = 'compare';
+  let observing = false;
+  let ownedChange = 0;
+  let observationToken = 0;
+  let changeTimer = 0;
 
   const challenges = [
     {
@@ -94,6 +98,16 @@
   modal.hidden = true;
   modal.innerHTML = '<section class="mbox learning-box" role="dialog" aria-modal="true" aria-labelledby="learning-title"><header class="learning-header"><div><p class="learning-eyebrow" id="learning-eyebrow"></p><h2 id="learning-title" tabindex="-1"></h2></div><button class="learning-close" type="button" aria-label="Fermer Apprendre">×</button></header><div class="learning-content" id="learning-content"></div></section>';
   app.append(modal);
+  const scene = document.createElement('section');
+  scene.id = 'learning-scene';
+  scene.hidden = true;
+  scene.setAttribute('aria-labelledby', 'learning-scene-title');
+  scene.innerHTML = `<header><div><p class="learning-eyebrow">Étape 2 · Observez la maquette</p><h2 id="learning-scene-title"></h2></div><button type="button" data-learning-scene="close" aria-label="Fermer l’expérience et reprendre l’exploration">×</button></header>
+    <div class="learning-scene-switch" role="group" aria-label="Comparer les états de la maquette"><button type="button" data-learning-scene="before" aria-pressed="false"><span>Avant</span><strong></strong></button><button type="button" data-learning-scene="after" aria-pressed="false"><span>Après</span><strong></strong></button></div>
+    <p id="learning-scene-observation" role="status" aria-live="polite" aria-atomic="true"></p>
+    <p id="learning-scene-auto">Le changement s’appliquera après le cadrage. Touchez Avant ou Après pour comparer à votre rythme.</p>
+    <button type="button" class="learning-button learning-primary" data-learning-scene="results">Résultat et explication →</button>`;
+  app.append(scene);
   const content = modal.querySelector('#learning-content');
   const heading = modal.querySelector('#learning-title');
   const eyebrow = modal.querySelector('#learning-eyebrow');
@@ -103,7 +117,102 @@
   modal.addEventListener('click', event => { if (event.target === modal) dismiss(); });
   button.addEventListener('click', () => open());
 
-  function dismiss() { modal.hidden = true; sync(); }
+  function dismiss() { stopObservation(); modal.hidden = true; sync(); }
+
+  function cancelAutomaticChange() {
+    observationToken += 1;
+    clearTimeout(changeTimer);
+    changeTimer = 0;
+  }
+
+  function stopObservation() {
+    cancelAutomaticChange();
+    if (!observing) return;
+    observing = false;
+    scene.hidden = true;
+    document.body.classList.remove('learning-observing');
+    if (typeof window.applyPanels === 'function') window.applyPanels();
+    sync();
+  }
+
+  function applyOwnedPreset(id) {
+    ownedChange += 1;
+    try { api.applyPreset(id, { fly: false }); }
+    finally { ownedChange -= 1; }
+  }
+
+  function sceneState(phase, manual = true) {
+    if (!observing) return;
+    if (manual) cancelAutomaticChange();
+    applyOwnedPreset(phase === 'before' ? 'normal' : current.id);
+    scene.dataset.phase = phase;
+    scene.querySelectorAll('[aria-pressed]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.learningScene === phase)));
+    const before = phase === 'before';
+    const r = before ? result.before : result.after;
+    const text = current.id === 'sed'
+      ? before ? `Regardez le canal : ${number.format(r.Qdiv)} m³/s passent vers les turbines.` : `Des dépôts apparaissent dans le canal. Moins d’eau passe : ${number.format(r.Qdiv)} m³/s.`
+      : current.id === 'one'
+        ? before ? 'Repérez G24 dans Inga II : son voyant est orange, comme les autres groupes limités par l’eau.' : 'Le voyant de G24 devient rouge. Ce groupe ne produit plus ; les autres récupèrent l’eau disponible.'
+        : before ? `Regardez les lignes du réseau : ${mw(r.Pgen)} produits, ${mw(r.Prec)} livrés après les pertes.` : `Le transport est limité : ${mw(r.Pgen)} produits, ${mw(r.Prec)} livrés après les pertes.`;
+    scene.querySelector('#learning-scene-observation').textContent = `${before ? 'Avant' : 'Après'} : ${text}`;
+    scene.querySelector('#learning-scene-auto').textContent = manual || !before
+      ? 'Touchez Avant ou Après pour changer la maquette. Les valeurs indiquent la puissance produite.'
+      : 'Le changement s’appliquera après le cadrage. Touchez Avant ou Après pour comparer à votre rythme.';
+  }
+
+  function observe(initial = 'after', automatic = false) {
+    stopObservation();
+    modal.hidden = true;
+    if (typeof window.closeInfo === 'function') window.closeInfo();
+    observing = true;
+    resultView = 'scene';
+    scene.hidden = false;
+    document.body.classList.add('learning-observing');
+    scene.querySelector('#learning-scene-title').textContent = current.title;
+    scene.querySelector('[data-learning-scene="before"] strong').textContent = mw(result.before.Pgen);
+    scene.querySelector('[data-learning-scene="after"] strong').textContent = mw(result.after.Pgen);
+    sceneState(initial, !automatic);
+    sync();
+    const token = observationToken;
+    const hasScene = api.focusLearning?.(current.id, () => {
+      if (!automatic || !observing || token !== observationToken) return;
+      changeTimer = setTimeout(() => {
+        if (observing && token === observationToken) sceneState('after');
+      }, 3000);
+    });
+    if (!hasScene) {
+      // The accessible numerical comparison also works without a 3D renderer.
+      applyOwnedPreset(current.id);
+      open('compare');
+      return;
+    }
+    scene.querySelector(`[data-learning-scene="${initial}"]`).focus({ preventScroll: true });
+  }
+
+  scene.querySelector('[data-learning-scene="before"]').onclick = () => sceneState('before');
+  scene.querySelector('[data-learning-scene="after"]').onclick = () => sceneState('after');
+  scene.querySelector('[data-learning-scene="results"]').onclick = () => {
+    applyOwnedPreset(current.id);
+    open('compare');
+  };
+  scene.querySelector('[data-learning-scene="close"]').onclick = stopObservation;
+  window.addEventListener('inga:simulationchange', () => { if (observing && !ownedChange) stopObservation(); });
+  window.addEventListener('resize', () => {
+    if (!observing) return;
+    cancelAutomaticChange();
+    scene.querySelector('#learning-scene-auto').textContent = 'Touchez Avant ou Après pour changer la maquette. Les valeurs indiquent la puissance produite.';
+    api.focusLearning?.(current.id);
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && observing && !document.querySelector('.modal:not([hidden])')) {
+      event.preventDefault();
+      event.stopPropagation();
+      stopObservation();
+    }
+  });
+  new MutationObserver(() => {
+    if (observing && document.querySelector('.modal:not([hidden])')) stopObservation();
+  }).observe(app, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
 
   function layout(title, label, html) {
     heading.textContent = title;
@@ -115,6 +224,7 @@
 
   function open(view = 'hub') {
     if (api.mode !== 'live') return;
+    stopObservation();
     const tourButton = document.getElementById('tourBtn');
     if (tourButton?.getAttribute('aria-pressed') === 'true') tourButton.click();
     // Keep a single dialog visible, including the compact mobile tools menu.
@@ -125,6 +235,7 @@
     });
     if (view === 'glossary') glossary();
     else if (view === 'recap') recap();
+    else if (view === 'compare' && result) comparison();
     else hub();
     modal.hidden = false;
     sync();
@@ -134,7 +245,7 @@
   function hub() {
     layout('Comprendre Inga pas à pas', 'Apprendre · 3 expériences', `
       <p class="learning-lead">Que se passe-t-il si le canal se bouche, si une machine s’arrête ou si le réseau est limité ?</p>
-      <p class="learning-how"><strong>Comment ça marche ?</strong>Choisissez une situation ci-dessous. Donnez votre avis, puis comparez l’avant et l’après. Nous vous expliquerons pourquoi.</p>
+      <p class="learning-how"><strong>Comment ça marche ?</strong>Choisissez une situation et donnez votre avis. La fenêtre se ferme pour vous montrer le changement sur la maquette. Comparez Avant / Après, puis ouvrez l’explication.</p>
       <p class="learning-reassurance">Pas besoin de connaître la bonne réponse : vous pouvez aussi choisir « Je ne sais pas, montrez-moi ». Il n’y a pas de note.</p>
       ${result && current ? `<button type="button" class="learning-button learning-resume" data-learning="resume">Revoir mon résultat : ${current.title}</button>` : ''}
       <p class="learning-progress">${explored.size} sur 3 expériences explorées pendant cette session</p>
@@ -149,7 +260,7 @@
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
     bind('glossary', glossary);
     bind('recap', recap);
-    bind('resume', () => resultView === 'explain' ? explanation() : comparison());
+    bind('resume', () => resultView === 'scene' ? observe() : resultView === 'explain' ? explanation() : comparison());
   }
 
   function bind(action, callback) {
@@ -173,7 +284,7 @@
       <form id="learning-prediction"><fieldset class="learning-choices"><legend>${current.question}</legend>
       ${choices.map(([value, label]) => `<label class="learning-choice"><input type="radio" name="prediction" value="${value}" required aria-describedby="learning-instruction"><span><strong>${label}</strong></span></label>`).join('')}
       </fieldset><div class="learning-decision"><button class="learning-button learning-primary" type="submit" id="learning-test" disabled>Lancer l’expérience</button><button class="learning-button" type="button" data-learning="skip-prediction">Je ne sais pas, montrez-moi</button></div></form>
-      <p class="learning-note">Vous n’avez aucun réglage à faire. En lançant l’expérience, le simulateur repart des réglages de départ, puis applique le changement annoncé.</p>
+      <p class="learning-note">La fenêtre se ferme au lancement. Vous verrez la maquette avant le changement, puis après. Les réglages sont automatiques ; les boutons Avant / Après vous permettent de comparer librement.</p>
       <details class="learning-details"><summary>Voir les réglages de cette expérience</summary><p>${current.setup}</p><p>Ici, « beaucoup » signifie plus de 5 % de variation ; « peu », 5 % maximum.</p></details>
       <button type="button" class="learning-back" data-learning="hub">← Choisir une autre expérience</button>`);
     bind('hub', hub);
@@ -193,11 +304,11 @@
 
   function runExperiment() {
     const before = api.simulate(clone(api.BASE));
-    api.applyPreset('normal', { fly: false });
-    api.applyPreset(current.id, { fly: false });
+    applyOwnedPreset('normal');
+    applyOwnedPreset(current.id);
     const after = clone(api.R);
     result = { before, after, percent: before.Pgen ? (after.Pgen - before.Pgen) / before.Pgen * 100 : 0 };
-    comparison();
+    observe('before', true);
   }
 
   function changeText() {
@@ -222,10 +333,11 @@
         <p>${changeText()}</p><small>MW = mégawatts, l’unité de puissance électrique. Plus la barre est longue, plus les centrales produisent.</small>
       </div>
       <div class="learning-verdict"><p>${prediction ? `Vous aviez choisi : « ${choiceLabel(prediction)} ».` : 'Vous avez choisi de découvrir sans répondre.'}</p><strong>${prediction ? matched ? 'Votre réponse est correcte.' : 'Le résultat est différent de votre réponse.' : 'Voici ce que l’on observe.'}</strong><p class="learning-answer">${choiceLabel(direction)}.</p></div>
-      <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="explain">Comprendre pourquoi →</button></div>
+      <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="explain">Comprendre pourquoi →</button><button type="button" class="learning-button" data-learning="observe">Revoir sur la maquette</button></div>
       <details class="learning-details"><summary>Voir tous les chiffres</summary><table class="learning-results"><caption>Résultats simulés pour cette expérience</caption><thead><tr><th scope="col">Mesure</th><th scope="col">Avant</th><th scope="col">Après</th></tr></thead><tbody>${metrics.map(([label, a, b]) => `<tr><th scope="row">${label}</th><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody></table></details>
       <button type="button" class="learning-back" data-learning="retry">← Recommencer cette expérience</button>`);
     bind('explain', explanation);
+    bind('observe', () => observe());
     bind('retry', () => challenge(current.id));
   }
 
@@ -239,16 +351,11 @@
       <details class="learning-details"><summary>Aller plus loin</summary><p>${current.explanation}</p></details></section>
       <p class="learning-takeaway"><strong>À retenir</strong>${current.takeaway}</p>
       <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="next">${next ? 'Expérience suivante →' : 'Revenir aux expériences'}</button><button type="button" class="learning-button" data-learning="observe">${current.observe}</button></div>
-      <p class="learning-note">Le bouton « Voir » affiche la maquette avec les réglages de cette expérience. Pour retrouver cette explication, ouvrez Apprendre puis « Revoir mon résultat ».</p>
+      <p class="learning-note">Le bouton « Voir » rouvre la maquette avec les commandes Avant / Après. Vous pourrez revenir au résultat depuis le petit panneau.</p>
       <button type="button" class="learning-back" data-learning="compare">← Revoir l’avant et l’après</button>
       <button type="button" class="learning-back" data-learning="glossary">Un mot à éclaircir ? Ouvrir le lexique</button>`);
     bind('compare', comparison);
-    bind('observe', () => {
-      api.applyPreset('normal', { fly: false });
-      api.applyPreset(current.id, { fly: true });
-      if (innerWidth <= 900 && typeof window.setMob === 'function') window.setMob('none');
-      dismiss();
-    });
+    bind('observe', () => observe());
     bind('next', () => next ? challenge(next.id) : hub());
     bind('glossary', glossary);
   }

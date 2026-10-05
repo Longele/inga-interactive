@@ -95,7 +95,21 @@ jobs:
           else:
               raise SystemExit('The distribution server did not become ready')
           PY
-          node "tests/$TEST_SUITE"
+          set +e
+          node "tests/$TEST_SUITE" 2>&1 | tee "$RUNNER_TEMP/inga-tests.log"
+          suite_exit=${PIPESTATUS[0]}
+          set -e
+          if [ "$suite_exit" -ne 0 ]; then
+            python3 - <<'PY'
+          import os
+          from pathlib import Path
+          log = Path(os.environ['RUNNER_TEMP'], 'inga-tests.log').read_text(errors='replace')
+          tail = '\n'.join(log.splitlines()[-45:])[-7000:]
+          escaped = tail.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error::' + escaped)
+          PY
+          fi
+          exit "$suite_exit"
 
       - name: Keep failure diagnostics
         if: failure()
@@ -104,6 +118,7 @@ jobs:
           name: diagnostics-${{ matrix.suite }}
           path: |
             ${{ runner.temp }}/inga-server.log
+            ${{ runner.temp }}/inga-tests.log
             /tmp/inga-*.png
           if-no-files-found: ignore
           retention-days: 7

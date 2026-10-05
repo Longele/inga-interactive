@@ -1,5 +1,18 @@
 # Notes de version
 
+## 1.0.1
+
+Parcours Apprendre adapté aux personnes qui découvrent l'hydroélectricité.
+
+- Réponse facultative : chaque expérience propose « Je ne sais pas, montrez-moi », sans note ni prérequis.
+- Parcours en trois étapes : Votre idée, Le résultat et Pourquoi.
+- Comparaison graphique Avant/Après de la puissance produite, avec accès aux chiffres détaillés.
+- Retour explicite sur la réponse choisie et présentation du résultat observé lorsqu'aucune réponse n'a été donnée.
+- Explication séparée du résultat pour comprendre les causes à son rythme.
+- Accès direct à Apprendre en bas de l'écran sur mobile et commande « Revoir mon résultat » pour reprendre la dernière expérience après l'exploration de la maquette.
+
+La validation de cette version doit être associée à son propre commit et à ses résultats de tests ; les preuves de la version 1.0.0 restent distinctes.
+
 ## 1.0.0
 
 Distribution structurée d'Inga Interactive pour médiation scientifique et usage muséal.

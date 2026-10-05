@@ -13,10 +13,15 @@
   let current = null;
   let prediction = null;
   let result = null;
+  let resultView = 'compare';
 
   const challenges = [
     {
       id: 'sed', title: 'Quand le canal s’ensable', topic: 'Le passage de l’eau',
+      action: 'Du sable réduit le passage de l’eau dans le canal.',
+      beforeLabel: 'Canal dégagé', afterLabel: 'Canal ensablé',
+      cause: ['Le canal laisse passer moins d’eau.', 'Moins d’eau fait tourner les turbines.', 'Les centrales produisent moins d’électricité.'],
+      observe: 'Voir le canal dans la maquette',
       question: 'Le canal laisse passer moins d’eau. Que devient la puissance produite ?',
       setup: 'La capacité du canal passe de 2 200 à 1 600 m³/s. Le débit du fleuve, les groupes et le réseau restent identiques.',
       explanation: 'Le fleuve a toujours beaucoup d’eau. C’est le canal qui en laisse passer moins vers les turbines : le débit turbiné diminue, et avec lui la puissance produite.',
@@ -24,13 +29,21 @@
     },
     {
       id: 'one', title: 'Un groupe s’arrête', topic: 'L’eau se répartit autrement',
-      question: 'Le groupe G24 devient indisponible. La puissance totale baisse-t-elle beaucoup ?',
+      action: 'Nous arrêtons G24, une machine qui produit de l’électricité. Les autres continuent de fonctionner.',
+      beforeLabel: 'Tous les groupes disponibles', afterLabel: 'G24 arrêté',
+      cause: ['G24 ne produit plus d’électricité.', 'Les autres groupes récupèrent l’eau disponible.', 'La production totale change peu dans cette situation.'],
+      observe: 'Voir les centrales dans la maquette',
+      question: 'G24 s’arrête. Que devient la production totale d’électricité ?',
       setup: 'G24, un groupe d’Inga II, est arrêté. Les treize autres groupes restent disponibles ; le canal conserve sa capacité de 2 200 m³/s.',
       explanation: 'Dans la référence, le canal limite déjà le débit total. Les autres groupes peuvent absorber l’eau qui alimentait G24. La production varie peu ; elle n’est pas strictement identique, car la répartition entre Inga I et Inga II, dont les chutes diffèrent, change.',
       takeaway: 'L’effet d’une panne dépend de la contrainte de départ. Si d’autres groupes s’arrêtent, leur capacité peut devenir la limite.'
     },
     {
       id: 'grid', title: 'Le réseau atteint sa limite', topic: 'Transporter l’électricité',
+      action: 'Nous réduisons la quantité d’électricité que les lignes du réseau peuvent transporter.',
+      beforeLabel: 'Réseau non limitant', afterLabel: 'Transport limité à 900 MW',
+      cause: ['Le réseau peut transporter moins d’électricité.', 'Les centrales réduisent leur production pour respecter cette limite.', 'Moins d’eau passe dans les turbines.'],
+      observe: 'Voir le réseau dans la maquette',
       question: 'Le réseau peut exporter au maximum 900 MW. Que devient la puissance produite ?',
       setup: 'La capacité de transport passe de 2 000 à 900 MW. L’eau disponible et les groupes restent identiques ; la demande reçue reste à 1 500 MW.',
       explanation: 'Le réseau ne peut pas transporter toute la puissance disponible. Le modèle réduit donc la production et le débit turbiné. Avec les pertes de transport de 5 %, la puissance livrée est encore inférieure à celle produite.',
@@ -38,9 +51,9 @@
     }
   ];
   const choices = [
-    ['down', 'Elle baisse nettement', 'Baisse de plus de 5 %.'],
-    ['near', 'Elle reste proche de la référence', 'Variation de 5 % maximum.'],
-    ['up', 'Elle augmente nettement', 'Hausse de plus de 5 %.']
+    ['down', 'La production baisse beaucoup'],
+    ['near', 'La production change peu'],
+    ['up', 'La production augmente beaucoup']
   ];
   const definitions = [
     ['Débit · m³/s', 'Volume d’eau qui passe en une seconde. Le débit du fleuve, celui du canal et celui des turbines sont différents.'],
@@ -119,12 +132,12 @@
   }
 
   function hub() {
-    current = null;
-    prediction = null;
-    result = null;
-    layout('Comprendre en expérimentant', 'Apprendre · 3 défis', `
-      <p class="learning-lead">Faites une hypothèse, testez-la, puis suivez le résultat de l’eau jusqu’au réseau.</p>
-      <p class="learning-progress">${explored.size} sur 3 défis explorés pendant cette session</p>
+    layout('Comprendre Inga pas à pas', 'Apprendre · 3 expériences', `
+      <p class="learning-lead">Que se passe-t-il si le canal se bouche, si une machine s’arrête ou si le réseau est limité ?</p>
+      <p class="learning-how"><strong>Comment ça marche ?</strong>Choisissez une situation ci-dessous. Donnez votre avis, puis comparez l’avant et l’après. Nous vous expliquerons pourquoi.</p>
+      <p class="learning-reassurance">Pas besoin de connaître la bonne réponse : vous pouvez aussi choisir « Je ne sais pas, montrez-moi ». Il n’y a pas de note.</p>
+      ${result && current ? `<button type="button" class="learning-button learning-resume" data-learning="resume">Revoir mon résultat : ${current.title}</button>` : ''}
+      <p class="learning-progress">${explored.size} sur 3 expériences explorées pendant cette session</p>
       <div class="learning-challenges">${challenges.map((challenge, index) => `
         <button type="button" class="learning-challenge" data-learning-challenge="${challenge.id}">
           <span class="learning-number" aria-hidden="true">0${index + 1}</span>
@@ -136,10 +149,15 @@
     content.querySelectorAll('[data-learning-challenge]').forEach(el => el.addEventListener('click', () => challenge(el.dataset.learningChallenge)));
     bind('glossary', glossary);
     bind('recap', recap);
+    bind('resume', () => resultView === 'explain' ? explanation() : comparison());
   }
 
   function bind(action, callback) {
     content.querySelector(`[data-learning="${action}"]`)?.addEventListener('click', callback);
+  }
+
+  function steps(active) {
+    return `<ol class="learning-steps" aria-label="Étapes de l’expérience">${['Votre idée', 'Le résultat', 'Pourquoi'].map((label, index) => `<li${index + 1 === active ? ' aria-current="step"' : ''}><span aria-hidden="true">${index + 1}</span>${label}</li>`).join('')}</ol>`;
   }
 
   function challenge(id) {
@@ -148,13 +166,16 @@
     prediction = null;
     result = null;
     const index = challenges.indexOf(current) + 1;
-    layout(current.title, `Défi ${index} sur 3 · 1. Prédire`, `
-      <button type="button" class="learning-back" data-learning="hub">← Tous les défis</button>
-      <p class="learning-lead">${current.setup}</p>
+    layout(current.title, `Expérience ${index} sur 3 · Étape 1 sur 3`, `
+      ${steps(1)}
+      <p class="learning-situation"><strong>Ce que nous allons changer</strong>${current.action}</p>
+      <p class="learning-instruction" id="learning-instruction">Choisissez ce que vous pensez. Vous pouvez vous tromper : le résultat vous sera expliqué.</p>
       <form id="learning-prediction"><fieldset class="learning-choices"><legend>${current.question}</legend>
-      ${choices.map(([value, label, hint]) => `<label class="learning-choice"><input type="radio" name="prediction" value="${value}" required><span><strong>${label}</strong><small>${hint}</small></span></label>`).join('')}
-      </fieldset><p class="learning-note">Le test remplace vos réglages par la configuration de référence, puis applique ce seul changement. Vous pourrez ensuite explorer le résultat dans la maquette.</p>
-      <button class="learning-button learning-primary" type="submit" id="learning-test" disabled>Tester mon hypothèse</button></form>`);
+      ${choices.map(([value, label]) => `<label class="learning-choice"><input type="radio" name="prediction" value="${value}" required aria-describedby="learning-instruction"><span><strong>${label}</strong></span></label>`).join('')}
+      </fieldset><div class="learning-decision"><button class="learning-button learning-primary" type="submit" id="learning-test" disabled>Lancer l’expérience</button><button class="learning-button" type="button" data-learning="skip-prediction">Je ne sais pas, montrez-moi</button></div></form>
+      <p class="learning-note">Vous n’avez aucun réglage à faire. En lançant l’expérience, le simulateur repart des réglages de départ, puis applique le changement annoncé.</p>
+      <details class="learning-details"><summary>Voir les réglages de cette expérience</summary><p>${current.setup}</p><p>Ici, « beaucoup » signifie plus de 5 % de variation ; « peu », 5 % maximum.</p></details>
+      <button type="button" class="learning-back" data-learning="hub">← Choisir une autre expérience</button>`);
     bind('hub', hub);
     const form = content.querySelector('form');
     form.addEventListener('change', event => {
@@ -165,34 +186,69 @@
     form.addEventListener('submit', event => {
       event.preventDefault();
       if (!prediction) return;
-      const before = api.simulate(clone(api.BASE));
-      api.applyPreset('normal', { fly: false });
-      api.applyPreset(current.id, { fly: true });
-      const after = api.R;
-      result = { before, after, percent: before.Pgen ? (after.Pgen - before.Pgen) / before.Pgen * 100 : 0 };
-      explored.add(current.id);
-      explanation();
+      runExperiment();
     });
+    bind('skip-prediction', () => { prediction = null; runExperiment(); });
   }
 
-  function explanation() {
+  function runExperiment() {
+    const before = api.simulate(clone(api.BASE));
+    api.applyPreset('normal', { fly: false });
+    api.applyPreset(current.id, { fly: false });
+    const after = clone(api.R);
+    result = { before, after, percent: before.Pgen ? (after.Pgen - before.Pgen) / before.Pgen * 100 : 0 };
+    comparison();
+  }
+
+  function changeText() {
+    const { before, after, percent } = result;
+    return Math.abs(percent) < 0.05 ? 'La puissance produite reste identique.' : `La puissance produite ${percent < 0 ? 'baisse' : 'augmente'} de ${decimal.format(Math.abs(percent))} % (${mw(Math.abs(after.Pgen - before.Pgen))}).`;
+  }
+
+  function comparison() {
+    resultView = 'compare';
     const { before, after, percent } = result;
     const direction = percent < -5 ? 'down' : percent > 5 ? 'up' : 'near';
     const matched = prediction === direction;
-    const change = Math.abs(percent) < 0.05 ? 'La puissance produite reste identique.' : `La puissance produite ${percent < 0 ? 'baisse' : 'augmente'} de ${decimal.format(Math.abs(percent))} % (${mw(Math.abs(after.Pgen - before.Pgen))}).`;
-    const next = challenges[challenges.indexOf(current) + 1];
-    const limits = { canal: 'le canal', intake: 'la prise d’eau', river: 'le fleuve', units: 'les groupes disponibles', demand: 'la demande', nodemand: 'la demande nulle', export: 'le réseau de transport', off: 'les groupes à l’arrêt' };
+    const choiceLabel = value => choices.find(choice => choice[0] === value)[1];
+    const scale = Math.max(before.Pgen, after.Pgen, 1);
     const metrics = [['Puissance produite', mw(before.Pgen), mw(after.Pgen)], ['Puissance livrée', mw(before.Prec), mw(after.Prec)], ['Débit turbiné', `${number.format(before.Qdiv)} m³/s`, `${number.format(after.Qdiv)} m³/s`]];
-    layout(current.title, `Défi ${challenges.indexOf(current) + 1} sur 3 · 2. Observer · 3. Comprendre`, `
-      <button type="button" class="learning-back" data-learning="hub">← Tous les défis</button>
-      <div class="learning-verdict"><p>${matched ? 'Votre hypothèse correspond au résultat.' : 'Le modèle révèle un autre résultat.'}</p><strong>${change}</strong></div>
-      <table class="learning-results"><caption>Comparaison calculée par le modèle</caption><thead><tr><th scope="col">Mesure</th><th scope="col">Référence</th><th scope="col">Après le changement</th></tr></thead><tbody>${metrics.map(([label, a, b]) => `<tr><th scope="row">${label}</th><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody></table>
-      <section class="learning-explanation"><h3>Pourquoi ce résultat ?</h3><p>${current.explanation}</p><p class="learning-constraint">La limite après le changement : <strong>${limits[after.bind] || 'la configuration choisie'}</strong>.</p></section>
+    layout(current.title, `Expérience ${challenges.indexOf(current) + 1} sur 3 · Étape 2 sur 3`, `
+      ${steps(2)}
+      <p class="learning-applied">Résultat de cette expérience : <strong>${current.afterLabel}.</strong> Voici ce que le simulateur a calculé :</p>
+      <div class="learning-comparison" role="group" aria-label="Puissance produite avant et après le changement">
+        <h3>Électricité produite par les centrales</h3>
+        ${[['Avant', current.beforeLabel, before.Pgen], ['Après', current.afterLabel, after.Pgen]].map(([label, situation, value]) => `<div class="learning-bar-row"><div><span><b>${label}</b> · ${situation}</span><strong>${mw(value)}</strong></div><div class="learning-bar-track" aria-hidden="true"><span style="width:${value / scale * 100}%"></span></div></div>`).join('')}
+        <p>${changeText()}</p><small>MW = mégawatts, l’unité de puissance électrique. Plus la barre est longue, plus les centrales produisent.</small>
+      </div>
+      <div class="learning-verdict"><p>${prediction ? `Vous aviez choisi : « ${choiceLabel(prediction)} ».` : 'Vous avez choisi de découvrir sans répondre.'}</p><strong>${prediction ? matched ? 'Votre réponse est correcte.' : 'Le résultat est différent de votre réponse.' : 'Voici ce que l’on observe.'}</strong><p class="learning-answer">${choiceLabel(direction)}.</p></div>
+      <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="explain">Comprendre pourquoi →</button></div>
+      <details class="learning-details"><summary>Voir tous les chiffres</summary><table class="learning-results"><caption>Résultats simulés pour cette expérience</caption><thead><tr><th scope="col">Mesure</th><th scope="col">Avant</th><th scope="col">Après</th></tr></thead><tbody>${metrics.map(([label, a, b]) => `<tr><th scope="row">${label}</th><td>${a}</td><td>${b}</td></tr>`).join('')}</tbody></table></details>
+      <button type="button" class="learning-back" data-learning="retry">← Recommencer cette expérience</button>`);
+    bind('explain', explanation);
+    bind('retry', () => challenge(current.id));
+  }
+
+  function explanation() {
+    resultView = 'explain';
+    explored.add(current.id);
+    const next = challenges[challenges.indexOf(current) + 1];
+    layout(current.title, `Expérience ${challenges.indexOf(current) + 1} sur 3 · Étape 3 sur 3`, `
+      ${steps(3)}
+      <section class="learning-explanation"><h3>Pourquoi ce résultat ?</h3><ol class="learning-cause">${current.cause.map((text, i) => `<li><span aria-hidden="true">${i + 1}</span><p>${text}</p></li>`).join('')}</ol>
+      <details class="learning-details"><summary>Aller plus loin</summary><p>${current.explanation}</p></details></section>
       <p class="learning-takeaway"><strong>À retenir</strong>${current.takeaway}</p>
-      <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="observe">Observer sur la maquette</button><button type="button" class="learning-button" data-learning="next">${next ? 'Défi suivant' : 'Revenir aux défis'}</button></div>
+      <div class="learning-actions"><button type="button" class="learning-button learning-primary" data-learning="next">${next ? 'Expérience suivante →' : 'Revenir aux expériences'}</button><button type="button" class="learning-button" data-learning="observe">${current.observe}</button></div>
+      <p class="learning-note">Le bouton « Voir » affiche la maquette avec les réglages de cette expérience. Pour retrouver cette explication, ouvrez Apprendre puis « Revoir mon résultat ».</p>
+      <button type="button" class="learning-back" data-learning="compare">← Revoir l’avant et l’après</button>
       <button type="button" class="learning-back" data-learning="glossary">Un mot à éclaircir ? Ouvrir le lexique</button>`);
-    bind('hub', hub);
-    bind('observe', dismiss);
+    bind('compare', comparison);
+    bind('observe', () => {
+      api.applyPreset('normal', { fly: false });
+      api.applyPreset(current.id, { fly: true });
+      if (innerWidth <= 900 && typeof window.setMob === 'function') window.setMob('none');
+      dismiss();
+    });
     bind('next', () => next ? challenge(next.id) : hub());
     bind('glossary', glossary);
   }
@@ -210,12 +266,12 @@
 
   function glossary() {
     layout('Les mots de l’hydroélectricité', 'Lexique · 12 repères', `
-      <button type="button" class="learning-back" data-learning="back">← ${result ? 'Revenir au résultat' : 'Revenir aux défis'}</button>
+      <button type="button" class="learning-back" data-learning="back">← ${result ? 'Revenir au résultat' : 'Revenir aux expériences'}</button>
       <p class="learning-lead">Des définitions pour lire la maquette et son bilan.</p>
       <label class="learning-search" for="learning-search">Chercher un mot<input id="learning-search" type="search" placeholder="Débit, puissance, turbine…" autocomplete="off"></label>
       <p id="learning-found" class="learning-note" role="status" aria-live="polite">12 définitions</p>
       <dl class="learning-glossary">${definitions.map(([term, text]) => `<div><dt>${term}</dt><dd>${text}</dd></div>`).join('')}</dl>`);
-    bind('back', () => result && current ? explanation() : hub());
+    bind('back', () => result && current ? resultView === 'explain' ? explanation() : comparison() : hub());
     const normalized = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr');
     content.querySelector('#learning-search').addEventListener('input', event => {
       const query = normalized(event.target.value.trim());

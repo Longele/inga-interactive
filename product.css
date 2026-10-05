@@ -67,6 +67,46 @@
 .learning-glossary>div{padding:15px 0;border-bottom:1px solid var(--line)}
 .learning-glossary dt{font-family:var(--f-display);font-size:20px;font-weight:500;line-height:1.4;color:var(--water)}
 .learning-glossary dd{font-size:14px;line-height:1.7;margin:6px 0 0;color:var(--ink)}
+.learning-how,.learning-situation{padding:14px 16px;margin:0 0 16px;border:1px solid var(--line2);border-radius:5px;font-size:14px;line-height:1.6;background:rgba(140,195,209,.04)}
+.learning-how strong,.learning-situation strong{display:block;color:var(--water);margin-bottom:4px}
+.learning-reassurance,.learning-instruction{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 18px}
+.learning-resume{width:100%;margin:0 0 18px;text-align:left;justify-content:flex-start}
+.learning-steps{display:flex;list-style:none;gap:8px;padding:0;margin:0 0 22px}
+.learning-steps li{display:flex;align-items:center;gap:6px;flex:1;font-size:12px;line-height:1.4;color:var(--muted);padding-bottom:9px;border-bottom:2px solid var(--line2)}
+.learning-steps li[aria-current]{color:var(--water);border-color:var(--water);font-weight:600}
+.learning-steps li>span{display:grid;place-items:center;flex:none;width:22px;height:22px;border:1px solid currentColor;border-radius:50%;font-family:var(--f-mono);font-size:11px}
+.learning-choices legend{font-size:19px;margin-bottom:12px}
+.learning-choice{min-height:48px;padding:11px 12px;margin-bottom:8px}
+.learning-decision{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.learning-decision .learning-button{flex:1 1 220px}
+.learning-decision #learning-test{margin:0}
+.learning-details{margin-top:20px;font-size:13px;line-height:1.65;color:var(--muted)}
+.learning-details summary{min-height:44px;padding:10px 0;color:var(--water);cursor:pointer}
+.learning-details p{margin:8px 0 14px}
+.learning-details+.learning-back{margin-top:12px;margin-bottom:0}
+.learning-applied{font-size:14px;line-height:1.6;margin:0 0 17px}
+.learning-comparison{padding:17px 18px;margin:0 0 18px;background:rgba(140,195,209,.035);border:1px solid var(--line2);border-radius:5px}
+.learning-comparison h3{font-size:15px;line-height:1.45;font-weight:500;margin:0 0 18px}
+.learning-bar-row{margin-bottom:16px}
+.learning-bar-row>div:first-child{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:5px 12px;margin-bottom:7px}
+.learning-bar-row span{font-size:12px;line-height:1.5;color:var(--muted)}
+.learning-bar-row b{font-weight:500;color:var(--ink)}
+.learning-bar-row strong{font-family:var(--f-mono);font-size:20px;font-weight:500;white-space:nowrap}
+.learning-bar-track{height:13px;background:rgba(255,255,255,.045);border-radius:2px;overflow:hidden}
+.learning-bar-track span{display:block;height:100%;background:#849798}
+.learning-bar-row:nth-of-type(2) .learning-bar-track span{background:var(--water)}
+.learning-comparison>p{font-size:14px;line-height:1.6;margin:18px 0 8px}
+.learning-comparison>small{display:block;font-size:12px;line-height:1.6;color:var(--muted)}
+.learning-verdict{margin-bottom:0}
+.learning-verdict strong{font-size:19px}
+.learning-verdict .learning-answer{color:var(--ink);font-size:14px;margin:8px 0 0}
+.learning-explanation{margin-top:0}
+.learning-cause{list-style:none;padding:0;margin:18px 0;display:grid;gap:0}
+.learning-cause li{display:flex;align-items:flex-start;gap:13px;position:relative;padding-bottom:24px}
+.learning-cause li:last-child{padding-bottom:0}
+.learning-cause li:not(:last-child)::after{content:'';position:absolute;left:14px;top:33px;bottom:5px;border-left:1px solid var(--line2)}
+.learning-cause span{display:grid;place-items:center;flex:none;width:29px;height:29px;background:rgba(140,195,209,.09);border:1px solid var(--line2);border-radius:50%;color:var(--water);font-family:var(--f-mono);font-size:12px}
+.learning-cause p{margin:2px 0 0;font-size:15px;line-height:1.6}
 @media(max-width:600px){
   .learning-modal{padding:max(8px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
   .learning-box{max-height:100%;border-radius:6px}
@@ -90,6 +130,12 @@
   .learning-recap{gap:18px}
   .learning-recap li{gap:10px}
   .learning-recap h3{font-size:20px}
+  .learning-steps{gap:6px;margin-bottom:17px}
+  .learning-steps li{font-size:11px;gap:4px}
+  .learning-steps li>span{width:19px;height:19px;font-size:10px}
+  .learning-comparison{padding:14px 13px}
+  .learning-bar-row strong{font-size:19px}
+  .learning-how,.learning-situation{padding:12px 13px}
   #intro .learning-intro{font-size:12px;margin:9px 0 12px}
 }
 @media(max-height:450px){

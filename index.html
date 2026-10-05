@@ -1892,7 +1892,7 @@ function setA11yHidden(el,hidden){
 }
 function activeModal(){ return [...document.querySelectorAll('.modal')].reverse().find(el=>!el.hidden)||null; }
 function a11yFocusable(root){
-  return [...root.querySelectorAll('a[href],button,input,select,textarea,[tabindex]')].filter(el=>
+  return [...root.querySelectorAll('a[href],button,input,select,textarea,summary,[tabindex]')].filter(el=>
     !el.disabled && el.tabIndex>=0 && !el.closest('[inert],[hidden]') && el.getClientRects().length && getComputedStyle(el).visibility!=='hidden');
 }
 function focusModal(modal){

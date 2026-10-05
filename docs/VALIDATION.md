@@ -1,4 +1,18 @@
-# Validation technique de la version 1.0.0
+# Validation technique
+
+## Version 1.0.1 — parcours Apprendre
+
+Vérifications exécutées sur le dossier public `dist/site` sous Chromium/Linux avec Playwright 1.62.1 :
+
+- `browser-learning.cjs` : 12 vérifications réussies. Réponses correctes, différentes ou absentes ; comparaison avec les calculs du modèle ; étapes séparées ; conservation du résultat ; reprise et réinitialisation ; clavier et détails repliables ; formats 320×568, 390×844 et 844×390 ; comportement musée.
+- `browser-navigation.cjs` : 4 groupes réussis. Navigation, fenêtres, bilan mobile et fonctionnement sans WebGL.
+- `browser-kiosk.cjs` : 4 vérifications réussies. Reprise après abandon et annulation au retour du visiteur.
+- Inspection visuelle des quatre écrans Apprendre à 390×844 avec la maquette rendue.
+- Génération du mode musée, actualisation du cache, construction de la distribution et contrôle syntaxique réussis.
+
+Les huit suites restent obligatoires dans GitHub Actions avant publication. Le résultat distant doit être vérifié pour le commit publié. Les vérifications historiques ci-dessous concernent la version 1.0.0.
+
+## Version 1.0.0
 
 Les résultats ci-dessous ont été obtenus dans l'environnement de préparation sous Chromium/Linux, avec Playwright 1.62.1. Ils décrivent les vérifications effectuées ; la recette sur l'équipement du client reste distincte.
 

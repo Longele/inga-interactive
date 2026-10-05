@@ -46,23 +46,95 @@ async function openLearning(page) {
   await page.locator('#learning').waitFor({ state: 'visible' });
 }
 
-async function compare(page, preset, answer) {
-  await openLearning(page);
-  await page.locator(`[data-learning-challenge="${preset}"]`).click();
-  assert.equal(await page.locator('#learning-test').isDisabled(), true, 'prediction precedes the experiment');
-  await page.locator(`[name="prediction"][value="${answer}"]`).check();
-  await page.locator('#learning-test').click();
+async function assertStep(page, number) {
+  const labels = ['Votre idée', 'Le résultat', 'Pourquoi'];
+  const active = page.locator('.learning-steps [aria-current="step"]');
+  assert.equal(await active.count(), 1, 'exactly one learning step is current');
+  assert.ok((await active.textContent()).includes(labels[number - 1]), `expected step ${number}: ${labels[number - 1]}`);
+}
+
+async function compareValues(page) {
   const values = await page.evaluate(() => {
     const before = __INGA.simulate(JSON.parse(JSON.stringify(__INGA.BASE)));
     const after = __INGA.R;
     return { before: { Pgen: before.Pgen, Prec: before.Prec, Qdiv: before.Qdiv }, after: { Pgen: after.Pgen, Prec: after.Prec, Qdiv: after.Qdiv, bind: after.bind }, failed: __INGA.S.units.filter(u => u.failed).map(u => u.id) };
   });
+  assert.equal(await page.locator('.learning-comparison').isVisible(), true, 'production comparison is visible without opening details');
+  const visual = (await page.locator('.learning-comparison').textContent()).replace(/\s/g, '');
+  const number = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
+  for (const power of [values.before.Pgen, values.after.Pgen]) {
+    assert.ok(visual.includes(number.format(power).replace(/\s/g, '')), `visual comparison is missing ${power} MW`);
+  }
+  assert.equal(await page.locator('.learning-results').evaluate(el => !!el.closest('details')), true, 'full figures are available in disclosure details');
+  // Read the DOM intentionally: the secondary table is collapsed until requested.
   const rows = await page.locator('.learning-results tbody tr').evaluateAll(items => items.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent)));
+  assert.equal(rows.length, 3);
   for (const [i, key] of ['Pgen', 'Prec', 'Qdiv'].entries()) {
     assert.equal(numeric(rows[i][0]), Math.round(values.before[key]));
     assert.equal(numeric(rows[i][1]), Math.round(values.after[key]));
   }
   return values;
+}
+
+async function predict(page, preset, answer) {
+  await openLearning(page);
+  const original = await page.evaluate(() => JSON.stringify(__INGA.S));
+  await page.locator(`[data-learning-challenge="${preset}"]`).click();
+  await assertStep(page, 1);
+  assert.equal(await page.locator('#learning-test').isDisabled(), true, 'a guess is required for the test action');
+  assert.equal(await page.locator('[name="prediction"]').count(), 3);
+  assert.equal(await page.locator('[name="prediction"]:checked').count(), 0);
+  assert.equal(await page.evaluate(() => JSON.stringify(__INGA.S)), original, 'choosing a challenge does not alter the simulation');
+  if (answer) {
+    const choice = page.locator(`[name="prediction"][value="${answer}"]`);
+    await choice.focus();
+    await page.keyboard.press('Space');
+    assert.equal(await choice.isChecked(), true, 'native radio supports keyboard selection');
+    assert.equal(await page.locator('#learning-test').isDisabled(), false);
+    assert.equal(await page.evaluate(() => JSON.stringify(__INGA.S)), original, 'making a prediction does not alter the simulation');
+    await page.locator('#learning-test').click();
+  } else {
+    const skip = page.locator('[data-learning="skip-prediction"]');
+    assert.match(await skip.textContent(), /Je ne sais pas, montrez-moi/);
+    await skip.click();
+  }
+  await assertStep(page, 2);
+  assert.equal(await page.locator('.learning-explanation').isVisible(), false, 'explanation is a separate third step');
+  return compareValues(page);
+}
+
+async function explain(page) {
+  await page.locator('[data-learning="explain"]').click();
+  await assertStep(page, 3);
+  assert.equal(await page.locator('.learning-explanation').isVisible(), true);
+  assert.equal(await page.locator('.learning-cause li').count(), 3, 'explanation has three causal links');
+}
+
+async function assertPanelFits(page, width, height, screen, actionSelector) {
+  const bounds = await page.locator('.learning-box').evaluate(el => {
+    const rect = el.getBoundingClientRect(), close = el.querySelector('.learning-close').getBoundingClientRect(), body = el.querySelector('.learning-content');
+    return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, closeTop: close.top, closeBottom: close.bottom, scrollWidth: body.scrollWidth, clientWidth: body.clientWidth, contentHeight: body.clientHeight };
+  });
+  assert.ok(bounds.left >= -1 && bounds.right <= width + 1, `${screen}: ${JSON.stringify(bounds)}`);
+  assert.ok(bounds.top >= -1 && bounds.bottom <= height + 1, `${screen}: ${JSON.stringify(bounds)}`);
+  assert.ok(bounds.closeTop >= 0 && bounds.closeBottom <= height);
+  assert.ok(bounds.scrollWidth <= bounds.clientWidth + 1, `horizontal overflow: ${screen}: ${JSON.stringify(bounds)}`);
+  assert.ok(bounds.contentHeight > 90, `no usable scrolling content: ${JSON.stringify(bounds)}`);
+  if (actionSelector) {
+    const action = page.locator(actionSelector);
+    await action.scrollIntoViewIfNeeded();
+    const rect = await action.boundingBox();
+    assert.ok(rect && rect.x >= 0 && rect.x + rect.width <= width + 1 && rect.y >= 0 && rect.y + rect.height <= height + 1,
+      `unreachable ${screen} action: ${JSON.stringify(rect)}`);
+    assert.equal(await action.evaluate(el => {
+      const rect = el.getBoundingClientRect(), hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
+      return !!hit && (el === hit || el.contains(hit));
+    }), true, `${screen} action is covered by another element`);
+  }
+  if (width === 320 && ['hub', 'prediction', 'result', 'explanation'].includes(screen)) {
+    await page.locator('.learning-content').evaluate(el => { el.scrollTop = 0; });
+    await page.screenshot({ path: `/tmp/inga-learning-${screen}-${width}.png` });
+  }
 }
 
 (async () => {
@@ -75,37 +147,124 @@ async function compare(page, preset, answer) {
     page.on('pageerror', error => errors.push(error.message));
     await ready(page, '/index.html', true);
 
-    await check('canal challenge calculates an actual loss and explains a changed prediction', async () => {
-      // Begin from another scenario: the challenge must still explicitly compare with the reference.
+    await check('wrong prediction uses reference values without changing the simulation before the test', async () => {
+      // Begin from a different state; this challenge must compare against the declared reference.
       await page.evaluate(() => __INGA.applyPreset('multi', { fly: false }));
-      const values = await compare(page, 'sed', 'near');
+      const values = await predict(page, 'sed', 'near');
       assert.ok(values.after.Pgen < values.before.Pgen * 0.95);
       assert.ok(values.after.Qdiv < values.before.Qdiv);
       assert.equal(values.after.bind, 'canal');
-      assert.match(await page.locator('.learning-verdict').textContent(), /autre résultat/);
-      await page.locator('[data-learning="observe"]').click();
-      assert.equal(await page.locator('#learning').isVisible(), false);
-      assert.equal(await page.locator('[data-p="sed"]').getAttribute('aria-pressed'), 'true');
+      const verdict = await page.locator('.learning-verdict').textContent();
+      assert.match(verdict, /Vous aviez choisi/);
+      assert.match(verdict, /Le résultat est différent/);
+      assert.doesNotMatch(verdict, /Votre réponse est correcte/);
+      // Closing during the comparison must not mark the challenge as understood.
+      await page.keyboard.press('Escape');
+      await openLearning(page);
+      assert.match(await page.locator('.learning-progress').textContent(), /0 sur 3/);
+      assert.equal(await page.locator('[data-learning="resume"]').isVisible(), true);
+      await page.locator('[data-learning="resume"]').click();
+      await assertStep(page, 2);
+      assert.equal(await page.locator('.learning-verdict').textContent(), verdict);
+      await compareValues(page);
+      await explain(page);
       return values;
     });
 
-    await check('one-group challenge explains the small water-limited change', async () => {
-      const values = await compare(page, 'one', 'near');
+    await check('comparison details are reachable by Tab and toggle with Enter', async () => {
+      await page.locator('[data-learning="compare"]').click();
+      await assertStep(page, 2);
+      const details = page.locator('details').filter({ has: page.locator('.learning-results') });
+      const summary = details.locator('summary');
+      assert.equal(await details.evaluate(el => el.open), false, 'secondary numbers start collapsed');
+      // Begin at the first modal control and use actual sequential keyboard navigation.
+      await page.locator('.learning-close').focus();
+      let reached = false;
+      const limit = await page.locator('#learning button, #learning input, #learning summary, #learning a[href]').count() + 3;
+      for (let n = 0; n < limit; n++) {
+        await page.keyboard.press('Tab');
+        assert.equal(await page.evaluate(() => !!document.activeElement.closest('#learning')), true);
+        if (await summary.evaluate(el => document.activeElement === el)) { reached = true; break; }
+      }
+      assert.equal(reached, true, 'Tab reaches the native details summary');
+      await page.keyboard.press('Enter');
+      assert.equal(await details.evaluate(el => el.open), true);
+      assert.equal(await page.locator('.learning-results').isVisible(), true);
+      assert.equal(await summary.evaluate(el => document.activeElement === el), true);
+      await page.keyboard.press('Enter');
+      assert.equal(await details.evaluate(el => el.open), false);
+      await page.keyboard.press('Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.learning), 'retry', 'Tab continues past summary instead of restarting the modal');
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await summary.evaluate(el => document.activeElement === el), true);
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.learning), 'explain', 'reverse tab order passes through summary');
+      await explain(page);
+    });
+
+    await check('resume retains the explanation, compare returns to the result, and retry clears the guess', async () => {
+      await page.keyboard.press('Escape');
+      await openLearning(page);
+      assert.match(await page.locator('.learning-progress').textContent(), /1 sur 3/);
+      await page.locator('[data-learning="resume"]').click();
+      await assertStep(page, 3);
+      await page.locator('[data-learning="compare"]').click();
+      await assertStep(page, 2);
+      await compareValues(page);
+      await explain(page);
+      const original = await page.evaluate(() => JSON.stringify(__INGA.S));
+      await page.locator('[data-learning="compare"]').click();
+      await assertStep(page, 2);
+      await page.locator('[data-learning="retry"]').click();
+      await assertStep(page, 1);
+      assert.match(await page.locator('#learning-title').textContent(), /canal/i);
+      assert.equal(await page.locator('[name="prediction"]:checked').count(), 0);
+      assert.equal(await page.locator('#learning-test').isDisabled(), true);
+      assert.equal(await page.evaluate(() => JSON.stringify(__INGA.S)), original);
+      await page.locator('[name="prediction"][value="down"]').check();
+      await page.locator('#learning-test').click();
+      assert.match(await page.locator('.learning-verdict').textContent(), /Votre réponse est correcte/);
+      await explain(page);
+      await page.locator('[data-learning="observe"]').click();
+      assert.equal(await page.locator('#learning').isVisible(), false);
+      assert.equal(await page.locator('[data-p="sed"]').getAttribute('aria-pressed'), 'true');
+      await openLearning(page);
+      assert.match(await page.locator('.learning-progress').textContent(), /1 sur 3/, 'retry does not count twice');
+      await page.keyboard.press('Escape');
+    });
+
+    await check('correct one-group prediction explains the small water-limited change', async () => {
+      const values = await predict(page, 'one', 'near');
       assert.deepEqual(values.failed, ['G24']);
       assert.ok(Math.abs(values.after.Pgen - values.before.Pgen) / values.before.Pgen < 0.05);
       assert.ok(Math.abs(values.after.Qdiv - values.before.Qdiv) < 0.01);
-      assert.match(await page.locator('.learning-verdict').textContent(), /correspond/);
+      const verdict = await page.locator('.learning-verdict').textContent();
+      assert.match(verdict, /Vous aviez choisi/);
+      assert.match(verdict, /Votre réponse est correcte/);
+      await explain(page);
       assert.match(await page.locator('.learning-explanation').textContent(), /répartition/);
+      await page.locator('[data-learning="next"]').click();
+      await assertStep(page, 1);
+      assert.match(await page.locator('#learning-title').textContent(), /réseau/i);
       await page.keyboard.press('Escape');
       return values;
     });
 
-    await check('network challenge distinguishes generated and delivered power', async () => {
-      const values = await compare(page, 'grid', 'down');
+    await check('skip prediction teaches the network limit without grading an unanswered question', async () => {
+      const values = await predict(page, 'grid', null);
+      const verdict = await page.locator('.learning-verdict').textContent();
+      assert.match(verdict, /Vous avez choisi de découvrir sans répondre/);
+      assert.doesNotMatch(verdict, /Votre réponse est correcte|Le résultat est différent/);
       assert.equal(values.after.bind, 'export');
       assert.ok(Math.abs(values.after.Pgen - 900) < 0.01);
       assert.ok(Math.abs(values.after.Prec - 855) < 0.01);
       assert.ok(values.after.Qdiv < values.before.Qdiv);
+      await page.keyboard.press('Escape');
+      await openLearning(page);
+      assert.match(await page.locator('.learning-progress').textContent(), /2 sur 3/);
+      await page.locator('[data-learning="resume"]').click();
+      await assertStep(page, 2);
+      await explain(page);
       await page.locator('[data-learning="next"]').click();
       assert.match(await page.locator('.learning-progress').textContent(), /3 sur 3/);
       await page.keyboard.press('Escape');
@@ -143,25 +302,25 @@ async function compare(page, preset, answer) {
     });
 
     for (const [width, height] of [[320, 568], [390, 844], [844, 390]]) {
-      await check(`learning panels fit ${width}×${height} and keep close reachable`, async () => {
+      await check(`three learning steps fit ${width}×${height} with reachable actions`, async () => {
         await page.setViewportSize({ width, height });
         await openLearning(page);
-        for (const screen of ['hub', 'prediction', 'result', 'glossary']) {
-          if (screen === 'prediction') await page.locator('[data-learning-challenge="sed"]').click();
-          if (screen === 'result') { await page.locator('[name="prediction"][value="down"]').check(); await page.locator('#learning-test').click(); }
-          if (screen === 'glossary') await page.locator('[data-learning="glossary"]').click();
-          const bounds = await page.locator('.learning-box').evaluate(el => {
-            const rect = el.getBoundingClientRect(), close = el.querySelector('.learning-close').getBoundingClientRect(), body = el.querySelector('.learning-content');
-            return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, closeTop: close.top, closeBottom: close.bottom, scrollWidth: body.scrollWidth, clientWidth: body.clientWidth, contentHeight: body.clientHeight };
-          });
-          assert.ok(bounds.left >= -1 && bounds.right <= width + 1, `${screen}: ${JSON.stringify(bounds)}`);
-          assert.ok(bounds.top >= -1 && bounds.bottom <= height + 1, `${screen}: ${JSON.stringify(bounds)}`);
-          assert.ok(bounds.closeTop >= 0 && bounds.closeBottom <= height);
-          assert.ok(bounds.scrollWidth <= bounds.clientWidth + 1, `horizontal overflow: ${screen}: ${JSON.stringify(bounds)}`);
-          assert.ok(bounds.contentHeight > 90, `no usable scrolling content: ${JSON.stringify(bounds)}`);
-          if (width === 320 && ['hub', 'result'].includes(screen)) await page.screenshot({ path: `/tmp/inga-learning-${screen}-${width}.png` });
-        }
-        await page.screenshot({ path: `/tmp/inga-learning-${width}.png` });
+        await assertPanelFits(page, width, height, 'hub', '[data-learning-challenge="sed"]');
+        await page.locator('[data-learning-challenge="sed"]').click();
+        await assertStep(page, 1);
+        await assertPanelFits(page, width, height, 'prediction', '[data-learning="skip-prediction"]');
+        await page.locator('[name="prediction"][value="down"]').check();
+        await assertPanelFits(page, width, height, 'prediction', '#learning-test');
+        await page.locator('#learning-test').click();
+        await assertStep(page, 2);
+        await assertPanelFits(page, width, height, 'result', '[data-learning="explain"]');
+        await explain(page);
+        await assertPanelFits(page, width, height, 'explanation', '[data-learning="observe"]');
+        await assertPanelFits(page, width, height, 'explanation', '[data-learning="next"]');
+        await page.locator('[data-learning="glossary"]').click();
+        await assertPanelFits(page, width, height, 'glossary', '[data-learning="back"]');
+        await page.locator('[data-learning="back"]').click();
+        await assertStep(page, 3);
         await page.locator('.learning-close').click();
       });
     }
@@ -170,6 +329,7 @@ async function compare(page, preset, answer) {
       await page.evaluate(() => __INGA.resetAll());
       await openLearning(page);
       assert.match(await page.locator('.learning-progress').textContent(), /0 sur 3/);
+      assert.equal(await page.locator('[data-learning="resume"]').count(), 0, 'reset discards the previous result');
       await page.keyboard.press('Escape');
       await ready(page, '/index.html?musee=1');
       await page.evaluate(() => window.dispatchEvent(new CustomEvent('inga:tour-complete')));

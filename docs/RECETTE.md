@@ -26,6 +26,8 @@ Ce document sert à accepter une version sur le matériel réellement installé.
 | Changer un scénario ; vérifier le comparatif avant/après et le retour à une situation connue | À tester |
 | Parcourir les trois défis et le glossaire dans Apprendre | À tester |
 | Ouvrir Du fleuve à la ville depuis la maquette et Apprendre ; parcourir les six étapes et les commandes précédente/suivante des ouvrages | À tester |
+| Écouter les six narrations ; tester pause, reprise, arrêt, fermeture pendant le chargement, passage à une autre coupe et texte repliable | À tester |
+| Après préparation du cache, couper le réseau et écouter les six pistes ; vérifier le toucher et l’audio sur les appareils mobiles retenus | À tester |
 | Vérifier l'actualisation des vues Fleuve et Ville, la conservation des réglages et du groupe G11 puis G24 entre turbine et alternateur | À tester |
 | Distinguer les résultats de l'expérience indépendante du transformateur du bilan principal affiché à l'étape Ville ; vérifier le parcours au clavier et sur petit écran | À tester |
 | Ouvrir la coupe du canal depuis les outils, Plus sur mobile et Apprendre ; vérifier le dessin et les commandes | À tester |

@@ -1,5 +1,17 @@
 # Validation technique
 
+## Version 1.5.0 — six narrations dans les coupes
+
+- Les six MP3 fournis se décodent entièrement avec FFmpeg, sans erreur : mono, 44,1 kHz, durées comprises entre 16,93 et 23,25 secondes. Les octets reçus sont conservés sans réencodage.
+- `browser-journey-audio.cjs` : dix groupes de vérification et le contrôle d’absence d’erreurs JavaScript réussissent sur la distribution construite. Les six pistes sont effectivement lues avec progression du temps et contrôle de leur durée, en ligne puis avec le réseau coupé.
+- Pause, reprise à la même position, arrêt, réécoute, fin sans navigation automatique, fermeture, retour à la maquette, changement de coupe, réinitialisation et ouverture d’une autre fenêtre vérifiés. Les chargements et événements tardifs ne relancent pas une ancienne voix.
+- Erreur réseau, nouvelle tentative, promesse de lecture bloquée, mise en arrière-plan et coexistence avec la visite guidée existante vérifiées. Un chargement bloqué propose une nouvelle tentative et l’explication écrite.
+- Commandes et texte repliable accessibles dans les six coupes à 320×568, 390×844, 740×800, 844×390 et 1440×900. Capture Ville à 320×568 inspectée visuellement.
+- Le cache fournit des réponses partielles MP3 correctes : préfixe, suffixe et plage impossible. Le test vérifie les octets et les en-têtes ; il ne constitue pas un essai sur un iPhone physique.
+- Les sept groupes de `browser-offline.cjs` passent, y compris mise à jour, migration et redémarrage hors ligne. La sélection de mise en page de `browser-journey.cjs` passe ses cinq formats et le contrôle d’absence d’erreurs. Vérifications syntaxiques, synchronisation du mode musée et du cache, construction des 72 fichiers publics et contrôle du diff réussis.
+
+La nouvelle suite porte à quatorze les suites navigateur exécutées automatiquement avant publication. Le résultat distant doit être vérifié pour le commit livré.
+
 ## Version 1.4.1 — explications pour débutants
 
 Les six scripts de narration ont été relus pour simplifier le vocabulaire et expliciter les liens entre eau, rotation, production et transport. Il s’agit d’une relecture éditoriale, pas d’une mesure de compréhension auprès de visiteurs. Aucun audio correspondant n’a été généré.

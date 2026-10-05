@@ -1,8 +1,17 @@
 # Narration — Du fleuve à la ville
 
-**Statut : textes prêts, relecture terminée ; fichiers audio non générés.** Voix ElevenLabs fournie par l'éditeur : `UaGvaD7NWzU5mJNoUqoY`. Ces six narrations s'adressent à une personne qui découvre entièrement l'hydroélectricité. Aucun son correspondant n'est annoncé comme disponible dans l'interface.
+**Statut : six MP3 fournis par l’éditeur et intégrés aux coupes.** Archive reçue : `Inga_Interactive_Narrations.zip`. Voix ElevenLabs demandée par l'éditeur : `UaGvaD7NWzU5mJNoUqoY`. Les fichiers sont conservés sans réencodage. Les textes ci-dessous accompagnent la lecture pour une personne qui découvre entièrement l'hydroélectricité.
 
-Lecture proposée : français naturel, chaleureux et posé, avec une courte respiration entre les idées. Chaque texte comporte 45 à 65 mots ; la durée sera vérifiée après génération, sans accélérer la voix pour tenir un minutage. Les objectifs ci-dessous guident la rédaction et ne sont pas à lire à voix haute. Les dessins expliquent des principes, sans reproduire tous les détails des installations réelles.
+Direction de lecture : français naturel, chaleureux et posé, avec une courte respiration entre les idées. Chaque texte comporte 45 à 65 mots. Les objectifs ci-dessous guident la rédaction et ne sont pas à lire à voix haute. Les dessins expliquent des principes, sans reproduire tous les détails des installations réelles.
+
+| Étape | Fichier livré | Durée mesurée |
+| --- | --- | --- |
+| Fleuve | `voix/journey-river.mp3` | 18,60 s |
+| Canal | `voix/journey-canal.mp3` | 17,32 s |
+| Turbine | `voix/journey-turbine.mp3` | 16,93 s |
+| Alternateur | `voix/journey-alternator.mp3` | 23,25 s |
+| Transformateur | `voix/journey-transformer.mp3` | 19,96 s |
+| Ville | `voix/journey-city.mp3` | 22,05 s |
 
 Ne pas ajouter de chiffres ou d'unités techniques non indispensables à la compréhension. Garder un ton calme ; aucun effet sonore ne doit masquer la voix.
 
@@ -48,8 +57,10 @@ Proposition à la fin du parcours, sans note ni passage obligé : **« Avec vos 
 
 Repères pour accompagner la réponse : l'eau fait tourner la roue ; l'alternateur transforme cette rotation en électricité ; le transformateur facilite le transport avec moins de pertes ; la tension est ensuite abaissée pour les usages. L'eau rejoint le fleuve après la turbine. Il suffit de retrouver ces liens ; aucun vocabulaire exact n'est exigé. En cas d'hésitation, proposer de revoir l'étape concernée.
 
-## Lecture et sons à prévoir
+## Commandes de lecture
 
-La future lecture doit être **à la demande**, sans démarrage automatique : une commande explicite lance la narration de l'étape ouverte. Elle doit pouvoir être arrêtée et s'interrompre lorsqu'on change d'étape ou quitte le parcours. Les textes restent accessibles sans son.
+La lecture est **à la demande**, sans démarrage automatique : **Écouter**, **Pause**, **Reprendre**, **Arrêter** et **Réécouter** pilotent la piste de la coupe ouverte. Changer de coupe ou fermer la fenêtre arrête la piste. Masquer l’onglet met la narration en pause ; y revenir ne la relance pas. Les textes restent disponibles avec **Lire l’explication**, y compris si le son ne se charge pas. La visite guidée existante conserve ses propres pistes.
+
+Les six fichiers font partie du téléchargement hors ligne et de l’archive client. Le service worker répond aux demandes de portions de MP3, utilisées par les lecteurs mobiles. En cas de chargement bloqué, le lecteur propose de réessayer et de lire le texte.
 
 Des ambiances facultatives et discrètes peuvent accompagner l'eau, la rotation ou la ville. Elles ne sont nécessaires ni à la compréhension ni à la navigation ; éviter les sons d'alerte et les effets masquant la voix. Leur production et leur intégration restent à faire, avec un réglage de coupure indépendant de la narration.

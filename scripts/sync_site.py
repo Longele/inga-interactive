@@ -19,6 +19,7 @@ worker = (root / 'sw.js').read_text()
 paths = json.loads(re.search(r'const FILES=(\[.*?\]);', worker).group(1))
 paths = sorted(set(paths) | {p.name for p in root.glob('*.css')} |
                {p.name for p in root.glob('*.js') if p.name != 'sw.js'} |
+               {p.relative_to(root).as_posix() for p in (root / 'voix').glob('*.mp3')} |
                ({'VERSION'} if (root / 'VERSION').exists() else set()))
 worker = re.sub(r'const FILES=\[.*?\];', 'const FILES=' + json.dumps(paths, ensure_ascii=False) + ';', worker)
 digest = hashlib.sha256()

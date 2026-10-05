@@ -47,4 +47,6 @@ Attribution vérifiée dans le catalogue officiel Google Earth Engine pour ce je
 
 Cette confirmation est une déclaration de l'éditeur, pas un audit indépendant des justificatifs. **À conserver dans ses archives commerciales :** facture ou preuve du plan actif, date de génération, référence de la voix et conditions applicables. Aucun identifiant de compte ni justificatif privé n'a besoin d'être publié avec le site.
 
+La version 1.5.0 ajoute les six fichiers `voix/journey-*.mp3`, reçus de l’éditeur dans `Inga_Interactive_Narrations.zip` et conservés sans réencodage. La référence de voix demandée pour ce parcours est `UaGvaD7NWzU5mJNoUqoY`. Leurs textes d’accompagnement et leurs durées figurent dans le document de livraison `NARRATION-PARCOURS.md`.
+
 Les documents externes cités dans le registre servent de sources documentaires. Ils ne sont pas livrés dans l'archive. Les références à la SNEL et à d'autres organismes ne constituent ni un partenariat, ni une certification, ni une autorisation de marque. La géométrie est une reconstruction pédagogique partielle. Les droits des créations propres au projet, des icônes et de toute référence visuelle adaptée sont à documenter par l'éditeur dans son contrat de livraison.

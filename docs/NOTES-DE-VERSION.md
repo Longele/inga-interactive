@@ -1,5 +1,11 @@
 # Notes de version
 
+## 1.5.0
+
+Les six narrations fournies par l’éditeur sont accessibles dans les coupes : Fleuve, Canal, Turbine, Alternateur, Transformateur et Ville. La lecture démarre au clic et propose pause, reprise, arrêt et réécoute, avec le texte repliable à côté des commandes.
+
+La narration s’arrête à la fermeture ou au changement de coupe et se met en pause lorsque l’onglet est masqué. Un chargement bloqué propose de réessayer ou de lire l’explication. Les MP3 sont inclus dans le cache hors ligne, avec prise en charge des demandes de portions de fichier par les lecteurs mobiles.
+
 ## 1.4.1
 
 Explications du parcours simplifiées pour les visiteurs qui découvrent l’hydroélectricité : phrases courtes, mots courants et liens entre l’eau, la rotation et l’électricité. Un récapitulatif « À retenir » apparaît à l’étape Ville avant les chiffres.

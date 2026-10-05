@@ -6,6 +6,8 @@ Inga Interactive explique le chemin de l'eau et de l'électricité à Inga I et 
 
 Le parcours « Du fleuve à la ville » relie ces éléments en six étapes visibles. Les vues Fleuve et Ville lisent le bilan du simulateur ; les étapes intermédiaires ouvrent les ouvrages correspondants. La navigation conserve les réglages et le groupe observé entre turbine et alternateur. L'expérience du transformateur reste indépendante du bilan principal.
 
+Six narrations fournies par l’éditeur accompagnent les coupes. Elles démarrent au clic, avec pause, reprise, arrêt et texte repliable. Elles sont incluses dans la préparation hors ligne. Leur provenance et leurs durées sont consignées dans `NARRATION-PARCOURS.md`.
+
 La coupe du canal permet d'ajuster des dépôts illustratifs et de suivre leur effet sur la capacité de passage et la puissance simulée, tout en conservant les autres réglages. La plage de 2 200 à 1 600 m³/s relie une valeur historique documentée à une hypothèse pédagogique ; le curseur ne mesure pas l'état réel du canal.
 
 La coupe de l'alternateur relie le principe rotor/stator/tensions alternées au groupe choisi dans le simulateur. Ses commandes agissent sur la charge et l'état de ce groupe. Le dessin à deux pôles et les tensions normalisées sont illustratifs ; ils n'établissent ni la géométrie, ni le nombre de pôles, ni la tension ou la fréquence réelle des machines d'Inga. L'excitation et la régulation de tension ne sont pas modélisées.
